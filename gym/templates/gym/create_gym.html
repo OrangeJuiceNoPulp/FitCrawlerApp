@@ -1,0 +1,31 @@
+{% extends 'gym/base.html' %}
+
+{% block content%}
+
+<h1>Create Gym and Signup</h1>
+
+<div class='error-message'>
+    <p>{{ error}} </p>
+</div>
+
+<form method="POST" class="create-gym-form">
+    {% csrf_token %}
+
+    <p>
+        <label for="id_gym_name">Gym Name:</label>
+        <input type="text" name="gym_name" maxlength="255" required id="id_gym_name">
+    </p>
+
+    <p>
+        <label for="id_gym_description">Gym Description:</label>
+        <textarea name="description" maxlength="255" id="id_gym_description"></textarea>
+    </p>
+    <p>
+        <label for="id_gym_code">Gym Code (So Your Members Can Join):</label>
+        <input type="text" name="code" maxlength="31" required id="id_gym_code">
+    </p>
+
+    <button type="submit">Submit</button>
+</form>
+
+{% endblock %}

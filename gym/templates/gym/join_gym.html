@@ -1,0 +1,28 @@
+{% extends 'gym/base.html' %}
+
+{% block content %}
+
+<h1>Join Gym</h1>
+
+<div class='error-message'>
+    <p>{{ error }} </p>
+</div>
+
+{% if success %}
+
+<div class='success-message'>
+    <p>{{ success }} </p>
+</div>
+{% else %}
+<form method="POST" class="join-gym-form">
+    {% csrf_token %}
+    <label for="id_gym_code">Join Code:</label>
+    <input type="text" name="code" maxlength="31" required id="id_gym_code">
+
+    <button type="submit">Join</button>
+</form>
+
+{% endif %}
+
+
+{% endblock %}

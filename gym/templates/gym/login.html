@@ -1,0 +1,30 @@
+{% extends 'gym/base.html' %}
+
+{% block content %}
+
+<h1>Login</h1>
+
+<div class='error-message'>
+    <p>{{ error}} </p>
+</div>
+
+<form method="POST" class="login-form">
+    {% csrf_token %}
+    <p>
+    <label for="id_username">Username:</label>
+    <input type="text" name="username" maxlength="63" required id="id_username">
+    </p>
+
+    <p>
+    <label for="id_password">Password:</label>
+    <input type="password" name="password" maxlength="63" required id="id_password">
+    </p>
+
+    <button type="submit">Login</button>
+</form>
+
+<h2><a href="{% url 'gym:signup' %}">Sign Up</a></h2>
+
+
+
+{% endblock %}

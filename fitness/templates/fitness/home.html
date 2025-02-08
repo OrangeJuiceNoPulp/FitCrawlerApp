@@ -1,0 +1,20 @@
+{% extends 'gym/base.html' %}
+
+{% block content%}
+
+<h1> Hello World </h1>
+{% if user.gym is None and user.is_authenticated %}
+
+<h2><a href="{% url 'gym:join_gym' %}">Join a gym!</a></h2>
+
+    {% if user.user_type == "FitGuildOfficer" %}
+    <h2><a href="{% url 'gym:create_gym' %}">Create a gym!</a></h2>
+    {% endif %}
+
+{% else %}
+<h2> Hello There! </h2>
+
+{% endif %}
+
+
+{% endblock %}
