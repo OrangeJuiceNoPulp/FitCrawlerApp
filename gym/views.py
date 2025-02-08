@@ -13,10 +13,15 @@ from gym.models import FitCrawlerUser, Gym
 homepage_url = 'fitness:home'
 
 # STEW Project Code (Previous Class Project For A School Course System like Moodle) 
-# and Django Docs referenced for the creation of
-# the User Login/Logout/Signup System Functionality; however,
-# various aspects had to be modified in order to fit the needs of this project.
+# and Django Docs referenced for the creation of the
+# following User Login/Logout/Signup System Functionality backend; however,
+# various aspects had to be changed in order to fit the needs of this project,
+# because this project is a completely different project.
+# Additionally, these functionalities are said to not count as features in the project
+# according to the project guidelines.
+# Jason 2/8/25
 # https://github.com/OrangeJuiceNoPulp/stew3/
+# https://docs.djangoproject.com/en/5.1/topics/auth/default/
 # https://docs.djangoproject.com/en/5.1/topics/auth/customizing/
 
 @login_required
@@ -39,14 +44,14 @@ def login(request):
     else:
         # The user is already at the login page, trying to login with a POST request
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
-        if user is None:
-            # User failed to authenticate
-            return render(request, 'gym/login.html', {'error':'Incorrect Username or Password'})
-        else:
+        if user is not None:
             # User is successfully authenticated, so log in the user
             login_user(request, user)
             # Redirect the user to the home page
             return redirect(homepage_url)
+        else:   
+            # User failed to authenticate
+            return render(request, 'gym/login.html', {'error':'Incorrect Username or Password'})
         
 def signup(request):
     # Ensure the user is not already logged in
@@ -70,8 +75,10 @@ def signup(request):
                     request.POST['password1'],
                     user_type = request.POST['user_type']
                 )
-                # Save the user to the database
-                user.save()
+                # The create_user method automatically saves the user in the database.
+                # If any changes are made to the user here outside of the create_user method,
+                # it will be necessary to save the user.
+                
                 # Login as the newly created user
                 login_user(request, user)
                 # Redirect the user to the home page
@@ -85,7 +92,7 @@ def signup(request):
             return render(request, 'gym/signup.html', {'error':'Passwords did not match!'})
     
 
-# Gym Creation is new to this project, only Django Docs were referenced when necessary.
+# The below features are new to this project, only Django Docs were referenced when necessary.
 # https://docs.djangoproject.com/en/5.1/topics/db/sql/
 # https://docs.djangoproject.com/en/5.1/intro/tutorial02/
 # https://docs.djangoproject.com/en/5.1/ref/models/fields/
@@ -93,6 +100,7 @@ def signup(request):
 # Creates a Gym with the current user as the Gym Owner.
 # When Owner's account is deleted, the Gym is deleted.
 # When the Gym is deleted, the Owner's Gym is set to NULL.
+# Jason 2/8/25
 @login_required
 def create_gym(request):
     if (request.user.user_type != "FitGuildOfficer") or (request.user.gym):
@@ -119,7 +127,13 @@ def create_gym(request):
                 # Redirect the user to the home page
                 return redirect(homepage_url)
                 
-        
+
+# Creates a Gym Application for the current user with the input Gym Join Code (which is unique)
+# Gym Applications are deleted if either the user or gym are deleted.
+# Users can only have one gym at once, but can apply to many gyms.
+# When implementing the Gym Application Acceptance functionality,
+# it will be necessary to delete all the Gym Applications for the accepted user.
+# Jason 2/8/25
 @login_required
 def join_gym(request):
     if request.user.gym:
@@ -134,7 +148,21 @@ def join_gym(request):
             with connection.cursor() as cursor:
                 cursor.execute("SELECT name, owner_id FROM gym_gym WHERE join_code = %s", [request.POST['code']])
                 gym_info = cursor.fetchone()
-                cursor.execute("INSERT INTO gym_gymapplication (applicant_id, destination_id) VALUES (%s, %s)", [request.user.id, gym_info[1]])
             
-            success_message = 'Applied to '+ gym_info[0] + '.'
-            return render(request, 'gym/join_gym.html', {'success': success_message})
+                if gym_info:
+                    # If there is a gym with that join code, ensure an application does not already exist
+                    cursor.execute("SELECT * FROM gym_gymapplication WHERE applicant_id = %s AND destination_id = %s", [request.user.id, gym_info[1]])
+                    existing_application = cursor.fetchone()
+                    if existing_application:
+                        # The user already has an open application for this gym, so display an error message
+                        return render(request, 'gym/join_gym.html', {'error':'You have already applied to this gym!'})
+                    else:
+                        # create the application
+                        cursor.execute("INSERT INTO gym_gymapplication (applicant_id, destination_id) VALUES (%s, %s)", [request.user.id, gym_info[1]])
+                        success_message = 'Applied to '+ gym_info[0] + '.'
+                        return render(request, 'gym/join_gym.html', {'success': success_message})
+                else:
+                    # Otherwise return an error message
+                    return render(request, 'gym/join_gym.html', {'error':'Code is incorrect!'})
+            
+            
