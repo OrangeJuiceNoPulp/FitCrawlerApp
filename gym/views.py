@@ -21,6 +21,7 @@ homepage_url = 'fitness:home'
 # according to the project guidelines.
 # Jason 2/8/25
 # https://github.com/OrangeJuiceNoPulp/stew3/
+# https://docs.djangoproject.com/en/5.1/intro/tutorial01/
 # https://docs.djangoproject.com/en/5.1/topics/auth/default/
 # https://docs.djangoproject.com/en/5.1/topics/auth/customizing/
 
