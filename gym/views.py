@@ -2,10 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db import IntegrityError, connection
 
 from django.contrib.auth.decorators import login_required
-
 from django.contrib.auth import login as login_user, logout as logout_user, authenticate
 
-from gym.models import FitCrawlerUser, Gym
+from gym.models import FitCrawlerUser, Gym, GymApplication
 
 # Create your views here.
 
@@ -166,4 +165,37 @@ def join_gym(request):
                     # Otherwise return an error message
                     return render(request, 'gym/join_gym.html', {'error':'Code is incorrect!'})
             
-            
+@login_required
+def accept_application(request, application_id):
+    # Accept a FitKnight's gym application and make them a member of the gym
+    # owned by the current user (who must be a FitGuildOfficer).
+
+    # Must be an officer who owns a gym
+    if request.user.user_type != 'FitGuildOfficer' or not request.user.gym:
+        return redirect('fitness:home')
+
+    # Using the ORM just to verify the application:
+    application = get_object_or_404(GymApplication, pk=application_id)
+
+    # Ensure the application is for the current user's gym
+    if application.destination_id != request.user.gym.owner_id:
+        return redirect('fitness:home')
+    
+    if request.method == 'POST':
+        with connection.cursor() as cursor:
+            # 1) Update the applicant's gym_id
+            cursor.execute("""
+                UPDATE gym_fitcrawleruser
+                SET gym_id = %s
+                WHERE id = %s""",
+                [request.user.gym.owner_id, application.applicant_id])
+
+            # 2) Delete all applications from that applicant
+            cursor.execute("""
+                DELETE FROM gym_gymapplication
+                WHERE applicant_id = %s""",
+                [application.applicant_id])
+
+        return redirect('fitness:home')
+
+    return render(request, 'gym/accept_app.html', {'application': application})
