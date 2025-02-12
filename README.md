@@ -3,5 +3,5 @@
 
 It is recommended to run this using VScode
 
-To run: Intall djangousing pip, then run 'python manage.py runserver' 
+To run: Intall django using pip, then run 'python manage.py runserver' 
         with the python terminal to run the application
