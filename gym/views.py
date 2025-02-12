@@ -11,12 +11,9 @@ from gym.models import FitCrawlerUser, Gym, GymApplication
 # URL for the homepage, made as a variable in case we decide to change the URL later
 homepage_url = 'fitness:home'
 
-# STEW Project Code (Previous Class Project For A School Course System like Moodle) 
-# and Django Docs referenced for the creation of the
-# following User Login/Logout/Signup System Functionality backend; however,
-# various aspects had to be changed in order to fit the needs of this project,
-# because this project is a completely different project.
-# Additionally, these functionalities are said to not count as features in the project
+# Django Docs referenced for the creation of the
+# following User Login/Logout/Signup System Functionality backend
+# These functionalities are said to not count as features in the project
 # according to the project guidelines.
 # Jason 2/8/25
 # https://github.com/OrangeJuiceNoPulp/stew3/
