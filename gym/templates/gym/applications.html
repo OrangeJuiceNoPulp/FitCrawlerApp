@@ -1,0 +1,26 @@
+{% extends 'gym/base.html' %}
+{% load static %}
+
+{% block content %}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'gym/applications.css' %}">
+
+    <h1>Gym Applications</h1>
+
+    {% if applications %}
+        <ul class="applications-list">
+            {% for app in applications %}
+                <li class="application-item">
+                    <span class="applicant-name">{{ app.user.username }}</span>
+                    <div class="decision-buttons">
+                        <button class="accept-button">Accept</button>
+                        <button class="decline-button">Decline</button>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-applications">No applications found.</p>
+    {% endif %}
+
+{% endblock %}

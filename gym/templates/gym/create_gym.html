@@ -1,31 +1,34 @@
 {% extends 'gym/base.html' %}
+{% load static %}
 
 {% block content%}
 
-<h1>Create Gym and Signup</h1>
+    <link rel="stylesheet" type="text/css" href="{% static 'gym/createGym.css' %}">
 
-<div class='error-message'>
-    <p>{{ error}} </p>
-</div>
+    <h1>Create Gym and Signup</h1>
 
-<form method="POST" class="create-gym-form">
-    {% csrf_token %}
+    <div class='error-message'>
+        <p>{{ error}} </p>
+    </div>
 
-    <p>
-        <label for="id_gym_name">Gym Name:</label>
-        <input type="text" name="gym_name" maxlength="255" required id="id_gym_name">
-    </p>
+    <form method="POST" class="create-gym-form">
+        {% csrf_token %}
 
-    <p>
-        <label for="id_gym_description">Gym Description:</label>
-        <textarea name="description" maxlength="255" id="id_gym_description"></textarea>
-    </p>
-    <p>
-        <label for="id_gym_code">Gym Code (So Your Members Can Join):</label>
-        <input type="text" name="code" maxlength="31" required id="id_gym_code">
-    </p>
+        <p>
+            <label for="id_gym_name">Gym Name:</label>
+            <input type="text" name="gym_name" maxlength="255" required id="id_gym_name">
+        </p>
 
-    <button type="submit">Submit</button>
-</form>
+        <p>
+            <label for="id_gym_description">Gym Description:</label>
+            <textarea name="description" maxlength="255" id="id_gym_description"></textarea>
+        </p>
+        <p>
+            <label for="id_gym_code">Gym Code (So Your Members Can Join):</label>
+            <input type="text" name="code" maxlength="31" required id="id_gym_code">
+        </p>
+
+        <button type="submit" class="submit-button">Submit</button>
+    </form>
 
 {% endblock %}

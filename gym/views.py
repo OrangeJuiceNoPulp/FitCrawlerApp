@@ -209,3 +209,34 @@ def review_application(request, application_id):
         return redirect('fitness:home')
 
     return render(request, 'gym/review_app.html', {'application': application})
+
+@login_required
+def applications(request):
+    if request.user.gym:
+        # Redirect to home page if the user already has a gym
+        return redirect(homepage_url)
+    else:
+        if request.method == 'GET':
+            # The user is requesting the join gym page
+            return render(request, 'gym/applications.html')
+        else:
+            # The user is already at the join gym page, trying to join a gym with a POST request
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT name, owner_id FROM gym_gym WHERE join_code = %s", [request.POST['code']])
+                gym_info = cursor.fetchone()
+            
+                if gym_info:
+                    # If there is a gym with that join code, ensure an application does not already exist
+                    cursor.execute("SELECT * FROM gym_gymapplication WHERE applicant_id = %s AND destination_id = %s", [request.user.id, gym_info[1]])
+                    existing_application = cursor.fetchone()
+                    if existing_application:
+                        # The user already has an open application for this gym, so display an error message
+                        return render(request, 'gym/join_gym.html', {'error':'You have already applied to this gym!'})
+                    else:
+                        # create the application
+                        cursor.execute("INSERT INTO gym_gymapplication (applicant_id, destination_id) VALUES (%s, %s)", [request.user.id, gym_info[1]])
+                        success_message = 'Applied to '+ gym_info[0] + '.'
+                        return render(request, 'gym/join_gym.html', {'success': success_message})
+                else:
+                    # Otherwise return an error message
+                    return render(request, 'gym/join_gym.html', {'error':'Code is incorrect!'})

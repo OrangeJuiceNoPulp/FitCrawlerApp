@@ -9,6 +9,7 @@
 
     {% if user.user_type == "FitGuildOfficer" %}
     <h2><a href="{% url 'gym:create_gym' %}">Create a gym!</a></h2>
+    <h2><a href="{% url 'gym:applications' %}">View Applications</a></h2>
     {% endif %}
 
 
