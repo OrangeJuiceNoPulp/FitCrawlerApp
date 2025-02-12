@@ -1,4 +1,7 @@
 # FitCrawlerApp
  Group G4 Senior Capstone Project
 
-intall django and run 'python manage.py runserver' to run the application
+It is recommended to run this using VScode
+
+To run: Intall djangousing pip, then run 'python manage.py runserver' 
+        with the python terminal to run the application
