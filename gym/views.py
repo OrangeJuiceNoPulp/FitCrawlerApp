@@ -166,77 +166,90 @@ def join_gym(request):
                     return render(request, 'gym/join_gym.html', {'error':'Code is incorrect!'})
             
 @login_required
-def review_application(request, application_id):
-    # Review a FitKnight's gym application and accept or deny them as a member of the gym
-    #   owned by the current user (who must be a FitGuildOfficer).
+def list_applications(request):
+    # Must be FitGuildOfficer with a gym
+    if request.user.user_type != 'FitGuildOfficer' or not request.user.gym:
+        return redirect('fitness:home')
+    
+    # Pull all applications for the officer’s gym
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            SELECT ga.id, ga.applicant_id, fc.username
+            FROM gym_gymapplication ga
+            JOIN gym_fitcrawleruser fc ON ga.applicant_id = fc.id
+            WHERE ga.destination_id = %s
+        """, [request.user.gym.owner_id])
+        rows = cursor.fetchall()
+    
+    # We'll make a little list of objects for the template
+    applications = []
+    for row in rows:
+        app_id, applicant_id, applicant_username = row
+        applications.append({
+            'id': app_id,
+            'applicant': {
+                'id': applicant_id,
+                'username': applicant_username
+            }
+        })
+    
+    return render(request, 'gym/applications.html', {'applications': applications})
 
-    # Must be an officer who owns a gym
+@login_required
+def process_application(request):
+    # Must be FitGuildOfficer with a gym
     if request.user.user_type != 'FitGuildOfficer' or not request.user.gym:
         return redirect('fitness:home')
 
-    # Using the ORM just to verify the application:
-    application = get_object_or_404(GymApplication, pk=application_id)
-
-    # Ensure the application is for the current user's gym
-    if application.destination_id != request.user.gym.owner_id:
-        return redirect('fitness:home')
-    
     if request.method == 'POST':
-        if 'accept' in request.POST:
-            # ACCEPT logic
-            with connection.cursor() as cursor:
-                # 1) Update the applicant's gym_id
+        app_id = request.POST.get('application_id')
+        action = request.POST.get('action')  # 'accept' or 'deny'
+        
+        if not app_id or not action:
+            return redirect('gym:list_applications')
+
+        with connection.cursor() as cursor:
+            # 1) Fetch applicant from the application
+            cursor.execute("""
+                SELECT applicant_id, destination_id
+                FROM gym_gymapplication
+                WHERE id = %s
+            """, [app_id])
+            row = cursor.fetchone()
+            if not row:
+                return redirect('gym:list_applications')
+
+            applicant_id, destination_id = row
+
+            # Ensure the application is for the current user's gym
+            if destination_id != request.user.gym.owner_id:
+                return redirect('gym:list_applications')
+
+            # 2) Accept or Deny
+            if action == 'accept':
+                # Accept: Update user’s gym and remove all applications
                 cursor.execute("""
                     UPDATE gym_fitcrawleruser
                     SET gym_id = %s
-                    WHERE id = %s""",
-                    [request.user.gym.owner_id, application.applicant_id])
-
-                # 2) Delete all applications from that applicant
+                    WHERE id = %s
+                """, [destination_id, applicant_id])
+                
                 cursor.execute("""
                     DELETE FROM gym_gymapplication
-                    WHERE applicant_id = %s""",
-                    [application.applicant_id])
-        elif 'deny' in request.POST:
-            # DENY logic
-            with connection.cursor() as cursor:
-                cursor.execute("""
-                    DELETE FROM gym_gymapplication
-                    WHERE id = %s""",
-                    [application.id])
-
-        # After accepting/denying, redirect to a page of your choice (like home).
-        return redirect('fitness:home')
-
-    return render(request, 'gym/review_app.html', {'application': application})
-
-@login_required
-def applications(request):
-    if request.user.gym:
-        # Redirect to home page if the user already has a gym
-        return redirect(homepage_url)
-    else:
-        if request.method == 'GET':
-            # The user is requesting the join gym page
-            return render(request, 'gym/applications.html')
-        else:
-            # The user is already at the join gym page, trying to join a gym with a POST request
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT name, owner_id FROM gym_gym WHERE join_code = %s", [request.POST['code']])
-                gym_info = cursor.fetchone()
+                    WHERE applicant_id = %s
+                """, [applicant_id])
             
-                if gym_info:
-                    # If there is a gym with that join code, ensure an application does not already exist
-                    cursor.execute("SELECT * FROM gym_gymapplication WHERE applicant_id = %s AND destination_id = %s", [request.user.id, gym_info[1]])
-                    existing_application = cursor.fetchone()
-                    if existing_application:
-                        # The user already has an open application for this gym, so display an error message
-                        return render(request, 'gym/join_gym.html', {'error':'You have already applied to this gym!'})
-                    else:
-                        # create the application
-                        cursor.execute("INSERT INTO gym_gymapplication (applicant_id, destination_id) VALUES (%s, %s)", [request.user.id, gym_info[1]])
-                        success_message = 'Applied to '+ gym_info[0] + '.'
-                        return render(request, 'gym/join_gym.html', {'success': success_message})
-                else:
-                    # Otherwise return an error message
-                    return render(request, 'gym/join_gym.html', {'error':'Code is incorrect!'})
+            elif action == 'deny':
+                # Deny: delete just this one application
+                cursor.execute("""
+                    DELETE FROM gym_gymapplication
+                    WHERE id = %s
+                """, [app_id])
+    
+    return redirect('gym:list_applications')
+
+#@login_required
+#def applications(request):
+#    if request.method == 'GET':
+#            # The user is requesting the join gym page
+#            return render(request, 'gym/applications.html')
