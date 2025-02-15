@@ -18,8 +18,14 @@ class Task(models.Model):
     user = models.ForeignKey(FitCrawlerUser, on_delete=models.CASCADE)
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
     
+    def __str__(self):
+        return str(self.user) + ': ' + str(self.exercise)
+    
 class Log(models.Model):
     # Columns
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     percent_completion = models.FloatField()
     time_completed = models.DateTimeField()
+    
+    def __str__(self):
+        return str(self.task) + ' - ' + str(self.time_completed)

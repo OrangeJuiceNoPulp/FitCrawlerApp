@@ -20,6 +20,7 @@ homepage_url = 'fitness:home'
 # https://docs.djangoproject.com/en/5.1/intro/tutorial01/
 # https://docs.djangoproject.com/en/5.1/topics/auth/default/
 # https://docs.djangoproject.com/en/5.1/topics/auth/customizing/
+# https://djangocentral.com/capturing-query-parameters-of-requestget-in-django/
 
 @login_required
 def logout(request):
@@ -44,8 +45,14 @@ def login(request):
         if user is not None:
             # User is successfully authenticated, so log in the user
             login_user(request, user)
-            # Redirect the user to the home page
-            return redirect(homepage_url)
+            
+            
+            # Redirect the user to the next page they were going to, if any
+            if request.GET.get('next'):
+                return redirect(request.GET.get('next'))
+            else:
+                # Otherwise, redirect the user to the home page
+                return redirect(homepage_url)
         else:   
             # User failed to authenticate
             return render(request, 'gym/login.html', {'error':'Incorrect Username or Password'})

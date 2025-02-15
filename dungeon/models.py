@@ -14,6 +14,9 @@ class Dungeon(models.Model):
     width = models.IntegerField()
     layout = models.TextField()
     
+    def __str__(self):
+        return str(self.name)
+    
 
 class DungeonExploration(models.Model):
     # Columns
@@ -28,9 +31,16 @@ class DungeonExploration(models.Model):
     user = models.ForeignKey(FitCrawlerUser, on_delete=models.CASCADE)
     dungeon = models.ForeignKey(Dungeon, on_delete=models.CASCADE)
     
+    def __str__(self):
+        return str(self.user) + ': ' + str(self.dungeon) 
+    
+    
 class GameStats(models.Model):
     # Columns
     # PK is the same as the user's id
     user = models.OneToOneField(FitCrawlerUser, on_delete=models.CASCADE, related_name='game_stats', primary_key=True)
     max_health = models.IntegerField()
     coins = models.BigIntegerField()
+    
+    def __str__(self):
+        return str(self.user)

@@ -5,4 +5,7 @@ from django.db import models
 class Exercise(models.Model):
     # Columns
     name = models.CharField(max_length=255)
-    description = models.CharField(max_length=512)
+    description = models.CharField(max_length=511)
+    
+    def __str__(self):
+        return str(self.name)

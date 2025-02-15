@@ -1,0 +1,43 @@
+{% extends 'gym/base.html' %}
+
+{% block content %}
+
+<h1>Search Exercises</h1>
+
+<div class='error-message'>
+    <p>{{ error }} </p>
+</div>
+
+
+<form method="GET" class="search-exercises-form">
+    <label for="id_exercise_name">Exercise Name:</label>
+    <input type="text" name="exercise_name" value="{{ search_query }}" maxlength="255" id="id_exercise_name">
+    <button type="submit">Search</button>
+</form>
+
+<ul>
+{% for exercise_id, exercise_name in exercises %}
+    <li>
+        <a href="{% url 'exercises:view_exercise' exercise_id %}">
+        {{exercise_name}}
+        </a>
+    </li>
+{% endfor %}
+</ul>
+
+{% if user.is_authenticated and user.user_type == 'FitGuildOfficer' %}
+<h2><a href="{% url 'exercises:create_exercise' %}">Add an exercise!</a></h2>
+{% endif %}
+
+<div>
+    {% if previous %}
+    <a href="{% url 'exercises:search_exercises' %}?page={{previous}}&exercise_name={{search_query}}">Prev</a>
+    {% endif %}
+    {{ page_number }}
+    {% if next %}
+    <a href="{% url 'exercises:search_exercises' %}?page={{next}}&exercise_name={{search_query}}">Next</a>
+    {% endif %}
+
+</div>
+
+{% endblock %}

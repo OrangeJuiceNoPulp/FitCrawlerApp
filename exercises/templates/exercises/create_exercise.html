@@ -1,0 +1,25 @@
+{% extends 'gym/base.html' %}
+
+{% block content %}
+
+<h1>Create Exercise</h1>
+
+<div class='error-message'>
+    <p>{{ error }} </p>
+</div>
+
+
+<form method="POST" class="create-exercise-form">
+    {% csrf_token %}
+    <label for="id_exercise_name">Exercise Name:</label>
+    <input type="text" name="exercise_name" maxlength="255" required id="id_exercise_name">
+
+    <label for="id_exercise_description">Instructions:</label>
+    <input type="text" name="description" maxlength="511" required id="id_exercise_description">
+
+    <button type="submit">Create</button>
+</form>
+
+
+
+{% endblock %}
