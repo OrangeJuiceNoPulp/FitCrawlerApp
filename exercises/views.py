@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.db import IntegrityError, connection
 
@@ -109,5 +110,26 @@ def search_exercises(request):
 
 @login_required
 def view_exercise(request, exercise_pk):
-    pass
+    # Displays the details of a single Exercise.
     
+    with connection.cursor() as cursor:
+        # Fetch the exercise row by ID
+        cursor.execute("""
+            SELECT id, name, description
+            FROM exercises_exercise
+            WHERE id = %s
+            """,[exercise_pk])
+        row = cursor.fetchone()
+
+    if not row:
+        # If no matching exercise, raise 404 or redirect
+        raise Http404("Exercise not found.")
+
+    # row is (id, name, description)
+    context = {
+        'exercise_id': row[0],
+        'exercise_name': row[1],
+        'exercise_description': row[2],
+    }
+
+    return render(request, 'exercises/view_exercise.html', context)

@@ -1,0 +1,9 @@
+{% extends 'gym/base.html' %}
+
+{% block content %}
+  <h1>{{ exercise_name }}</h1>
+  <p>Description: {{ exercise_description }}</p>
+
+  <a href="{% url 'exercises:search_exercises' %}">Return to Search</a>
+
+{% endblock %}
