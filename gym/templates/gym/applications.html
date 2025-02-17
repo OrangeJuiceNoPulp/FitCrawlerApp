@@ -1,3 +1,6 @@
+<!--Designed by Joseph Marchione and Brendon Wolfe on February 11th-->
+<!--Modified by ___ on February __-->
+
 {% extends 'gym/base.html' %}
 {% load static %}
 
@@ -8,29 +11,29 @@
 
 {% if applications %}
     <ul class="applications-list">
-        {% for app in applications %}
-            <li class="application-item">
-                <span class="applicant-name">
-                    {{ app.applicant.username }}
-                </span>
-                <div class="decision-buttons">
-                    <form method="POST" action="{% url 'gym:process_application' %}" style="display:inline;">
-                        {% csrf_token %}
-                        <input type="hidden" name="application_id" value="{{ app.id }}">
-                        
-                        <!-- Accept button -->
-                        <button class="accept-button" type="submit" name="action" value="accept">
-                            Accept
-                        </button>
-                        
-                        <!-- Deny button -->
-                        <button class="decline-button" type="submit" name="action" value="deny">
-                            Decline
-                        </button>
-                    </form>
-                </div>
-            </li>
-        {% endfor %}
+    {% for app in applications %}
+        <li class="application-item">
+            <span class="applicant-name">
+                {{ app.applicant.username }}
+            </span>
+            <div class="decision-buttons">
+                <form method="POST" action="{% url 'gym:process_application' %}" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="application_id" value="{{ app.id }}">
+                    
+                    <!-- Accept button -->
+                    <button class="accept-button" type="submit" name="action" value="accept">
+                        Accept
+                    </button>
+                    
+                    <!-- Deny button -->
+                    <button class="decline-button" type="submit" name="action" value="deny">
+                        Decline
+                    </button>
+                </form>
+            </div>
+        </li>
+    {% endfor %}
     </ul>
 {% else %}
     <p class="no-applications">No applications found.</p>
