@@ -14,6 +14,7 @@
 
 {% elif user.is_authenticated and user.user_type == 'FitGuildOfficer' and user.gym %}
 <h2><a href="{% url 'gym:list_applications' %}">View Applications</a></h2>
+<h2><a href="{% url 'fitness:search_knights' %}">Search Knights</a></h2>
 <h3>Hello FitGuildOfficer {{ user.username }}</h3>
 <h3>Your Gym Name is: {{ user.gym.name }}</h3>
 <h3>Your Gym Code is: {{ user.gym.join_code }}</h3>
