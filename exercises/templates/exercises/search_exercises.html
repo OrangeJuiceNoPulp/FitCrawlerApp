@@ -1,6 +1,6 @@
 <!-- Designed by ____ on February __ -->
 <!-- Modified by Brendon Wolfe for CSS compatibility on February 16th -->
- 
+
 {% extends 'gym/base.html' %}
 {%load static %}
 
@@ -36,11 +36,11 @@
 <h2><a href="{% url 'exercises:create_exercise' %}">Add an exercise!</a></h2>
 {% endif %}
 
-<div>
+<div class="footer">
+    {{ page_number }}
     {% if previous %}
     <a href="{% url 'exercises:search_exercises' %}?page={{previous}}&exercise_name={{search_query}}">Prev</a>
     {% endif %}
-    {{ page_number }}
     {% if next %}
     <a href="{% url 'exercises:search_exercises' %}?page={{next}}&exercise_name={{search_query}}">Next</a>
     {% endif %}

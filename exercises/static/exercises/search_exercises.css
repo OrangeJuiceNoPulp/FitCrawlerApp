@@ -58,4 +58,25 @@ ul li a:hover{
 }
 
 
+.footer{
+    position: fixed;
+    bottom: .1rem;
+}
+
+.footer a {
+    color: purple;
+    text-decoration: none;
+    font-size: 1.1rem;
+}
+
+.footer a:hover {
+    color: #7040a0;
+}
+
+@media screen and (max-width: 600px) {
+    ul {
+        max-width: 100%;
+    }
+}
+
 
