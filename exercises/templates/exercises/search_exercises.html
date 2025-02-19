@@ -1,7 +1,7 @@
 <!-- Designed by ____ on February __ -->
 <!-- Modified by Brendon Wolfe for CSS compatibility on February 16th -->
 
-{% extends 'gym/base.html' %}
+{% extends 'gym/header.html' %}
 {%load static %}
 
 {% block content %}
@@ -36,6 +36,7 @@
 <h2><a href="{% url 'exercises:create_exercise' %}">Add an exercise!</a></h2>
 {% endif %}
 
+
 <div class="footer">
     {{ page_number }}
     {% if previous %}
@@ -46,5 +47,7 @@
     {% endif %}
 
 </div>
+
+
 
 {% endblock %}

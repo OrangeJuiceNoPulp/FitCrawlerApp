@@ -1,0 +1,85 @@
+/* Designed by Brendon Wolfe on February 17th */
+
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
+
+body {
+    background-color: #282828; 
+    color: white; 
+    font-family: "Rajdhani", sans-serif;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #39FF14; 
+    padding: 1rem;
+    margin: -1.5rem -1.75rem;
+    background-color: #181818; 
+    margin-bottom: 1rem;
+    position: fixed;
+    width: 100%;
+}
+
+.left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; 
+    width: 42%;
+}
+
+.logo {
+    font-size: 1.8rem;
+    margin-left: 1rem;
+    font-weight: bold;
+    width: 10%;
+    margin: -1rem 0rem;
+}
+
+.logo h1 {
+    color:#39FF14;
+    margin: 0rem;  
+    font-size: 3rem;  
+}
+
+.right {
+    display: flex;
+    align-items: center; 
+    justify-content: flex-end; 
+    width: 42%;
+}
+
+.authentication {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 45%;
+}
+
+
+.button {
+    background-color: #39FF14; 
+    color: black; 
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 5px;
+    margin-left: 0.5rem;
+    transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #28a828; 
+}
+
+.username {
+    font-weight: bold;
+    margin-left: 1rem;
+    color: #39FF14; 
+}
+
+.header-space{
+    margin-top:1.5rem;
+    padding-bottom: 3rem;
+}
