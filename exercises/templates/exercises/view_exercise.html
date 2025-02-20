@@ -6,4 +6,27 @@
 
   <a href="{% url 'exercises:search_exercises' %}">Return to Search</a>
 
+  <div class="list-div">
+    <ul>
+    {% for video_id, video_url in exercise_videos %}
+        <li>
+            <a href="{{ video_url }}">
+            {{video_url}}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+
+{% if user.is_authenticated and user.user_type == 'FitGuildOfficer' %}
+
+<form method="POST" class="add-exercise-video-form">
+  {% csrf_token %}
+  <label for="id_video_link">Video Link:</label>
+  <input type="text" name="video_link" id="id_video_link">
+  <button type="submit">Add</button>
+</form>
+
+{% endif %}
+
 {% endblock %}

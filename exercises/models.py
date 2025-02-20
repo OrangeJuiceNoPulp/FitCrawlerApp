@@ -9,3 +9,8 @@ class Exercise(models.Model):
     
     def __str__(self):
         return str(self.name)
+    
+class ExerciseVideo(models.Model):
+    # Columns
+    exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
+    video_link = models.URLField(max_length=255)

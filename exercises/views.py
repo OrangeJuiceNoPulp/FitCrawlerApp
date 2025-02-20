@@ -112,24 +112,48 @@ def search_exercises(request):
 def view_exercise(request, exercise_pk):
     # Displays the details of a single Exercise.
     
-    with connection.cursor() as cursor:
-        # Fetch the exercise row by ID
-        cursor.execute("""
-            SELECT id, name, description
-            FROM exercises_exercise
-            WHERE id = %s
-            """,[exercise_pk])
-        row = cursor.fetchone()
+    if request.method == 'GET':
+        # The user is requesting the details of the exercise
+        with connection.cursor() as cursor:
+            # Fetch the exercise row by ID
+            cursor.execute("""
+                SELECT id, name, description
+                FROM exercises_exercise
+                WHERE id = %s
+                """,[exercise_pk])
+            row = cursor.fetchone()
+            
+            # Fetch the videos associated with the exercise
+            cursor.execute("""
+                SELECT id, video_link
+                FROM exercises_exercisevideo
+                WHERE exercise_id = %s
+                """,[exercise_pk])
+            video_rows = cursor.fetchall()
 
-    if not row:
-        # If no matching exercise, raise 404 or redirect
-        raise Http404("Exercise not found.")
+        if not row:
+            # If no matching exercise, raise 404 or redirect
+            raise Http404("Exercise not found.")
 
-    # row is (id, name, description)
-    context = {
-        'exercise_id': row[0],
-        'exercise_name': row[1],
-        'exercise_description': row[2],
-    }
+        # row is (id, name, description)
+        context = {
+            'exercise_id': row[0],
+            'exercise_name': row[1],
+            'exercise_description': row[2],
+            'exercise_videos': video_rows,
+        }
 
-    return render(request, 'exercises/view_exercise.html', context)
+        return render(request, 'exercises/view_exercise.html', context)
+        
+    else:
+        # The user is trying to add an exercise video with a POST request
+        if request.user.user_type != 'FitGuildOfficer':
+            return redirect('exercises:view_exercise', exercise_pk)
+        else:
+            with connection.cursor() as cursor:
+                cursor.execute("INSERT INTO exercises_exercisevideo (video_link, exercise_id) VALUES (%s, %s)", [request.POST['video_link'],exercise_pk])
+    
+            # Refresh the view exercise page
+            return redirect('exercises:view_exercise', exercise_pk)
+    
+    
