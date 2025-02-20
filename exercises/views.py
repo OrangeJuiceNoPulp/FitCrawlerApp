@@ -1,6 +1,8 @@
+import re
 from django.http import Http404
 from django.shortcuts import render, redirect
 from django.db import IntegrityError, connection
+from .models import Exercise
 
 from django.urls import reverse
 from urllib.parse import urlencode
@@ -33,10 +35,12 @@ def create_exercise(request):
             # The user is already at the create exercise page, trying to create an exercise with a POST request
             with connection.cursor() as cursor:
                 #
-                cursor.execute("INSERT INTO exercises_exercise (name, description) VALUES (%s, %s)", [request.POST['exercise_name'],request.POST['description']])
+                cursor.execute("INSERT INTO exercises_exercise (name, description, video_link) VALUES (%s, %s, %s)",
+                               [request.POST['exercise_name'],request.POST['description'], request.POST['video_link']])
     
                 # Redirect the user to the search exercises page, searching for the recently created exercise
-                return redirect(reverse('exercises:search_exercises') + '?' + urlencode({'exercise_name':request.POST['exercise_name']}))
+                return redirect(reverse('exercises:search_exercises') + '?' + urlencode({'exercise_name':request.POST['exercise_name']}))        
+
             
 
 # For getting the search query from the GET request, the following article was referenced
@@ -106,7 +110,12 @@ def search_exercises(request):
         template_args['next'] = page_number + 1
     return render(request, 'exercises/search_exercises.html', template_args)
         
-
+def extract_video_id(video_url):
+    """Extract the YouTube video ID from a URL."""
+    if not video_url:
+        return None
+    match = re.search(r"v=([a-zA-Z0-9_-]+)", video_url)
+    return match.group(1) if match else None
 
 @login_required
 def view_exercise(request, exercise_pk):
@@ -123,11 +132,11 @@ def view_exercise(request, exercise_pk):
                 """,[exercise_pk])
             row = cursor.fetchone()
             
-            # Fetch the videos associated with the exercise
+            # Fetch the video associated with the exercise
             cursor.execute("""
                 SELECT id, video_link
-                FROM exercises_exercisevideo
-                WHERE exercise_id = %s
+                FROM exercises_exercise
+                WHERE id = %s
                 """,[exercise_pk])
             video_rows = cursor.fetchall()
 
@@ -135,25 +144,17 @@ def view_exercise(request, exercise_pk):
             # If no matching exercise, raise 404 or redirect
             raise Http404("Exercise not found.")
 
-        # row is (id, name, description)
+        # Create a list of (video_id, extracted_video_id) tuples to put in 'context'
+        exercise_video = [(row[0], extract_video_id(row[1])) for row in video_rows]
+
+        # row is (id, name, description) these are the templet args
         context = {
             'exercise_id': row[0],
             'exercise_name': row[1],
             'exercise_description': row[2],
-            'exercise_videos': video_rows,
+            'exercise_video': exercise_video,
         }
 
         return render(request, 'exercises/view_exercise.html', context)
-        
-    else:
-        # The user is trying to add an exercise video with a POST request
-        if request.user.user_type != 'FitGuildOfficer':
-            return redirect('exercises:view_exercise', exercise_pk)
-        else:
-            with connection.cursor() as cursor:
-                cursor.execute("INSERT INTO exercises_exercisevideo (video_link, exercise_id) VALUES (%s, %s)", [request.POST['video_link'],exercise_pk])
-    
-            # Refresh the view exercise page
-            return redirect('exercises:view_exercise', exercise_pk)
     
     

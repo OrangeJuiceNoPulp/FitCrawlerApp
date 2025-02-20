@@ -6,26 +6,28 @@
 
   <a href="{% url 'exercises:search_exercises' %}">Return to Search</a>
 
-  <div class="list-div">
-    <ul>
-    {% for video_id, video_url in exercise_videos %}
-        <li>
-            <a href="{{ video_url }}">
-            {{video_url}}
-            </a>
-        </li>
-    {% endfor %}
-    </ul>
+<div class="list-div">
+    {% if exercise_video %}
+      <ul>
+        {% for video_id, video_embed_id in exercise_video %}
+        <iframe width="560" height="315"
+            src="https://www.youtube.com/embed/{{ video_embed_id }}"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+        <!-- DEBUG LINK <br>
+        <a href="https://www.youtube.com/watch?v={{ video_embed_id }}" target="_blank">
+            Watch on YouTube
+        </a> -->
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No video available for this exercise.</p>
+    {% endif %}
 </div>
 
 {% if user.is_authenticated and user.user_type == 'FitGuildOfficer' %}
-
-<form method="POST" class="add-exercise-video-form">
-  {% csrf_token %}
-  <label for="id_video_link">Video Link:</label>
-  <input type="text" name="video_link" id="id_video_link">
-  <button type="submit">Add</button>
-</form>
 
 {% endif %}
 
