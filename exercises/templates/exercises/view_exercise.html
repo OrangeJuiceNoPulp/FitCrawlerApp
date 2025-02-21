@@ -1,34 +1,57 @@
+<!-- Designed by ____ on February ____ -->
+<!-- Modified by Brendon Wolfe on February 21st to handle photos -->
+
 {% extends 'gym/header.html' %}
+{% load static %}
 
 {% block content %}
-  <h1>{{ exercise_name }}</h1>
-  <p>Description: {{ exercise_description }}</p>
 
-  <a href="{% url 'exercises:search_exercises' %}">Return to Search</a>
+  <link rel="stylesheet" type="text/css" href="{% static 'exercises/view_exercises.css' %}">
 
-<div class="list-div">
-    {% if exercise_video %}
-      <ul>
-        {% for video_id, video_embed_id in exercise_video %}
-        <iframe width="560" height="315"
-            src="https://www.youtube.com/embed/{{ video_embed_id }}"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-        </iframe>
-        <!-- DEBUG LINK <br>
-        <a href="https://www.youtube.com/watch?v={{ video_embed_id }}" target="_blank">
-            Watch on YouTube
-        </a> -->
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p>No video available for this exercise.</p>
+  <body>
+    <div class="container">
+      <div class="detail_div">
+        <h1 class="exercise_name">{{ exercise_name }}</h1>
+        <p class="exercise_description">Description: {{ exercise_description }}</p>
+      </div>
+     
+      <div class="video_div">
+          {% if exercise_video %}
+            <ul>
+              {% for video_id, video_embed_id in exercise_video %}
+              <iframe
+                  src="https://www.youtube.com/embed/{{ video_embed_id }}"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen>
+              </iframe>
+              <!-- DEBUG LINK <br>
+              <a href="https://www.youtube.com/watch?v={{ video_embed_id }}" target="_blank">
+                  Watch on YouTube
+              </a> -->
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p>No video available for this exercise.</p>
+          {% endif %}
+      </div>
+    </div>
+    <div class="photos">
+      {% if exercise_photos %}
+      {% for photo_id, photo_url in exercise_photos %}
+      <img src="{{ photo_url }}" alt="{{ photo_id }}">
+      {% endfor %}
+      {% else %}
+      <p>No photos available for this exercise.</p>
+      {% endif %}
+    </div>
+    <div class="button_div">
+      <a href="{% url 'exercises:search_exercises' %}" class="return_button">Return to Search</a>  
+    </div>
+    
+    {% if user.is_authenticated and user.user_type == 'FitGuildOfficer' %}
+    
     {% endif %}
-</div>
-
-{% if user.is_authenticated and user.user_type == 'FitGuildOfficer' %}
-
-{% endif %}
+  </body>
 
 {% endblock %}

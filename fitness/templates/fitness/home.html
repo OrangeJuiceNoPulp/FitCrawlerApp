@@ -24,13 +24,16 @@
     {% if user.is_authenticated and user.user_type == 'FitKnight' and user.gym %}
     <h3>Your Gym Name is: {{ user.gym.name }}</h3>
     {% endif %}
+    <h2><a>Inventory</a></h2>
     
 {% else %}
 <h2> Hello There! </h2>
+<h2> Want to compete? Sign in to complete challenges and earn rewards!</h2>
 
 {% endif %}
 
 <h2><a href="{% url 'exercises:search_exercises' %}">Search Exercises</a></h2>
+<h2><a>View Leaderboard</a></h2>
 
 
 {% endblock %}
