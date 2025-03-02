@@ -1,0 +1,32 @@
+{% extends 'gym/header.html' %}
+
+
+{% block content%}
+
+    <h1>Report Daily Progress</h1>
+
+    <div class='error-message'>
+        <p>{{ error }} </p>
+    </div>
+
+    <form method="POST" class="complete-daily-form">
+        {% csrf_token %}
+
+        <p>
+            <label for="id_minutes_walked">Minutes Walked:</label>
+            <input type="number" name="minutes_walked" value={{ mins_walk }} min={{ mins_walk }} required id="id_minutes_walked">
+        </p>
+
+        <p>
+            <label for="id_water_drank_L">Liters of Water Drank:</label>
+            <input type="number" name="water_drank_L" value={{ water }} min={{ water }} step="0.1" required id="id_water_drank_L">
+        </p>
+        <p>
+            <label for="id_fruit_veggie_servings">Servings of Fruits And Vegetables:</label>
+            <input type="number" name="fruit_veggie_servings" value={{ fruit_veg }} min={{ fruit_veg }} required id="id_fruit_veggie_servings">
+        </p>
+
+        <button type="submit" class="submit-button">Submit</button>
+    </form>
+
+{% endblock %}

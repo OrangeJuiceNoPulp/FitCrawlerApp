@@ -25,6 +25,7 @@
     <h3>Your Gym Name is: {{ user.gym.name }}</h3>
     {% endif %}
     <h2><a>Inventory</a></h2>
+    <h2><a href="{% url 'fitness:view_current_tasks' %}">Today's Fit-Quests</a></h2>
     
 {% else %}
 <h2> Hello There! </h2>

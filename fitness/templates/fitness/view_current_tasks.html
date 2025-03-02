@@ -1,0 +1,34 @@
+{% extends 'gym/header.html' %}
+
+
+{% block content%}
+
+    <div class='error-message'>
+        <p>{{ error }} </p>
+    </div>
+
+    <h1>Daily Quests</h1>
+
+    <p>Walked {{mins_walk}} minutes out of {{walk_goal}} minutes.</p>
+    <p>Drank {{water}} Liters of water out of {{water_goal}} Liters.</p>
+    <p>Consumed {{fruit_veg}} servings of fruits and vegetables out of {{fruit_veg_goal}} servings.</p>
+
+    <p>
+        <a href="{% url 'fitness:complete_daily' %}">
+        Report Daily Quest Progress
+        </a>
+    </p>
+
+    <h1>Today's Fit-Quests<h1>
+
+    <ul>
+    {% for task_id, task_name in task_rows %}
+        <li>
+            <a href="{% url 'fitness:task_details' task_id %}">
+            {{task_name}}
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

@@ -3,6 +3,8 @@ from django.db import models
 from exercises.models import Exercise
 from gym.models import FitCrawlerUser
 
+import datetime
+
 # Create your models here.
 
 class Task(models.Model):
@@ -25,11 +27,24 @@ class Task(models.Model):
     def __str__(self):
         return str(self.user) + ': ' + str(self.exercise)
     
-class Log(models.Model):
+class TaskLog(models.Model):
     # Columns
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     percent_completion = models.FloatField()
-    time_completed = models.DateTimeField()
+    time_completed = models.DateTimeField(default=datetime.datetime.now())
     
     def __str__(self):
         return str(self.task) + ' - ' + str(self.time_completed)
+    
+class DailyLog(models.Model):
+    # Columns
+    user = models.ForeignKey(FitCrawlerUser, on_delete=models.CASCADE)
+    time_completed = models.DateTimeField(default=datetime.datetime.now())
+    
+    minutes_walked = models.IntegerField()
+    water_drank_L = models.FloatField()
+    fruit_veggie_servings = models.IntegerField()
+    
+    def __str__(self):
+        return str(self.user) + ' - ' + str(self.time_completed)
+    
