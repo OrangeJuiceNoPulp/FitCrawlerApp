@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // this is used to display the popup when clicking the profile button
 
     profileButton.addEventListener('click', function (event) {
-        popup.style.display = "block";
+        popup.style.display = "flex";
     });
 
     // these are to close the popup when pressing esc or clicking outside of the popup

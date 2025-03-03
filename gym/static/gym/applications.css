@@ -63,7 +63,7 @@ h1 {
 }
 
 .decline-button:hover {
-    background-color: red;
+    background-color: #cc0000;
 }
 
 .no-applications {
@@ -72,3 +72,4 @@ h1 {
     margin-top: 3rem;
     font-size: 1.2rem;
 }
+

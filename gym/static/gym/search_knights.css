@@ -1,48 +1,21 @@
-/* Designed by Brendon Wolfe on February 16th */
+/* Designed by Brendon Wolfe on March 2nd */
 
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
 
 h1 {
-    color: #ffdd57; 
     text-align: center;
-    font-size: 2rem;
+    color: #ffdd57;
+    margin: 1.25rem 0;
 }
 
-h2 {
-    color: #39FF14; 
+.error-message {
     text-align: center;
-    font-size: 1.5rem;
-}
-
-ul {
-    width: fit-content;
-    background-color: #181818;
-    max-width: 25rem;
-    padding: 1.5rem 4.5rem;
-    box-shadow: 0rem 0rem 1rem rgb(55, 255, 25);
-    border-radius: .625rem;
-}   
-
-li {
-    list-style: none;
-    margin-bottom: .625rem;
-    font-family: 'Rajdhani', sans-serif;
+    color: red;
     font-size: 1.2rem;
-    border-top: pink;
-    border-style: solid;
-    border-width: 0 0 1px 0;
+    margin-bottom: 1.5rem;
 }
 
-ul li a {
-    color: #00d9ff;
-    text-decoration: none;
-}
-
-ul li a:hover{
-    color: #00a6ed;
-}
-
-.search-exercises-form {
+.search-knights-form {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -50,12 +23,12 @@ ul li a:hover{
     margin-bottom: 2rem;
 }
 
-.search-exercises-form label {
+.search-knights-form label {
     font-size: 1.1rem;
     color: white;
 }
 
-.search-exercises-form input {
+.search-knights-form input {
     padding: 0.5rem;
     border-radius: 0.3rem;
     border: 0.06rem solid #39FF14;
@@ -64,7 +37,7 @@ ul li a:hover{
     color: white;
 }
 
-.search-exercises-form button {
+.search-knights-form button {
     padding: 0.6rem 1rem;
     border: none;
     border-radius: 0.25rem;
@@ -77,16 +50,48 @@ ul li a:hover{
     transition: background-color 0.3s ease;
 }
 
-.search-exercises-form button:hover {
+.search-knights-form button:hover {
     background-color: #28a828;
 }
 
-.list-div{
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.list-div {
+    max-width: 35rem;
+    margin: 0 auto;
 }
 
+.list-div ul {
+    list-style: none;
+    padding: 0;
+}
+
+.list-div li {
+    background-color: #232323;
+    border: 0.06rem solid #39FF14;
+    box-shadow: 0rem 0rem 1rem rgb(55, 255, 25);
+    border-radius: 0.3rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: white;
+    text-align: center;
+}
+
+.list-div li a {
+    text-decoration: none;
+    color: #ffdd57;
+    font-weight: bold;
+}
+
+.list-div li a:hover {
+    color: #FFD700;
+}
+
+.noResults {
+    text-align: center;
+    color: red;
+    margin-top: 3rem;
+    font-size: 1.2rem;
+}
 
 .footer{
     position: fixed;
@@ -103,11 +108,3 @@ ul li a:hover{
 .footer a:hover {
     color: #7040a0;
 }
-
-@media screen and (max-width: 600px) {
-    ul {
-        max-width: 100%;
-    }
-}
-
-

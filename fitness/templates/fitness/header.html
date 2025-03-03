@@ -12,24 +12,32 @@
     </head>
     <body> 
         <header class="header">
-            <img src="{% static 'fitness/fitcrawlerLogo.png' %}" alt="FitCrawler Logo" class="logo">
-            <h2><a href="{% url 'fitness:home' %}" class="button">Home</a></h2>
-            <h2><a href="{% url 'exercises:search_exercises' %}" class="button">Search Exercises</a></h2>
-            <h2><a class="button">View Leaderboard</a></h2>
-            {% if user.is_authenticated %}
-            <h2><a class="button js-profile">Profile</a></h2>
-            <div class="popup" id="js-popup">
-                <div class="username"> {{ user.username }} </div>
-                
-                <form action="{% url 'gym:logout' %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="button">Logout</button>
-                </form>
+            <div class="logoDiv">
+               <img src="{% static 'fitness/fitcrawlerLogo.png' %}" alt="FitCrawler Logo" class="logo">
             </div>
-            {% else %}
-            <h2><a href="{% url 'gym:signup' %}" class="button">Sign Up</a></h2>
-            <h2><a href="{% url 'gym:login' %}" class="button">Login</a></h2>
-            {% endif %}
+            <div class="buttonDiv">
+                <h2><a href="{% url 'fitness:home' %}" class="button">Home</a></h2>
+                <h2><a href="{% url 'exercises:search_exercises' %}" class="button">Search Exercises</a></h2>
+                {% if user.is_authenticated and user.user_type == 'FitKnight' %}
+                    <h2><a class="button">Inventory</a></h2>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <h2><a class="button js-profile">Profile</a></h2>
+                <div class="popup" id="js-popup">
+                    <h2 class="username">{{ user.username }}</h2>
+                    <a class="button">Profile</a>
+                    
+                    <form action="{% url 'gym:logout' %}" method="POST">
+                        {% csrf_token %}
+                        <button type="submit" class="button">Logout</button>
+                    </form>
+                </div>
+                {% else %}
+                <h2><a href="{% url 'gym:signup' %}" class="button">Sign Up</a></h2>
+                <h2><a href="{% url 'gym:login' %}" class="button">Login</a></h2>
+                {% endif %}
+            </div>
+            
         </header>
 
         <div class="header-space"></div>

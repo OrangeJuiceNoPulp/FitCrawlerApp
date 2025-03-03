@@ -1,6 +1,8 @@
 {% extends 'fitness/header.html' %}
-
+{% load static %}
 {% block content %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'gym/search_knights.css' %}">
 
 <h1>Knights in Your Gym</h1>
 
@@ -27,15 +29,15 @@
         {% endfor %}
         </ul>
     {% else %}
-    <p>No matching knights found.</p>
+    <p class="noResults">No matching knights found.</p>
     {% endif %}
 </div>
 
-<div>
+<div class="footer">
+    {{ page_number }}
     {% if previous %}
     <a href="{% url 'fitness:search_knights' %}?page={{previous}}&knight_name={{search_query}}">Prev</a>
     {% endif %}
-    {{ page_number }}
     {% if next %}
     <a href="{% url 'fitness:search_knights' %}?page={{next}}&knight_name={{search_query}}">Next</a>
     {% endif %}
