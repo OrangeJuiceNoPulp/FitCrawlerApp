@@ -1,8 +1,9 @@
 from math import ceil
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, connection
+from .models import Task
 
 import datetime
 
@@ -84,11 +85,156 @@ def check_and_create_game_stats(user_id):
                 """,
                 [user_id, 20, 0, 0, beginner_gear[0], beginner_gear[1], beginner_gear[2], beginner_gear[3]]
             )
+
+def assign_task(request):
+    # Ensure the current user is a FitGuildOfficer.
+    if request.user.user_type != 'FitGuildOfficer':
+        return redirect('fitness:home')
+    
+    # The FitGuildOfficer's gym
+    officer_gym_id = request.user.gym_id
+
+    if request.method == 'POST':
+        # Fetch form data from POST
+        knight_id = request.POST.get('knight_id')
+        task_name = request.POST.get('name')
+        sets = request.POST.get('sets', 1)
+        difficulty = request.POST.get('difficulty_score', 'Medium')
+        num_per_set = request.POST.get('num_per_set', 10)
+        days_of_week = request.POST.get('days_of_week', '')
+        end_date = request.POST.get('end_date')  # e.g. "2025-03-09" or empty
+
+        try:
+            sets = int(sets)
+        except ValueError:
+            sets = 1
+
+        try:
+            num_per_set = int(num_per_set)
+        except ValueError:
+            num_per_set = 10
+
+        # Double-check: Does this FitKnight exist and share the same gym?
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT gym_id
+                  FROM gym_fitcrawleruser
+                 WHERE id = %s
+                   AND user_type = 'FitKnight'
+            """, [knight_id])
+            row = cursor.fetchone()
+
+            # If user not found, or not in same gym, it's invalid
+            if not row or row[0] != officer_gym_id:
+                raise Http404("That FitKnight doesn't exist in your gym.")
             
+            # Insert the new task
+            cursor.execute("""
+                INSERT INTO fitness_task
+                  (name, sets, difficulty_score, num_per_set, days_of_week, end_date, user_id)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
+            """, [
+                task_name,
+                sets,
+                difficulty,
+                num_per_set,
+                days_of_week,
+                end_date or None,  # if blank, store NULL
+                knight_id,
+            ])
+
+        return redirect('fitness:home')
+    
+    else:
+        # GET request: Display a form with all FitKnights in *this officer's gym*
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT id, username
+                  FROM gym_fitcrawleruser
+                 WHERE user_type = 'FitKnight'
+                   AND gym_id = %s
+                 ORDER BY username
+            """, [officer_gym_id])
+            knights = cursor.fetchall()
+            # knights -> [(id, 'Knight1'), (id, 'Knight2'), ...]
+
+        return render(request, 'fitness/assign_task.html', {'knights': knights})
+
+@login_required
+def complete_task(request, task_pk):
+    # Ensure the current user is a not FitGuildOfficer.
+    if request.user.user_type == 'FitGuildOfficer':
+        return redirect('fitness:home')
+    
+    if request.method == 'POST':
+        with connection.cursor() as cursor:
+            # Verify the user actually owns this task
+            cursor.execute("""
+                SELECT user_id, difficulty_score
+                FROM fitness_task
+                WHERE id = %s
+            """, [task_pk])
+            row = cursor.fetchone()
+
+            task_owner_id, difficulty = row
+
+            # Decide how many points to give based on the difficulty
+            difficulty_map = {
+                'Noob':    2,
+                'Easy':    3,
+                'Medium':  5,
+                'Hard':    8,
+                'Expert':  10,
+            }
+            points_to_add = difficulty_map.get(difficulty, 0)
+
+            # Insert into the TaskLog with 100% completion
+            cursor.execute("""
+                INSERT INTO fitness_tasklog (task_id, percent_completion, time_completed)
+                VALUES (%s, %s, %s)
+            """, [task_pk, 100, datetime.datetime.now()])
+
+            # Update the user’s action_points in dungeon_gamestats
+            cursor.execute("""
+                UPDATE dungeon_gamestats
+                SET action_points = action_points + %s
+                WHERE user_id = %s
+            """, [points_to_add, request.user.id])
+
+            return redirect('fitness:task_details', task_pk=task_pk)
+
 @login_required
 def task_details(request, task_pk):
-    # Displays the details of a single task.
-    pass    
+    # Ensure the current user is a not FitGuildOfficer.
+    if request.user.user_type == 'FitGuildOfficer':
+        return redirect('fitness:home')
+    else:
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                SELECT id, name, sets, difficulty_score, num_per_set,
+                    days_of_week, end_date
+                FROM fitness_task
+                WHERE id = %s
+                AND user_id = %s
+                """, [task_pk, request.user.id]
+            )
+            row = cursor.fetchone()
+
+            if not row:
+                raise Http404("Task does not exist")
+            
+            # build dict for the HTML template
+            task_dict = {
+                "id": row[0],
+                "name": row[1],
+                "sets": row[2],
+                "difficulty_score": row[3],
+                "num_per_set": row[4],
+                "days_of_week": row[5],
+                "end_date": row[6],
+            }
+
+        return render(request, "fitness/task_details", {"task": task_dict})
 
 # Displays the FitKnight's Fit-Quests (tasks) for the day
 # As well as any progress on daily quests

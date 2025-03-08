@@ -24,7 +24,7 @@
     <ul>
     {% for task_id, task_name in task_rows %}
         <li>
-            <a href="{% url 'fitness:task_details' task_id %}">
+            <a href="{% url 'fitness:task_details' task_pk=task_id %}">
             {{task_name}}
             </a>
         </li>
