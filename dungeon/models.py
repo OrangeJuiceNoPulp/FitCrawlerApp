@@ -6,6 +6,10 @@ import datetime
 
 # Create your models here.
 
+STARTING_MAX_HEALTH = 20
+STARTING_COINS = 0
+STARTING_ACTION_POINTS = 0
+
 class Dungeon(models.Model):
     # Columns
     name = models.CharField(max_length=127)
@@ -81,9 +85,11 @@ class GameStats(models.Model):
     user = models.OneToOneField(FitCrawlerUser, on_delete=models.CASCADE, related_name='game_stats', primary_key=True)
     
     # Game Stats
-    max_health = models.IntegerField()
-    coins = models.BigIntegerField()
-    action_points = models.FloatField(default=0)
+    max_health = models.IntegerField(default=STARTING_MAX_HEALTH)
+    coins = models.BigIntegerField(default=STARTING_COINS)
+    action_points = models.FloatField(default=STARTING_MAX_HEALTH)
+
+    dungeons_completed = models.IntegerField(default=0)
     
     # Game Equipment
     sword = models.ForeignKey(Sword, on_delete=models.SET_NULL, null=True)
@@ -100,22 +106,25 @@ class Milestone(models.Model):
     # Columns
     
     # Milestone Requirements
-    num_noob_task = models.IntegerField()
-    num_easy_task = models.IntegerField()
-    num_medium_task = models.IntegerField()
-    num_hard_task = models.IntegerField()
-    num_expert_task = models.IntegerField()
+    num_noob_task = models.IntegerField(default=0)
+    num_easy_task = models.IntegerField(default=0)
+    num_medium_task = models.IntegerField(default=0)
+    num_hard_task = models.IntegerField(default=0)
+    num_expert_task = models.IntegerField(default=0)
     
-    total_minutes_walked = models.IntegerField()
-    total_water_drank_L = models.FloatField()
-    total_fruit_veggie_servings = models.IntegerField()
+    total_minutes_walked = models.IntegerField(default=0)
+    total_water_drank_L = models.FloatField(default=0)
+    total_fruit_veggie_servings = models.IntegerField(default=0)
+
+    total_dungeons_completed = models.IntegerField(default=0)
     
     # Milestone Rewards
-    reward_action_points = models.IntegerField()
-    reward_sword = models.ForeignKey(Sword, on_delete=models.SET_NULL, null=True)
-    reward_boots = models.ForeignKey(Boots, on_delete=models.SET_NULL, null=True)
-    reward_staff = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True)
-    reward_armor = models.ForeignKey(Armor, on_delete=models.SET_NULL, null=True)
+    reward_action_points = models.IntegerField(default=0)
+    reward_sword = models.ForeignKey(Sword, on_delete=models.SET_NULL, null=True, blank=True)
+    reward_boots = models.ForeignKey(Boots, on_delete=models.SET_NULL, null=True, blank=True)
+    reward_staff = models.ForeignKey(Staff, on_delete=models.SET_NULL, null=True, blank=True)
+    reward_armor = models.ForeignKey(Armor, on_delete=models.SET_NULL, null=True, blank=True)
+    reward_max_health = models.IntegerField(default=0)
     
     
 class MilestoneLog(models.Model):

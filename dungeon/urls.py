@@ -3,5 +3,6 @@ from . import views
 
 app_name = 'dungeon'
 urlpatterns = [
-    # Paths here
+    path('milestones/', views.view_milestones, name='view_milestones'),
+    path('milestone/<int:milestone_pk>/', views.complete_milestone, name='complete_milestone'),
 ]

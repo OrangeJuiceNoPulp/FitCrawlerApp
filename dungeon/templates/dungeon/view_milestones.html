@@ -1,0 +1,128 @@
+{% extends 'fitness/header.html' %}
+
+
+{% block content %}
+
+    <div class='error-message'>
+        <p>{{ error }} </p>
+    </div>
+
+    
+
+    <h1>Total Progress</h1>
+
+    <p>{{noob_tasks}} noob</p>
+    <p>{{easy_tasks}} easy</p>
+    <p>{{medium_tasks}} medium</p>
+    <p>{{hard_tasks}} hard</p>
+    <p>{{expert_tasks}} expert</p>
+
+    <p>{{total_walk}} minutes walked</p>
+    <p>{{total_water}} L water drank</p>
+    <p>{{total_fruit_veg}} servings of fruit and vegetables consumed</p>
+
+    <h1>Milestones</h1>
+
+    
+    <ul>
+    {% for milestone_id, noob, easy, medium, hard, expert, walk, water, fruit_veg, dungeons in milestone_info %}
+
+        <!-- Display complete (but unclaimed) milestones at the top -->
+        {% if noob_tasks >= noob and easy_tasks >= easy and medium_tasks >= medium and hard_tasks >= hard and expert_tasks >= expert and total_walk >= walk and total_water >= water and total_fruit_veg >= fruit_veg and total_dungeons >= dungeons %}
+            <li>
+                Milestone {{milestone_id}}:
+                {% if noob != 0 %}
+                    {{noob_tasks}} of {{noob}} Noob Fit-Quests...
+                {% endif %}
+
+                {% if easy != 0 %}
+                    {{easy_tasks}} of {{easy}} Easy Fit-Quests...
+                {% endif %}
+
+                {% if medium != 0 %}
+                    {{medium_tasks}} of {{medium}} Medium Fit-Quests...
+                {% endif %}
+
+                {% if hard != 0 %}
+                    {{hard_tasks}} of {{hard}} Hard Fit-Quests...
+                {% endif %}
+
+                {% if expert != 0 %}
+                    {{expert_tasks}} of {{expert}} Expert Fit-Quests...
+                {% endif %}
+
+                {% if walk != 0 %}
+                    {{total_walk}} of {{walk}} Minutes Walked...
+                {% endif %}
+
+                {% if water != 0 %}
+                    {{total_water}} of {{water}} L of Water Drank...
+                {% endif %}
+
+                {% if fruit_veg != 0 %}
+                    {{total_fruit_veg}} of {{fruit_veg}} Servings of Fruits and Vegetables Consumed...
+                {% endif %}
+
+                {% if dungeons != 0 %}
+                    {{total_dungeons}} of {{dungeons}} Dungeons Explored...
+                {% endif %}
+
+                <a href="{% url 'dungeon:complete_milestone' milestone_id %}">
+                    Claim Reward
+                </a>
+
+            </li>    
+        {% endif %}
+    {% endfor %}
+
+    {% for milestone_id, noob, easy, medium, hard, expert, walk, water, fruit_veg, dungeons in milestone_info %}
+
+        <!-- Display incomplete milestones at the bottom -->
+    {% if noob_tasks < noob or easy_tasks < easy or medium_tasks < medium or hard_tasks < hard or expert_tasks < expert or total_walk < walk or total_water < water or total_fruit_veg < fruit_veg or total_dungeons < dungeons %}
+        <li>
+            Milestone {{milestone_id}}:
+            {% if noob != 0 %}
+                {{noob_tasks}} of {{noob}} Noob Fit-Quests...
+            {% endif %}
+
+            {% if easy != 0 %}
+                {{easy_tasks}} of {{easy}} Easy Fit-Quests...
+            {% endif %}
+
+            {% if medium != 0 %}
+                {{medium_tasks}} of {{medium}} Medium Fit-Quests...
+            {% endif %}
+
+            {% if hard != 0 %}
+                {{hard_tasks}} of {{hard}} Hard Fit-Quests...
+            {% endif %}
+
+            {% if expert != 0 %}
+                {{expert_tasks}} of {{expert}} Expert Fit-Quests...
+            {% endif %}
+
+            {% if walk != 0 %}
+                {{total_walk}} of {{walk}} Minutes Walked...
+            {% endif %}
+
+            {% if water != 0 %}
+                {{total_water}} of {{water}} L of Water Drank...
+            {% endif %}
+
+            {% if fruit_veg != 0 %}
+                {{total_fruit_veg}} of {{fruit_veg}} Servings of Fruits and Vegetables Consumed...
+            {% endif %}
+
+            {% if dungeons != 0 %}
+                {{total_dungeons}} of {{dungeons}} Dungeons Explored...
+            {% endif %}
+
+        </li>    
+
+
+
+    {% endif %}
+{% endfor %}
+    </ul>
+
+{% endblock %}

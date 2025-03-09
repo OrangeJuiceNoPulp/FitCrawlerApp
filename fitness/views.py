@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError, connection
 from .models import Task
 
+from dungeon.models import STARTING_ACTION_POINTS, STARTING_COINS, STARTING_MAX_HEALTH
+
 import datetime
 
 # Create your views here.
@@ -16,6 +18,9 @@ DAILY_WATER = 1.5
 DAILY_FRUIT_VEG = 3
 DAILY_WALK = 30
 
+# Amount of Fit-Quest (task) progress necessary in order to earn the task reward.
+TASK_COMPLETION_REQUIREMENT = 0.75
+
 # Amount of action points to reward each daily quest
 DAILY_REWARD = 5
 
@@ -25,7 +30,9 @@ def redirect_home(request):
 def home(request):
     return render(request, 'fitness/home.html')
 
-# Helper function for getting the default gear ids
+# Helper function for getting the default gear ids.
+# Used by check_and_create_game_stats().
+# Jason 3/1/25
 def get_beginner_gear_ids():
     with connection.cursor() as cursor:
         # Fetch the user's game stats
@@ -80,10 +87,10 @@ def check_and_create_game_stats(user_id):
             beginner_gear = get_beginner_gear_ids()
             cursor.execute("""
                 INSERT INTO dungeon_gamestats 
-                (user_id, max_health, coins, action_points, sword_id, boots_id, staff_id, armor_id) 
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                (user_id, max_health, coins, action_points, dungeons_completed, sword_id, boots_id, staff_id, armor_id) 
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """,
-                [user_id, 20, 0, 0, beginner_gear[0], beginner_gear[1], beginner_gear[2], beginner_gear[3]]
+                [user_id, STARTING_MAX_HEALTH, STARTING_COINS, STARTING_ACTION_POINTS, 0, beginner_gear[0], beginner_gear[1], beginner_gear[2], beginner_gear[3]]
             )
 
 def assign_task(request):
