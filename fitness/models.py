@@ -20,6 +20,7 @@ class Task(models.Model):
     num_per_set = models.IntegerField()
     days_of_week = models.CharField(max_length=15)
     end_date = models.DateTimeField(null=True)
+    is_completed = models.BooleanField(default=False)
     
     user = models.ForeignKey(FitCrawlerUser, on_delete=models.CASCADE)
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)
@@ -29,7 +30,7 @@ class Task(models.Model):
     
 class TaskLog(models.Model):
     # Columns
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, null=True, on_delete=models.CASCADE)
     percent_completion = models.FloatField()
     time_completed = models.DateTimeField(default=datetime.datetime.now())
     

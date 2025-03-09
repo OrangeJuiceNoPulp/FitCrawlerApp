@@ -1,0 +1,66 @@
+{% extends 'fitness/header.html' %}
+
+{% block content%}
+
+    <h1>Assign Task to a FitKnight</h1>
+    <form method="POST">
+    {% csrf_token %}
+
+    <!-- Select which FitKnight -->
+    <label for="knight_id">FitKnight:</label>
+    <select name="knight_id" id="knight_id" required>
+        {% for k_id, k_username in knights %}
+        <option value="{{ k_id }}">{{ k_username }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
+
+    <!-- Pick an Exercise -->
+    <label for="exercise_id">Exercise:</label>
+    <select name="exercise_id" id="exercise_id" required>
+        {% for ex_id, ex_name in exercises %}
+        <option value="{{ ex_id }}">{{ ex_name }}</option>
+        {% endfor %}
+    </select>
+    <br><br>
+
+    <!-- Task Name -->
+    <label for="name">Task Name:</label>
+    <input type="text" name="name" id="name" required>
+    <br><br>
+
+    <!-- Number of Sets -->
+    <label for="sets">Number of Sets:</label>
+    <input type="number" name="sets" id="sets" value="1">
+    <br><br>
+
+    <!-- Difficulty Score -->
+    <label for="difficulty_score">Difficulty:</label>
+    <select name="difficulty_score" id="difficulty_score">
+        <option value="Noob">Noob</option>
+        <option value="Easy">Easy</option>
+        <option value="Medium" selected>Medium</option>
+        <option value="Hard">Hard</option>
+        <option value="Expert">Expert</option>
+    </select>
+    <br><br>
+
+    <!-- Reps per Set -->
+    <label for="num_per_set">Reps per Set:</label>
+    <input type="number" name="num_per_set" id="num_per_set" value="10">
+    <br><br>
+
+    <!-- Days of Week 
+    <label for="days_of_week">Days of Week (e.g. '135' for M/W/F):</label>
+    <input type="text" name="days_of_week" id="days_of_week">
+    <br><br>  -->
+
+    <!-- End Date -->
+    <label for="end_date">End Date:</label>
+    <input type="date" name="end_date" id="end_date">
+    <br><br>
+
+    <button type="submit">Assign Task</button>
+    </form>
+
+{% endblock %}

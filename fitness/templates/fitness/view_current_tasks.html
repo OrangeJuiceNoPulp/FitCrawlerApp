@@ -21,14 +21,19 @@
 
     <h1>Today's Fit-Quests<h1>
 
-    <ul>
-    {% for task_id, task_name in task_rows %}
-        <li>
-            <a href="{% url 'fitness:task_details' task_pk=task_id %}">
-            {{task_name}}
-            </a>
-        </li>
-    {% endfor %}
-    </ul>
+    {% if task_rows %}
+        <ul>
+        {% for task_id, task_name in task_rows %}
+            <li>
+                <a href="{% url 'fitness:task_details' task_pk=task_id %}">
+                {{task_name}}
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <h3>No assigned tasks</h3>
+    {% endif %}
+
 
 {% endblock %}

@@ -5,14 +5,20 @@
     <h1>Task: {{ task.name }}</h1>
 
     <p>Sets: {{ task.sets }}</p>
-    <p>Difficulty: {{ task.difficulty_score }}</p>
     <p>Number per Set: {{ task.num_per_set }}</p>
-    <p>Days of Week: {{ task.days_of_week }}</p>
+    <p>Difficulty: {{ task.difficulty_score }}</p>
+    <!-- <p>Days of Week: {{ task.days_of_week }}</p> -->
     <p>End Date: {{ task.end_date }}</p>
 
     <form action="{% url 'fitness:complete_task' task_pk=task.id %}" method="POST">
         {% csrf_token %}
         <button type="submit">Done</button>
     </form>
+
+    <p>
+        <a href="{% url 'fitness:view_current_tasks' %}">
+        Return to Tasks
+        </a>
+    </p>
 
 {% endblock %}
