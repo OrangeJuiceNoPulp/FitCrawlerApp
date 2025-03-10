@@ -1,5 +1,38 @@
+<!-- Designed by Brendon Wolfe on March 6th -->
+
 {% extends 'fitness/header.html' %}
 {% load static %}
 {% block content%}
+<link rel="stylesheet" type="text/css" href="{% static 'fitness/profile.css' %}">
+
+<body>
+    <div class="left">
+        <img href class="profilePic">
+        <p class="badgeTitle">Badges</p>
+        <div class="badgeContainer">
+            <img href class="badges">
+            <img href class="badges">
+            <img href class="badges">
+        </div>
+    </div>
+    <div class="right">
+        <div class="row">
+            <p class="text">{{user.username}}</p>
+            <p class="text">{{user.email}}</p>
+            <a class="button">Change Password</a>
+        </div>
+        <div class="row">
+            {% if officer %}
+                <p class="text">{{ officer.username }}</p>
+                <p class="text">{{ officer.email }}</p>
+                <p class="text">{{ user.gym.name }}</p>
+            {% else %}
+                <p class="text">No officer found.</p>
+                <p class="text">N/A</p>
+                <p class="text">No gym found</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
 
 {% endblock %}

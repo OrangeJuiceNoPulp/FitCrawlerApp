@@ -1,30 +1,32 @@
 {% extends 'fitness/header.html' %}
-
+{% load static %}
 {% block content %}
 
-<h1>Login</h1>
+<link rel="stylesheet" type="text/css" href="{% static 'gym/login.css' %}">
 
-<div class='error-message'>
-    <p>{{ error}} </p>
-</div>
+<body>
+    <h1 class="loginText">Login</h1>
 
-<form method="POST" class="login-form">
-    {% csrf_token %}
-    <p>
-    <label for="id_username">Username:</label>
-    <input type="text" name="username" maxlength="63" required id="id_username">
-    </p>
+    <div class='error-message'>
+        <p>{{ error}} </p>
+    </div>
 
-    <p>
-    <label for="id_password">Password:</label>
-    <input type="password" name="password" maxlength="63" required id="id_password">
-    </p>
+    <form method="POST" class="login-form">
+        {% csrf_token %}
+        <p>
+        <label for="id_username">Username:</label>
+        <input type="text" name="username" maxlength="63" required id="id_username">
+        </p>
 
-    <button type="submit">Login</button>
-</form>
+        <p>
+        <label for="id_password">Password:</label>
+        <input type="password" name="password" maxlength="63" required id="id_password">
+        </p>
 
-<h2><a href="{% url 'gym:signup' %}">Sign Up</a></h2>
-
-
+        <button type="submit">Login</button>
+    </form>
+    <p>Already have an account?</p>
+    <h2><a href="{% url 'gym:signup' %}">Sign Up</a></h2>
+</body>
 
 {% endblock %}

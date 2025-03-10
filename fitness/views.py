@@ -6,6 +6,7 @@ from django.db import IntegrityError, connection
 from .models import Task
 
 from dungeon.models import STARTING_ACTION_POINTS, STARTING_COINS, STARTING_MAX_HEALTH
+from .models import FitCrawlerUser
 
 import datetime
 
@@ -496,3 +497,14 @@ def search_knights(request):
         template_args['next'] = page_number + 1
 
     return render(request, 'fitness/search_knights.html', template_args)
+
+#
+# This is used to find a user's gym officer
+@login_required
+def profile(request):
+    user = request.user
+    officer = None
+    if user.user_type == 'FitKnight':
+        officer = FitCrawlerUser.objects.filter(gym_id=user.gym_id, user_type='FitGuildOfficer').first()
+
+    return render(request, 'fitness/profile.html', {'officer': officer})

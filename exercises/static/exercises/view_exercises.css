@@ -1,66 +1,116 @@
-/* Designed by Brendon Wolfe on February 21st */
+/* Improved by Brendon Wolfe on February 21st */
 
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
 
 body {
-    background-color: #282828; 
-    color: white; 
-    font-family: "Rajdhani", sans-serif;
-}
-
-.exercise_name {
-    font-size: 1.75rem;
-    color: #ffdd57;
-    margin-bottom: .01rem;
-}
-
-.exercise_description {
-    font-size: medium;
-}
-
-.return_button {
-    font-size: medium;
-    background-color: #181818;
-    padding: .1rem .5rem;
-    border-radius: .5rem;
+    background-color: #282828;
     color: white;
-    position: fixed;
-    bottom: 1rem;
+    font-family: "Rajdhani", sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
 }
 
 .container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    justify-content: space-between;
-    padding: 1rem;
+    justify-content: center;
+    width: 80%;
+    max-width: 900px;
+    padding: 1.5rem;
+    background-color: #1c1c1c;
+    border-radius: 0.75rem;
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
 }
 
 .detail_div {
+    width: 90%;
+    background-color: #181818;
+    padding: 1rem;
+    padding-top: .5rem;
+    border: 2px solid #39FF14;
+    border-radius: 0.5rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.exercise_name {
+    font-size: 2rem;
+    color: #ffdd57;
+    text-shadow: 2px 2px 10px rgba(255, 221, 87, 0.8);
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+.exercise_description {
+    font-size: 1.2rem;
+    color: #f5f5f5;
+}
+
+.video_div {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    width: 40%;
-    background-color: #181818;
-    padding: 0rem 0.5rem;
-    border-width: .1rem;
-    border-style: solid;
-    box-shadow: 0 0rem .5rem rgb(55, 255, 25);
-    border-color: #39FF14;
-    border-radius: .5rem;
+    margin-top: 1rem;
 }
 
-.list_div {
+.video_div ul {
     display: flex;
-    width: 60%;
+    align-items: center;
+    justify-content: center;
+    list-style: none;
+    padding: 0;
+    width: 100%;
 }
 
 .video_div ul iframe {
-    width: 100%;
-    height: 100%;
-    border-width: .1rem;
-    border-style: solid;
-    border-color: #39FF14;
-    border-radius: .5rem;
+    width: 80%;
+    height: 40vh;
+    border: 2px solid #39FF14;
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 8px rgba(57, 255, 20, 0.5);
+}
+
+.button_div {
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.return_button {
+    font-size: 1.2rem;
+    background-color: #39FF14;
+    padding: 0.6rem 1.2rem;
+    margin-bottom: 1rem;
+    border-radius: 0.5rem;
+    color: #121212;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.return_button:hover {
+    background-color: #2ECC71;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .container {
+        width: 90%;
+        padding: 1rem;
+    }
+    .exercise_name {
+        font-size: 1.75rem;
+    }
+    .exercise_description {
+        font-size: 1rem;
+    }
+    .video_div ul iframe {
+        height: 40vh;
+    }
 }

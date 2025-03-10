@@ -4,33 +4,35 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'gym/search_knights.css' %}">
 
-<h1>Knights in Your Gym</h1>
+<div class="container">
+    <h1>Knights in Your Gym</h1>
 
-<div class='error-message'>
-    <p>{{ error }} </p>
-</div>
+    <div class='error-message'>
+        <p>{{ error }} </p>
+    </div>
 
 
-<form method="GET" class="search-knights-form">
-    <label for="id_knight_name">Knight Name:</label>
-    <input type="text" name="knight_name" value="{{ search_query }}" maxlength="255" id="id_knight_name">
-    <button type="submit">Search</button>
-</form>
+    <form method="GET" class="search-knights-form">
+        <label for="id_knight_name">Knight Name:</label>
+        <input type="text" name="knight_name" value="{{ search_query }}" maxlength="255" id="id_knight_name">
+        <button type="submit">Search</button>
+    </form>
 
-<div class="list-div">
-    {% if knights %}
-        <ul>
-        {% for knight_id, knight_username, knight_email in knights %}
-            <li>
-                <a>
-                {{ knight_username }} ({{ knight_email }})
-                </a>
-            </li>
-        {% endfor %}
-        </ul>
-    {% else %}
-    <p class="noResults">No matching knights found.</p>
-    {% endif %}
+    <div class="list-div">
+        {% if knights %}
+            <ul>
+            {% for knight_id, knight_username, knight_email in knights %}
+                <li>
+                    <a>
+                    {{ knight_username }} ({{ knight_email }})
+                    </a>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+        <p class="noResults">No matching knights found.</p>
+        {% endif %}
+    </div>
 </div>
 
 <div class="footer">

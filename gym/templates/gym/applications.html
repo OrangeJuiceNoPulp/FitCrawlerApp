@@ -7,35 +7,39 @@
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'gym/applications.css' %}">
 
-<h1>Gym Applications</h1>
+<div class="container">
+    <h1>Gym Applications</h1>
 
-{% if applications %}
-    <ul class="applications-list">
-    {% for app in applications %}
-        <li class="application-item">
-            <span class="applicant-name">
-                {{ app.applicant.username }}
-            </span>
-            <div class="decision-buttons">
-                <form method="POST" action="{% url 'gym:process_application' %}" style="display:inline;">
-                    {% csrf_token %}
-                    <input type="hidden" name="application_id" value="{{ app.id }}">
-                    
-                    <!-- Accept button -->
-                    <button class="accept-button" type="submit" name="action" value="accept">
-                        Accept
-                    </button>
-                    
-                    <!-- Deny button -->
-                    <button class="decline-button" type="submit" name="action" value="deny">
-                        Decline
-                    </button>
-                </form>
-            </div>
-        </li>
-    {% endfor %}
-    </ul>
-{% else %}
-    <p class="no-applications">No applications found.</p>
-{% endif %}
+    {% if applications %}
+        <ul class="applications-list">
+        {% for app in applications %}
+            <li class="application-item">
+                <span class="applicant-name">
+                    {{ app.applicant.username }}
+                </span>
+                <div class="decision-buttons">
+                    <form method="POST" action="{% url 'gym:process_application' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <input type="hidden" name="application_id" value="{{ app.id }}">
+                        
+                        <!-- Accept button -->
+                        <button class="accept-button" type="submit" name="action" value="accept">
+                            Accept
+                        </button>
+                        
+                        <!-- Deny button -->
+                        <button class="decline-button" type="submit" name="action" value="deny">
+                            Decline
+                        </button>
+                    </form>
+                </div>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-applications">No applications found.</p>
+    {% endif %}
+</div>
+
+
 {% endblock %}

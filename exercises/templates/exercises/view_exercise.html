@@ -36,15 +36,6 @@
           {% endif %}
       </div>
     </div>
-    <div class="photos">
-      {% if exercise_photos %}
-      {% for photo_id, photo_url in exercise_photos %}
-      <img src="{{ photo_url }}" alt="{{ photo_id }}">
-      {% endfor %}
-      {% else %}
-      <p>No photos available for this exercise.</p>
-      {% endif %}
-    </div>
     <div class="button_div">
       <a href="{% url 'exercises:search_exercises' %}" class="return_button">Return to Search</a>  
     </div>
