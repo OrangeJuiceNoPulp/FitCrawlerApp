@@ -1,4 +1,5 @@
 /* Designed by Brendon Wolfe on February 16th */
+/* Responsive design developed by Eli Sepulveda on March 8th */
 
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
 
@@ -25,7 +26,6 @@ ul {
 }   
 
 li {
-    list-style: none;
     margin-bottom: .625rem;
     font-family: 'Rajdhani', sans-serif;
     font-size: 1.2rem;
@@ -119,10 +119,67 @@ ul li a:hover{
     padding-bottom: 1rem;
 }
 
-@media screen and (max-width: 600px) {
-    ul {
-        max-width: 100%;
-    }
+.logoDivSearch{
+    display: none;
 }
 
+@media screen and (max-width: 600px) {
+    h1 {
+        font-size: 1.5rem;
+    }
 
+    h2 {
+        font-size: 1.2rem;
+    }
+
+    .container {
+        margin-left: 15%;
+        width: 70%;
+        padding: 1rem;
+        border-radius: 20px;
+    }
+
+    ul {
+        width: 100%;
+        max-width: none;
+    }
+
+    .search-exercises-form {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .search-exercises-form input {
+        width: 80%;
+    }
+
+    .search-exercises-form button {
+        width: 80%;
+    }
+
+    .footer {
+        position: fixed;
+        bottom: 12%;
+        right: 0;
+        width: 10%;
+        text-align: center;
+        background-color: #181818;
+        padding: 0.5rem;
+        border: 1px solid #39FF14;
+    }
+
+    .logoDivSearch{
+        position: fixed;
+        top: 1%;
+        left: 0;
+        width: 12%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 12vh;
+        background-color: #181818;
+        border-radius: 15px;
+        padding: 1vh 1vh;
+        margin-left: .5vh;
+    }
+}

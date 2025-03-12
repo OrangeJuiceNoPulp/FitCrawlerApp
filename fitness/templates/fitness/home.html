@@ -1,19 +1,30 @@
+
+
 {% extends 'fitness/header.html' %}
 {% load static %}
 {% block content%}
 
 <body>
     <link rel="stylesheet" type="text/css" href="{% static 'fitness/home.css' %}">
-    
+
     <div class="container">
         <div class="sidebar">
             {% if user.gym is None and user.is_authenticated and user.user_type == 'FitKnight' %}
+                <div class="logoDivHome">
+                    <img src="{% static 'fitness/fitcrawlerLogo.png' %}" alt="FitCrawler Logo" class="logo">
+                </div>
                 <h3 class="greeting">Hello FitKnight!</h3>
                 <h2><a href="{% url 'gym:join_gym' %}">Join a gym to get started!</a></h2>
             {% elif user.gym is None and user.is_authenticated and user.user_type == 'FitGuildOfficer' %}
+                <div class="logoDivHome">
+                    <img src="{% static 'fitness/fitcrawlerLogo.png' %}" alt="FitCrawler Logo" class="logo">
+                </div>
                 <h3 class="greeting">Hello FitGuildOfficer!</h3>
                 <h2><a href="{% url 'gym:create_gym' %}">Create a gym!</a></h2>
             {% elif user.is_authenticated and user.user_type == 'FitGuildOfficer' and user.gym %}
+                <div class="logoDivHome">
+                    <img src="{% static 'fitness/fitcrawlerLogo.png' %}" alt="FitCrawler Logo" class="logo">
+                </div>
                 <h3 class="greeting">Hello FitGuildOfficer!</h3>
                 <h3 class="gymName">Your Gym Name is: {{ user.gym.name }}</h3>
                 <h3 class="gymCode">Your Gym Code is: {{ user.gym.join_code }}</h3>
@@ -21,12 +32,18 @@
                 <h2><a href="{% url 'gym:search_knights' %}" class="button">Search Knights</a></h2>
                 <h2><a href="{% url 'fitness:assign_task' %}" class="button">Assign Tasks</a></h2>
             {% elif user.is_authenticated and user.user_type == 'FitKnight' %}
+                <div class="logoDivHome">
+                    <img src="{% static 'fitness/fitcrawlerLogo.png' %}" alt="FitCrawler Logo" class="logo">
+                </div>
                 <h3 class="greeting">Hello FitKnight!</h3>
                 {% if user.is_authenticated and user.user_type == 'FitKnight' and user.gym %}
                     <h3 class="gymName">Your Gym Name is: {{ user.gym.name }}</h3>
                 {% endif %}
                 <h2><a href="{% url 'fitness:view_current_tasks' %}">Fit-Quests</a></h2>
             {% else %}
+                <div class="logoDivHome">
+                    <img src="{% static 'fitness/fitcrawlerLogo.png' %}" alt="FitCrawler Logo" class="logo">
+                </div>
                 <h2> Hello There! </h2>
                 <h2> Want to compete? Sign in to complete challenges and earn rewards!</h2>
             {% endif %}

@@ -1,5 +1,5 @@
 /* Designed by Brendon Wolfe on February 10th */
-/* Modified by Brendon Wolfe for responsive design on February 16th */
+/* Modified by Brendon Wolfe on February 16th */
 
 
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
@@ -57,7 +57,7 @@ h1 {
 
 .decline-button {
     background-color: red;
-    color: #F5F5F5;
+    color: white;
 }
 
 .accept-button:hover {

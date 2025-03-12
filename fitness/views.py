@@ -498,7 +498,7 @@ def search_knights(request):
 
     return render(request, 'fitness/search_knights.html', template_args)
 
-#
+# Added by Eli Sepulveda on March 6th
 # This is used to find a user's gym officer
 @login_required
 def profile(request):

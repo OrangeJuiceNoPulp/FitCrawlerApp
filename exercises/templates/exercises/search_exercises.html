@@ -1,4 +1,4 @@
-<!-- Designed by ____ on February __ -->
+<!-- Designed by Jason Kauppila on February 15th -->
 <!-- Modified by Brendon Wolfe for CSS compatibility on February 16th -->
 
 {% extends 'fitness/header.html' %}
@@ -36,6 +36,10 @@
     {% if user.is_authenticated and user.user_type == 'FitGuildOfficer' %}
     <h2><a href="{% url 'exercises:create_exercise' %}">Add an exercise!</a></h2>
     {% endif %}
+</div>
+
+<div class="logoDivSearch">
+    <img src="{% static 'fitness/fitcrawlerLogo.png' %}" alt="FitCrawler Logo" class="logo">
 </div>
 
 

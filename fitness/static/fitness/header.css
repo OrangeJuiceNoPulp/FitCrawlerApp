@@ -1,5 +1,6 @@
 /* Designed by Brendon Wolfe on February 17th */
 /* Updated by Brendon Wolfe on March 2nd */
+/* Responsive design developed by Eli Sepulveda on March 8th */
 
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
 
@@ -90,7 +91,7 @@ body {
     top: 13%;
     left: 85%;
     width: 5rem;
-    height: 18%;
+    height: 25%;
     background: #181818;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
     padding: 1rem;
@@ -149,4 +150,60 @@ body {
     color:aqua;
 }
 
+@media screen and (max-width: 600px) {
+    .header {
+        position: fixed;
+        bottom: 0;
+        top: 87%;
+        width: 100%;
+        height: 10vh;
+        border-top: 1px solid #39FF14;
+        border-bottom: none;
+        background-color: #181818;
+        z-index: 1000;
+        justify-content: space-evenly;
+        padding: 0.5rem;
+    }
 
+    .header h2 {
+        font-size: 0.9rem;
+    }
+
+    .logoDiv {
+        display: none;
+    }
+
+    .buttonDiv {
+        width: 95%;
+        height: 100%;
+        justify-content: space-evenly;
+    }
+
+    .button {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.9rem;
+        border-radius: 4px;
+    }
+
+    .profileButton {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.9rem;
+        border-radius: 4px;
+    }
+
+    .header-space {
+        display: none;
+    }
+
+    .popup {
+        left: 68%;
+        top: 47%;
+        width: 20%;
+        height: 30%;
+    }
+
+    .popup .button {
+        width: 100%;
+        font-size: 1rem;
+    }
+}
