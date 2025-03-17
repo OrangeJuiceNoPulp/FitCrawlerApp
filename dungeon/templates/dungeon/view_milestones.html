@@ -11,112 +11,177 @@
 
     <h1>Total Progress</h1>
 
-    <p>{{noob_tasks}} noob</p>
-    <p>{{easy_tasks}} easy</p>
-    <p>{{medium_tasks}} medium</p>
-    <p>{{hard_tasks}} hard</p>
-    <p>{{expert_tasks}} expert</p>
+    <p>{{noob_tasks}} Noob Quests</p>
+    <p>{{easy_tasks}} Easy Quests</p>
+    <p>{{medium_tasks}} Medium Quests</p>
+    <p>{{hard_tasks}} Hard Quests</p>
+    <p>{{expert_tasks}} Expert Quests</p>
 
-    <p>{{total_walk}} minutes walked</p>
-    <p>{{total_water}} L water drank</p>
-    <p>{{total_fruit_veg}} servings of fruit and vegetables consumed</p>
+    <p>{{total_walk}} Minutes Walked</p>
+    <p>{{total_water}} L Water Drank</p>
+    <p>{{total_fruit_veg}} Servings of Fruit and Vegetables Consumed</p>
+    <p>{{total_dungeons}} Dungeons Explored</p>
 
     <h1>Milestones</h1>
 
     
     <ul>
-    {% for milestone_id, noob, easy, medium, hard, expert, walk, water, fruit_veg, dungeons in milestone_info %}
+        {% for milestone_id, noob, easy, medium, hard, expert, walk, water, fruit_veg, dungeons, action_points, max_health, sword_name, sword_rank, boots_name, boots_rank, staff_name, staff_rank, armor_name, armor_rank in milestone_info %}
 
         <!-- Display complete (but unclaimed) milestones at the top -->
         {% if noob_tasks >= noob and easy_tasks >= easy and medium_tasks >= medium and hard_tasks >= hard and expert_tasks >= expert and total_walk >= walk and total_water >= water and total_fruit_veg >= fruit_veg and total_dungeons >= dungeons %}
             <li>
-                Milestone {{milestone_id}}:
-                {% if noob != 0 %}
-                    {{noob_tasks}} of {{noob}} Noob Fit-Quests...
-                {% endif %}
-
-                {% if easy != 0 %}
-                    {{easy_tasks}} of {{easy}} Easy Fit-Quests...
-                {% endif %}
-
-                {% if medium != 0 %}
-                    {{medium_tasks}} of {{medium}} Medium Fit-Quests...
-                {% endif %}
-
-                {% if hard != 0 %}
-                    {{hard_tasks}} of {{hard}} Hard Fit-Quests...
-                {% endif %}
-
-                {% if expert != 0 %}
-                    {{expert_tasks}} of {{expert}} Expert Fit-Quests...
-                {% endif %}
-
-                {% if walk != 0 %}
-                    {{total_walk}} of {{walk}} Minutes Walked...
-                {% endif %}
-
-                {% if water != 0 %}
-                    {{total_water}} of {{water}} L of Water Drank...
-                {% endif %}
-
-                {% if fruit_veg != 0 %}
-                    {{total_fruit_veg}} of {{fruit_veg}} Servings of Fruits and Vegetables Consumed...
-                {% endif %}
-
-                {% if dungeons != 0 %}
-                    {{total_dungeons}} of {{dungeons}} Dungeons Explored...
-                {% endif %}
-
-                <a href="{% url 'dungeon:complete_milestone' milestone_id %}">
-                    Claim Reward
-                </a>
-
+                <div>
+                    <h2>Milestone {{milestone_id}}:</h2>
+                    <p>
+                        {% if noob != 0 %}
+                            {{noob_tasks}} of {{noob}} Noob Fit-Quests.
+                        {% endif %}
+        
+                        {% if easy != 0 %}
+                            {{easy_tasks}} of {{easy}} Easy Fit-Quests.
+                        {% endif %}
+        
+                        {% if medium != 0 %}
+                            {{medium_tasks}} of {{medium}} Medium Fit-Quests.
+                        {% endif %}
+        
+                        {% if hard != 0 %}
+                            {{hard_tasks}} of {{hard}} Hard Fit-Quests.
+                        {% endif %}
+        
+                        {% if expert != 0 %}
+                            {{expert_tasks}} of {{expert}} Expert Fit-Quests.
+                        {% endif %}
+        
+                        {% if walk != 0 %}
+                            {{total_walk}} of {{walk}} Minutes Walked.
+                        {% endif %}
+        
+                        {% if water != 0 %}
+                            {{total_water}} of {{water}} L of Water Drank.
+                        {% endif %}
+        
+                        {% if fruit_veg != 0 %}
+                            {{total_fruit_veg}} of {{fruit_veg}} Servings of Fruits and Vegetables Consumed.
+                        {% endif %}
+        
+                        {% if dungeons != 0 %}
+                            {{total_dungeons}} of {{dungeons}} Dungeons Explored.
+                        {% endif %}
+                    </p>
+                    
+                    <h3>Rewards:</h3>
+    
+                    <p>
+                        {% if action_points %}
+                            {{action_points}} Action Points.
+                        {% endif %}
+        
+                        {% if max_health %}
+                            +{{max_health}} Max Health.
+                        {% endif %}
+        
+                        {% if sword_name %}
+                            {{sword_name}}: Rank {{sword_rank}}.
+                        {% endif %}
+        
+                        {% if boots_name %}
+                            {{boots_name}}: Rank {{boots_rank}}.
+                        {% endif %}
+        
+                        {% if staff_name %}
+                            {{staff_name}}: Rank {{staff_rank}}.
+                        {% endif %}
+        
+                        {% if armor_name %}
+                            {{armor_name}}: Rank {{armor_rank}}.
+                        {% endif %}
+                    </p>
+                    
+                    <a href="{% url 'dungeon:complete_milestone' milestone_id %}">
+                        Claim Reward
+                    </a>
+                </div>
             </li>    
         {% endif %}
     {% endfor %}
 
-    {% for milestone_id, noob, easy, medium, hard, expert, walk, water, fruit_veg, dungeons in milestone_info %}
+    {% for milestone_id, noob, easy, medium, hard, expert, walk, water, fruit_veg, dungeons, action_points, max_health, sword_name, sword_rank, boots_name, boots_rank, staff_name, staff_rank, armor_name, armor_rank in milestone_info %}
 
         <!-- Display incomplete milestones at the bottom -->
     {% if noob_tasks < noob or easy_tasks < easy or medium_tasks < medium or hard_tasks < hard or expert_tasks < expert or total_walk < walk or total_water < water or total_fruit_veg < fruit_veg or total_dungeons < dungeons %}
         <li>
-            Milestone {{milestone_id}}:
-            {% if noob != 0 %}
-                {{noob_tasks}} of {{noob}} Noob Fit-Quests...
-            {% endif %}
-
-            {% if easy != 0 %}
-                {{easy_tasks}} of {{easy}} Easy Fit-Quests...
-            {% endif %}
-
-            {% if medium != 0 %}
-                {{medium_tasks}} of {{medium}} Medium Fit-Quests...
-            {% endif %}
-
-            {% if hard != 0 %}
-                {{hard_tasks}} of {{hard}} Hard Fit-Quests...
-            {% endif %}
-
-            {% if expert != 0 %}
-                {{expert_tasks}} of {{expert}} Expert Fit-Quests...
-            {% endif %}
-
-            {% if walk != 0 %}
-                {{total_walk}} of {{walk}} Minutes Walked...
-            {% endif %}
-
-            {% if water != 0 %}
-                {{total_water}} of {{water}} L of Water Drank...
-            {% endif %}
-
-            {% if fruit_veg != 0 %}
-                {{total_fruit_veg}} of {{fruit_veg}} Servings of Fruits and Vegetables Consumed...
-            {% endif %}
-
-            {% if dungeons != 0 %}
-                {{total_dungeons}} of {{dungeons}} Dungeons Explored...
-            {% endif %}
-
+            <div>
+                <h2>Milestone {{milestone_id}}:</h2>
+                <p>
+                    {% if noob != 0 %}
+                        {{noob_tasks}} of {{noob}} Noob Fit-Quests.
+                    {% endif %}
+        
+                    {% if easy != 0 %}
+                        {{easy_tasks}} of {{easy}} Easy Fit-Quests.
+                    {% endif %}
+        
+                    {% if medium != 0 %}
+                        {{medium_tasks}} of {{medium}} Medium Fit-Quests.
+                    {% endif %}
+        
+                    {% if hard != 0 %}
+                        {{hard_tasks}} of {{hard}} Hard Fit-Quests.
+                    {% endif %}
+        
+                    {% if expert != 0 %}
+                        {{expert_tasks}} of {{expert}} Expert Fit-Quests.
+                    {% endif %}
+        
+                    {% if walk != 0 %}
+                        {{total_walk}} of {{walk}} Minutes Walked.
+                    {% endif %}
+        
+                    {% if water != 0 %}
+                        {{total_water}} of {{water}} L of Water Drank.
+                    {% endif %}
+        
+                    {% if fruit_veg != 0 %}
+                        {{total_fruit_veg}} of {{fruit_veg}} Servings of Fruits and Vegetables Consumed.
+                    {% endif %}
+        
+                    {% if dungeons != 0 %}
+                        {{total_dungeons}} of {{dungeons}} Dungeons Explored.
+                    {% endif %}
+                </p>
+                
+                <h3>Rewards:</h3>
+    
+                <p>
+                    {% if action_points %}
+                        {{action_points}} Action Points.
+                    {% endif %}
+        
+                    {% if max_health %}
+                        +{{max_health}} Max Health.
+                    {% endif %}
+        
+                    {% if sword_name %}
+                        {{sword_name}}: Rank {{sword_rank}}.
+                    {% endif %}
+        
+                    {% if boots_name %}
+                        {{boots_name}}: Rank {{boots_rank}}.
+                    {% endif %}
+        
+                    {% if staff_name %}
+                        {{staff_name}}: Rank {{staff_rank}}.
+                    {% endif %}
+        
+                    {% if armor_name %}
+                        {{armor_name}}: Rank {{armor_rank}}.
+                    {% endif %}
+                </p>
+    
+            </div>
+            
         </li>    
 
 

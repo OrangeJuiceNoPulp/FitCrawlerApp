@@ -18,6 +18,11 @@ class Dungeon(models.Model):
     # "width" is the amount of characters at which the dungeon layout wraps, to form a 2D array
     width = models.IntegerField()
     layout = models.TextField()
+
+    DIFFICULTIES = (('Noob', 'Noob'), ('Easy', 'Easy'), ('Medium', 'Medium'), ('Hard', 'Hard'), ('Expert', 'Expert'))
+    difficulty_score = models.CharField(max_length=31, choices=DIFFICULTIES, default='Medium')
+
+    sprite_folder = models.CharField(max_length=63, blank=True, null=True)
     
     def __str__(self):
         return str(self.name)
@@ -45,6 +50,7 @@ class Sword(models.Model):
     sword_rank = models.IntegerField()
     name = models.CharField(max_length=63)
     strength_boost = models.FloatField()
+    sprite_path = models.CharField(max_length=63, blank=True, null=True)
     
     def __str__(self):
         return str(self.name) + ': ' + str(self.sword_rank) 
@@ -55,6 +61,7 @@ class Boots(models.Model):
     boots_rank = models.IntegerField()
     name = models.CharField(max_length=63)
     ap_reduction_factor = models.FloatField()
+    sprite_path = models.CharField(max_length=63, blank=True, null=True)
     
     def __str__(self):
         return str(self.name) + ': ' + str(self.boots_rank) 
@@ -65,6 +72,7 @@ class Staff(models.Model):
     staff_rank = models.IntegerField()
     name = models.CharField(max_length=63)
     healing_factor = models.FloatField()
+    sprite_path = models.CharField(max_length=63, blank=True, null=True)
     
     def __str__(self):
         return str(self.name) + ': ' + str(self.staff_rank) 
@@ -75,6 +83,7 @@ class Armor(models.Model):
     armor_rank = models.IntegerField()
     name = models.CharField(max_length=63)
     defense_factor = models.FloatField()
+    sprite_path = models.CharField(max_length=63, blank=True, null=True)
     
     def __str__(self):
         return str(self.name) + ': ' + str(self.armor_rank) 

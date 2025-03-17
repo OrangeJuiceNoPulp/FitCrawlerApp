@@ -19,7 +19,7 @@
                 <h2><a href="{% url 'fitness:home' %}" class="button">Home</a></h2>
                 <h2><a href="{% url 'exercises:search_exercises' %}" class="button">Exercises</a></h2>
                 {% if user.is_authenticated and user.user_type == 'FitKnight' %}
-                    <h2><a class="button">Inventory</a></h2>
+                    <h2><a href="{% url 'dungeon:view_inventory' %}" class="button">Inventory</a></h2>
                 {% endif %}
                 {% if user.is_authenticated %}
                 <h2><a class="button js-profile">Profile</a></h2>

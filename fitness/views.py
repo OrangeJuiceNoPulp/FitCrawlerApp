@@ -28,8 +28,66 @@ DAILY_REWARD = 5
 def redirect_home(request):
     return redirect('fitness:home')
 
+# Helper function for the home view, so that the leaderboard can be viewed as well.
+# Jason 3/16/25
+def view_leaderboard(gym_id, num_entries):
+    with connection.cursor() as cursor:
+        if gym_id:
+            global_board = False
+            cursor.execute("""
+                SELECT u.username, g.coins
+                FROM gym_fitcrawleruser u JOIN dungeon_gamestats g
+                        ON u.id = g.user_id
+                WHERE u.gym_id = %s
+                ORDER BY g.coins DESC
+                LIMIT %s
+                """, [gym_id, num_entries]
+            )
+             
+        else:
+            global_board = True
+            cursor.execute("""
+                SELECT u.username, g.coins
+                FROM gym_fitcrawleruser u JOIN dungeon_gamestats g
+                        ON u.id = g.user_id
+                
+                ORDER BY g.coins DESC
+                LIMIT %s
+                """, [num_entries]
+            )
+
+        return (cursor.fetchall(), global_board)
+
+# Home page modified to support view_leaderboard() functionality.
+# Logged-in users can view either the global leaderboard,
+# or a leaderboard just for their gym if they have a gym.
+# Jason 3/16/25
 def home(request):
-    return render(request, 'fitness/home.html')
+    NUM_LEADERBOARD_ENTRIES = 10
+    gym_id = None
+
+    # Determine if the user is trying to get their local gym leaderboard
+    if request.GET.get('gym_board'):
+        
+        # Ensure the user is signed in and has a gym
+        if request.user.is_authenticated:
+            with connection.cursor() as cursor:
+                # Fetch the user's gym id
+                cursor.execute("""
+                    SELECT u.id, u.gym_id
+                    FROM gym_fitcrawleruser u
+                    WHERE u.id = %s
+                    """, [request.user.id]
+                    )
+                gym_id = cursor.fetchone()[1]
+
+    # Execute SQL query to get the correct leaderboard info
+    leaderboard, global_board = view_leaderboard(gym_id, NUM_LEADERBOARD_ENTRIES)
+        
+    # global_board = True => The displayed leaderboard is the global leaderboard
+    # global_board = False => The displayed leaderboard is the gym leaderboard
+    template_args = {'leaderboard': leaderboard, 'global_board': global_board}
+    return render(request, 'fitness/home.html', template_args)
 
 # Helper function for getting the default gear ids.
 # Used by check_and_create_game_stats().

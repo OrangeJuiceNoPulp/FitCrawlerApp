@@ -49,8 +49,28 @@
             {% endif %}
         </div>
         <div class="leaderboard">
-            <p>Leaderboard</p>
-             
+            {% if global_board %}
+                <h1>Global Leaderboard</h1>
+            {% elif user.is_authenticated and user.gym and not global_board %}
+                <h1>{{ user.gym.name }} Leaderboard</h1>
+            {% endif %}
+            
+            <ul>
+                {% for l_user_name, l_coins in leaderboard %}
+                        <h3>{{l_user_name}} - {{l_coins}}</h3>
+                {% endfor %}
+            </ul>
+
+            <form method="GET" class="leaderboard form">
+                {% if user.is_authenticated and user.gym and global_board %}
+                    <input hidden type="checkbox" name="gym_board" checked id="id_global_board_checkbox">
+                    <button type="submit">View My Gym's Leaderboard</button>
+                {% elif not global_board %}
+                    <input hidden type="checkbox" name="gym_board" id="id_global_board_checkbox">
+                    <button type="submit" class="submit-button">View Global Leaderboard</button>
+                {% endif %}
+            </form>
+
         </div>
     </div>
 </body>

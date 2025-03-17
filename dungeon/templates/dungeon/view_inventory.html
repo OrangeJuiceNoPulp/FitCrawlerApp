@@ -1,0 +1,83 @@
+{% extends 'fitness/header.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class='error-message'>
+        <p>{{ error }} </p>
+    </div>
+
+    <style>
+        .container {
+            text-align: center;
+        }
+        .inventory_container {
+            display: grid;
+            grid-template-areas:
+                "sword boots"
+                "staff armor";
+            grid-template-columns: auto auto;
+    
+        }
+        .inventory_container > div.sword_container{
+            grid-area: sword;
+            justify-content: center;
+            text-align: center;
+        }
+        .inventory_container > div.boots_container{
+            grid-area: boots;
+            justify-content: center;
+            text-align: center;
+        }
+        .inventory_container > div.staff_container{
+            grid-area: staff;
+            justify-content: center;
+            text-align: center;
+        }
+        .inventory_container > div.armor_container{
+            grid-area: armor;
+            justify-content: center;
+            text-align: center;
+        }
+    </style>
+
+    <div class="container">
+        <h1>{{username}}</h1>
+        <h3>Max Health: {{max_health}}</h3>
+        <h3>Action Points: {{action_points}}</h3>
+        <h3>Coins: {{coins}}</h3>
+        <h3><a href="{% url 'dungeon:view_milestones' %}">Milestones</a></h3>
+    </div>
+
+    <div class="inventory_container">
+        <div class="sword_container">
+            <img src="{% static sword_info.path %}">
+            <h2>{{sword_info.name}}</h2>
+            <h3>Rank: {{sword_info.rank}}</h3>
+            <h3>Strength Boost: {{sword_info.stats}}</h3>
+        </div>
+    
+        <div class="boots_container">
+            <img src="{% static boots_info.path %}">
+            <h2>{{boots_info.name}}</h2>
+            <h3>Rank: {{boots_info.rank}}</h3>
+            <h3>Speed: {{boots_info.stats}}</h3>
+        </div>
+    
+        <div class="staff_container">
+            <img src="{% static staff_info.path %}">
+            <h2>{{staff_info.name}}</h2>
+            <h3>Rank: {{staff_info.rank}}</h3>
+            <h3>Healing: {{staff_info.stats}}</h3>
+        </div>
+    
+        <div class="armor_container">
+            <img src="{% static armor_info.path %}">
+            <h2>{{armor_info.name}}</h2>
+            <h3>Rank: {{armor_info.rank}}</h3>
+            <h3>Protection: {{armor_info.stats}}</h3>
+        </div>
+    </div>
+    
+
+{% endblock %}
