@@ -30,7 +30,7 @@
                 <h3 class="gymCode">Your Gym Code is: {{ user.gym.join_code }}</h3>
                 <h2><a href="{% url 'gym:list_applications' %}" class="button">View Your Gym's Applications</a></h2>
                 <h2><a href="{% url 'gym:search_knights' %}" class="button">Search Knights</a></h2>
-                <h2><a href="{% url 'fitness:assign_task' %}" class="button">Assign Tasks</a></h2>
+                
             {% elif user.is_authenticated and user.user_type == 'FitKnight' %}
                 <div class="logoDivHome">
                     <img src="{% static 'fitness/fitcrawlerLogo.png' %}" alt="FitCrawler Logo" class="logo">

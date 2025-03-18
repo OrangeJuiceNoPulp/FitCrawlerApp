@@ -23,8 +23,9 @@
             <ul>
             {% for knight_id, knight_username, knight_email in knights %}
                 <li>
-                    <a>
                     {{ knight_username }} ({{ knight_email }})
+                    <a href="{% url 'fitness:assign_task_for_knight' knight_id=knight_id %}">
+                    Assign Task
                     </a>
                 </li>
             {% endfor %}

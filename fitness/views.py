@@ -152,7 +152,8 @@ def check_and_create_game_stats(user_id):
                 [user_id, STARTING_MAX_HEALTH, STARTING_COINS, STARTING_ACTION_POINTS, 0, beginner_gear[0], beginner_gear[1], beginner_gear[2], beginner_gear[3]]
             )
 
-def assign_task(request):
+# Joseph 3/8/25 modified 3/17/25
+def assign_task(request, knight_id=None):
     # Ensure the current user is a FitGuildOfficer.
     if request.user.user_type != 'FitGuildOfficer':
         return redirect('fitness:home')
@@ -161,6 +162,10 @@ def assign_task(request):
     officer_gym_id = request.user.gym_id
 
     if request.method == 'POST':
+        #DEBUG DATA
+        print("DEBUG: knight_id from URL =", knight_id)
+        print("DEBUG POST DATA: ", request.POST)
+
         # Fetch form data from POST
         knight_id = request.POST.get('knight_id')
         exercise_id = request.POST.get('exercise_id')
@@ -216,18 +221,23 @@ def assign_task(request):
 
         return redirect('fitness:home')
     
-    else:
+    elif request.method == 'GET':
         # GET request: Show a form with FitKnights (same gym) AND available Exercises
+        context = {}
+
         with connection.cursor() as cursor:
-            # 1. Pull Knights from the same gym
-            cursor.execute("""
-                SELECT id, username
-                  FROM gym_fitcrawleruser
-                 WHERE user_type = 'FitKnight'
-                   AND gym_id = %s
-                 ORDER BY username
-            """, [officer_gym_id])
-            knights = cursor.fetchall()  
+            # 1. Validate that the given knight_id is in this officers gym
+            if knight_id:
+                cursor.execute("""
+                    SELECT id, username, email
+                      FROM gym_fitcrawleruser
+                    WHERE id = %s
+                      AND user_type = 'FitKnight'
+                      AND gym_id = %s
+                """, [knight_id, officer_gym_id])
+                chosen_knight = cursor.fetchone()
+                context["chosen_knight"] = chosen_knight
+                context["knight_id"] = knight_id
 
             # 2. Pull exercises
             cursor.execute("""
@@ -235,13 +245,11 @@ def assign_task(request):
                   FROM exercises_exercise
                  ORDER BY name
             """)
-            exercises = cursor.fetchall()
+            context['exercises'] = cursor.fetchall()
         
-        return render(request, 'fitness/assign_task.html', {
-            'knights': knights,
-            'exercises': exercises,
-        })
+        return render(request, 'fitness/assign_task.html', context)
 
+# Joseph 3/8/25
 @login_required
 def complete_task(request, task_pk):
     # Ensure the current user is a not FitGuildOfficer.
@@ -293,6 +301,7 @@ def complete_task(request, task_pk):
 
             return redirect('fitness:view_current_tasks')
 
+# Joseph 3/8/25
 @login_required
 def task_details(request, task_pk):
     # Ensure the current user is a not FitGuildOfficer.
@@ -481,80 +490,6 @@ def complete_daily(request):
                     
             return redirect('fitness:view_current_tasks')
 
-
-
-@login_required
-def search_knights(request):
-    # Ensure the current user is a FitGuildOfficer with a gym.
-    if request.user.user_type != 'FitGuildOfficer' or not request.user.gym:
-        return redirect('fitness:home')
-
-    # Get the search query from the GET request
-    if request.GET.get('knight_name'):
-        search_query = request.GET.get('knight_name')
-    else: 
-        # Specify a default empty search query
-        search_query = ''
-        
-    # Get the page number from the GET request
-    if request.GET.get('page'):
-        page_number = int(request.GET.get('page'))
-    else: 
-        # Specify a default page number
-        page_number = 1
-        
-    with connection.cursor() as cursor:
-        # Count the number of FitKnights in this officer's gym
-        cursor.execute("""
-            SELECT COUNT(*)
-            FROM gym_fitcrawleruser
-            WHERE user_type = 'FitKnight'
-              AND gym_id = %s
-              AND LOWER(username) LIKE CONCAT('%%', LOWER(%s), '%%')
-            """,
-            [request.user.gym_id, search_query]
-        )
-        total = cursor.fetchone()[0]
-        
-        # Determine the last possible page based upon the total number of matching exercises
-        last_page = ceil(total / NUM_ENTRIES_PER_PAGE)
-        # Handle the case of no matching exercises to avoid page 0
-        if last_page < 1:
-            last_page = 1
-        
-        # If the page number is out of range
-        if page_number / NUM_ENTRIES_PER_PAGE > total:
-            # Set the page number as the last possible page number
-            page_number = last_page
-            
-        # Calculate the offset
-        offset = NUM_ENTRIES_PER_PAGE*(page_number - 1)
-        
-        # Fetch the matching knights
-        cursor.execute("""
-            SELECT id, username, email
-            FROM gym_fitcrawleruser
-            WHERE user_type = 'FitKnight'
-              AND gym_id = %s
-              AND LOWER(username) LIKE CONCAT('%%', LOWER(%s), '%%')
-            ORDER BY username
-            LIMIT %s
-            OFFSET %s
-            """,
-            [request.user.gym_id, search_query, NUM_ENTRIES_PER_PAGE, offset]
-        )
-        rows = cursor.fetchall()
-        
-        
-    # Create a dictionary of things to pass to the template for the html
-    template_args = {'knights': rows, 'search_query': search_query, 'page_number': page_number}
-
-    if page_number > 1:
-        template_args['previous'] = page_number - 1
-    if page_number < last_page:
-        template_args['next'] = page_number + 1
-
-    return render(request, 'fitness/search_knights.html', template_args)
 
 # Added by Eli Sepulveda on March 6th
 # This is used to find a user's gym officer

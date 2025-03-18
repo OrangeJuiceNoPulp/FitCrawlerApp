@@ -3,17 +3,11 @@
 {% block content%}
 
     <h1>Assign Task to a FitKnight</h1>
-    <form method="POST">
+    <form method="POST" >
     {% csrf_token %}
 
     <!-- Select which FitKnight -->
-    <label for="knight_id">FitKnight:</label>
-    <select name="knight_id" id="knight_id" required>
-        {% for k_id, k_username in knights %}
-        <option value="{{ k_id }}">{{ k_username }}</option>
-        {% endfor %}
-    </select>
-    <br><br>
+    <input type="hidden" name="knight_id" value="{{ knight_id }}" />
 
     <!-- Pick an Exercise -->
     <label for="exercise_id">Exercise:</label>
