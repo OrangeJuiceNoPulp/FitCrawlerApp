@@ -11,4 +11,5 @@ urlpatterns = [
     path('list_applications/', views.list_applications, name='list_applications'),
     path('process_application/', views.process_application, name='process_application'),
     path('search_knights/', views.search_knights, name='search_knights'),
+    path('remove_member/<int:knight_id>/', views.remove_member, name='remove_member'),
 ]

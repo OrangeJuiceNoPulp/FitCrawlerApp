@@ -1,0 +1,20 @@
+<!-- Joseph Marchione 3/18/2025 -->
+{% extends 'fitness/header.html' %}
+
+{% block content %}
+
+<h1>Remove Knight</h1>
+<p>Are you sure you want to remove Knight #{{ knight_id }} from your gym?</p>
+
+<!-- Yes Button (POST) -->
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit">Yes, remove this Knight</button>
+</form>
+
+<!-- No Button (GET) simply goes back -->
+<form action="{% url 'gym:search_knights' %}">
+    <button type="submit">No</button>
+</form>
+
+{% endblock %}

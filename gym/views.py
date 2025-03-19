@@ -1,15 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db import IntegrityError, connection
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as login_user, logout as logout_user, authenticate
+from django.http import HttpResponse, Http404
 
 from gym.models import FitCrawlerUser, Gym, GymApplication
 
 from math import ceil
-
-from django.http import HttpResponse
-
 
 # Create your views here.
 
@@ -173,7 +170,51 @@ def join_gym(request):
                 else:
                     # Otherwise return an error message
                     return render(request, 'gym/join_gym.html', {'error':'Code is incorrect!'})
+
+# Joseph Marchione 3/18/25
+@login_required
+def remove_member(request, knight_id):
+    # Must be FitGuildOfficer with a gym
+    if request.user.user_type != 'FitGuildOfficer':
+        return redirect('fitness:home')
+    
+    officer_gym_id = request.user.gym_id
+
+    if not officer_gym_id:
+        # if the offcer does not have a gym for some reason, epic fail lol
+        raise Http404("Illegal Operation: You do not own a gym dumbass")
+    
+    if request.method == 'POST':
+        # remove the knight
+        with connection.cursor() as cursor:
+            # verify the knight is part of the gym
+            cursor.execute("""
+                SELECT gym_id, user_type
+                FROM gym_fitcrawleruser
+                WHERE id = %s
+            """, [knight_id])
+            row = cursor.fetchone()
+
+            knight_gym_id, knight_type = row
+
+            if knight_type != 'FitKnight' or knight_gym_id != officer_gym_id:
+                raise Http404("That knight isnt in your gym")
             
+            # set the knights gym to null
+            cursor.execute(""" 
+                UPDATE gym_fitcrawleruser
+                SET gym_id = NULL
+                WHERE id = %s
+            """, [knight_id])
+
+        # redirect to the search_knights list
+        return redirect('gym:search_knights')
+    
+    else:
+        # if GET, show a confirmation
+        return render(request, 'gym/remove_member.html', {'knight_id': knight_id})
+
+# Joe Marchione            
 @login_required
 def list_applications(request):
     # Must be FitGuildOfficer with a gym
@@ -204,6 +245,7 @@ def list_applications(request):
     
     return render(request, 'gym/applications.html', {'applications': applications})
 
+# Joe Marchione
 @login_required
 def process_application(request):
     # Must be FitGuildOfficer with a gym
@@ -265,6 +307,7 @@ def process_application(request):
 
 NUM_ENTRIES_PER_PAGE = 10
 
+# Joe Marchione
 @login_required
 def search_knights(request):
     # Ensure the current user is a FitGuildOfficer with a gym.
