@@ -79,12 +79,8 @@ h1 {
 
 .list-div li a {
     text-decoration: none;
-    color: #ffdd57;
+    color: #121212; ;
     font-weight: bold;
-}
-
-.list-div li a:hover {
-    color: #FFD700;
 }
 
 .noResults {
@@ -129,20 +125,19 @@ h1 {
 .btn {
     display: inline-block;
     padding: 8px 12px;
-    background-color: #39FF14;
-    color: #fff;
+    background-color: green;
     text-decoration: none;
     border-radius: 4px;
 }
   
 .btn:hover {
-    background-color: #39FF14;
+    background-color: #2ECC71;
 }
   
 .btn-danger {
-    background-color: #e74c3c;
+    background-color: red;
 }
   
 .btn-danger:hover {
-    background-color: #c0392b;
+    background-color: #cc0000;
 }

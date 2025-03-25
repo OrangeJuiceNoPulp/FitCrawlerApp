@@ -1,6 +1,7 @@
 {% extends 'fitness/header.html' %}
-
+{% load static %}
 {% block content%}
+<link rel="stylesheet" type="text/css" href="{% static 'fitness/task_details.css' %}">
 
     <h1>Task: {{ task.name }}</h1>
 
@@ -9,6 +10,9 @@
     <p>Difficulty: {{ task.difficulty_score }}</p>
     <!-- <p>Days of Week: {{ task.days_of_week }}</p> -->
     <p>End Date: {{ task.end_date }}</p>
+    <div class="rewardDiv">
+        <img src="{% static 'fitness/armor_default.png' %}" alt="FitCrawler Logo" class="item">
+     </div>
 
     <form action="{% url 'fitness:complete_task' task_pk=task.id %}" method="POST">
         {% csrf_token %}

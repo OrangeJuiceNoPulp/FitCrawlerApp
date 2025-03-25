@@ -1,6 +1,7 @@
 {% extends 'fitness/header.html' %}
-
+{% load static %}
 {% block content%}
+<link rel="stylesheet" type="text/css" href="{% static 'gym/signup.css' %}">
 
 <h1>Sign Up</h1>
 
@@ -34,7 +35,6 @@
 
     <button type="submit">Submit</button>
 </form>
-
 <p>Already have an account?</p>
 <h2><a href="{% url 'gym:login' %}">Login</a></h2>
 
