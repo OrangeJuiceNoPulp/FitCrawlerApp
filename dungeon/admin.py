@@ -4,6 +4,7 @@ from dungeon.models import *
 
 # Register your models here.
 
+admin.site.register(DungeonEnemy)
 admin.site.register(Dungeon)
 admin.site.register(DungeonExploration)
 admin.site.register(GameStats)

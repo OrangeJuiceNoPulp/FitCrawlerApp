@@ -1,5 +1,7 @@
 from django.db import models
 
+from django.utils.timezone import now
+
 from exercises.models import Exercise
 from gym.models import FitCrawlerUser
 
@@ -32,7 +34,7 @@ class TaskLog(models.Model):
     # Columns
     task = models.ForeignKey(Task, null=True, on_delete=models.CASCADE)
     percent_completion = models.FloatField()
-    time_completed = models.DateTimeField(default=datetime.datetime.now())
+    time_completed = models.DateTimeField(default=now)
     
     def __str__(self):
         return str(self.task) + ' - ' + str(self.time_completed)
@@ -40,7 +42,7 @@ class TaskLog(models.Model):
 class DailyLog(models.Model):
     # Columns
     user = models.ForeignKey(FitCrawlerUser, on_delete=models.CASCADE)
-    time_completed = models.DateTimeField(default=datetime.datetime.now())
+    time_completed = models.DateTimeField(default=now)
     
     minutes_walked = models.IntegerField()
     water_drank_L = models.FloatField()

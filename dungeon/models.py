@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.timezone import now
 
 from gym.models import FitCrawlerUser
 
@@ -10,6 +11,21 @@ STARTING_MAX_HEALTH = 20
 STARTING_COINS = 0
 STARTING_ACTION_POINTS = 0
 
+
+    
+
+class DungeonEnemy(models.Model):
+    # Columns
+    name = models.CharField(max_length=63)
+    strength = models.IntegerField()
+    defense = models.IntegerField()
+    max_health = models.IntegerField()
+
+    sprite_path = models.CharField(max_length=63, blank=True, null=True)
+
+    def __str__(self):
+        return str(self.name)
+    
 class Dungeon(models.Model):
     # Columns
     name = models.CharField(max_length=127)
@@ -21,25 +37,57 @@ class Dungeon(models.Model):
 
     DIFFICULTIES = (('Noob', 'Noob'), ('Easy', 'Easy'), ('Medium', 'Medium'), ('Hard', 'Hard'), ('Expert', 'Expert'))
     difficulty_score = models.CharField(max_length=31, choices=DIFFICULTIES, default='Medium')
+    # 1-2 Noob, 3-4 Easy, 5-6 Medium, 7-8 Hard, 9-10 Expert
+    difficulty_quantifer = models.FloatField(default=5)
 
     sprite_folder = models.CharField(max_length=63, blank=True, null=True)
-    
+    thumbnail_path = models.CharField(max_length=63, blank=True, null=True)
+
+
+    # Dungeon Encoding:
+    #
+    # S = start location
+    # 1 through 9 = empty space (places where the player can move)
+    # E = Dungeon End
+
+    # 0 (zero) = always wall, o (lowercase O) = conditional wall
+    wall_spawn = models.FloatField(default=1)
+
+    # C = always spawn chest, c = conditional spawn
+    chest_spawn = models.FloatField(default=1)
+
+
+    # X = always spawn, x = conditional spawn
+    common_monster = models.ForeignKey(DungeonEnemy, on_delete=models.SET_NULL, related_name='common', blank=True, null=True)
+    common_monster_spawn = models.FloatField(default=1)
+
+    # Y = always spawn, y = conditional spawn
+    uncommon_monster = models.ForeignKey(DungeonEnemy, on_delete=models.SET_NULL, related_name='uncommon', blank=True, null=True)
+    uncommon_monster_spawn = models.FloatField(default=1)
+
+    # Z = always spawn, z = conditional spawn
+    boss_monster = models.ForeignKey(DungeonEnemy, on_delete=models.SET_NULL, related_name='boss', blank=True, null=True)
+    boss_monster_spawn = models.FloatField(default=1)
+
     def __str__(self):
         return str(self.name)
     
 
 class DungeonExploration(models.Model):
     # Columns
+    # PK is the same as the user's id
+    user = models.OneToOneField(FitCrawlerUser, on_delete=models.CASCADE, related_name='dungeon_exploration', primary_key=True)
+
     current_location = models.IntegerField()
     previous_location = models.IntegerField()
     direction = models.CharField(max_length=7)
     
     health = models.IntegerField()
     
-    exploration_start = models.DateTimeField(default=datetime.datetime.now())
+    exploration_start = models.DateTimeField(default=now)
     
-    user = models.ForeignKey(FitCrawlerUser, on_delete=models.CASCADE)
     dungeon = models.ForeignKey(Dungeon, on_delete=models.CASCADE)
+    dungeon_layout = models.TextField()
     
     def __str__(self):
         return str(self.user) + ': ' + str(self.dungeon) 
@@ -140,7 +188,7 @@ class MilestoneLog(models.Model):
     # Columns
     milestone = models.ForeignKey(Milestone, on_delete=models.CASCADE)
     user = models.ForeignKey(FitCrawlerUser, on_delete=models.CASCADE)
-    time_completed = models.DateTimeField(default=datetime.datetime.now())
+    time_completed = models.DateTimeField(default=now)
     
     def __str__(self):
         return str(self.user) + ' - ' + str(self.time_completed)

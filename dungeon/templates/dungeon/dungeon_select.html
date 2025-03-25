@@ -5,9 +5,10 @@
 <h1>Dungeons</h1>
 
 <ul>
-    {% for dungeon_id, name, description, difficulty_score, sprite_folder in dungeon_info %}
+    {% for dungeon_id, name, description, difficulty_score, thumbnail in dungeon_info %}
         <li>
             <div>
+                <img src="{% static thumbnail %}" width="128" height="128">
                 <h2>{{name}}</h2>
                 <p>{{description}}</p>
                 <h3>Difficulty: {{difficulty_score}}</h3>

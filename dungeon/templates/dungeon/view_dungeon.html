@@ -1,0 +1,225 @@
+{% extends 'fitness/header.html' %}
+{% load static %}
+
+{% block content %}
+
+    <div class='error-message'>
+        {% if exhausted %}
+        <h1>You are too exhausted to move!</h1>
+        {% endif %}
+    </div>
+
+    <style>
+        
+        .screen_container {
+            position: relative;
+            top: 20px;
+            display: grid;
+            grid-template-areas:
+                "dungeon_screen inventory"
+                "movement player_info";
+            grid-template-columns: 70% 30%;
+        }
+        .screen_container > player_info_container {
+            grid-area: player_info;
+            text-align: center;
+            justify-content: center;
+        }
+        .screen_container > .movement_container {
+            position: relative;
+            top: 100px;
+            grid-area: movement;
+            display: grid;
+            grid-template-areas:
+                "turn_left go_forwards turn_right"
+                "go_left go_backwards go_right";
+            grid-template-columns: auto auto auto;
+        }
+        .movement_container > .turn_left_container {
+            grid-area: turn_left;
+            justify-content: center;
+        }
+        .movement_container > .go_forwards_container {
+            grid-area: go_forwards;
+            justify-content: center;
+        }
+        .movement_container > .turn_right_container {
+            grid-area: turn_right;
+            justify-content: center;
+        }
+        .movement_container > .go_left_container {
+            grid-area: go_left;
+            justify-content: center;
+        }
+        .movement_container > .go_backwards_container {
+            grid-area: go_backwards;
+            justify-content: center;
+        }
+        .movement_container > .go_right_container {
+            grid-area: go_right;
+            justify-content: center;
+        }
+
+
+        
+        
+        .screen_container > .dungeon_screen_container {
+            grid-area: dungeon_screen;
+        }
+        .dungeon_screen_container > .dungeon_overlay {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            z-index: 1;
+        }
+        .dungeon_screen_container > .dungeon_background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 0;
+        }
+        .screen_container > .inventory_container {
+            grid-area: inventory;
+            display: grid;
+            grid-template-areas:
+                "sword boots"
+                "staff armor";
+            grid-template-columns: auto auto;
+    
+        }
+        .inventory_container > div.sword_container{
+            grid-area: sword;
+            justify-content: center;
+            text-align: center;
+        }
+        .inventory_container > div.boots_container{
+            grid-area: boots;
+            justify-content: center;
+            text-align: center;
+        }
+        .inventory_container > div.staff_container{
+            grid-area: staff;
+            justify-content: center;
+            text-align: center;
+        }
+        .inventory_container > div.armor_container{
+            grid-area: armor;
+            justify-content: center;
+            text-align: center;
+        }
+    </style>
+
+    <div class="screen_container">
+        <div class="dungeon_screen_container">
+            {% if chest %}
+                <img class="dungeon_overlay" src="{% static chest %}" width="512" height="384">
+            {% endif %}
+
+            {% if monster %}
+                <img class="dungeon_overlay" src="{% static monster %}" width="512" height="384">
+            {% endif %}
+
+            <img class="dungeon_background" src="{% static background %}" width="512" height="384">
+        </div>
+
+
+        <div class="inventory_container">
+            <div class="sword_container">
+                <img src="{% static inventory.sword_info.path %}" width="64" height="64">
+                <h2>{{inventory.sword_info.name}}</h2>
+            </div>
+        
+            <div class="boots_container">
+                <img src="{% static inventory.boots_info.path %}" width="64" height="64">
+                <h2>{{inventory.boots_info.name}}</h2>
+            </div>
+        
+            <div class="staff_container">
+                <img src="{% static inventory.staff_info.path %}" width="64" height="64">
+                <h2>{{inventory.staff_info.name}}</h2>
+            </div>
+        
+            <div class="armor_container">
+                <img src="{% static inventory.armor_info.path %}" width="64" height="64">
+                <h2>{{inventory.armor_info.name}}</h2>
+            </div>
+        </div>
+
+    
+
+    <div class="movement_container">
+        <div class="turn_left_container">
+            <a href="{% url 'dungeon:dungeon_rotate' 'left'%}">
+                <img src="{% static 'dungeon/UI/turn_left.png' %}" width="64" height="64">
+            </a>
+        </div>
+
+        <div class="go_forwards_container">
+            {% if forwards %}
+            <a href="{% url 'dungeon:dungeon_traverse' 'forwards' %}">
+                <img src="{% static 'dungeon/UI/up_arrow.png' %}" width="64" height="64">
+            </a>
+            {% else %}
+                <img src="{% static 'dungeon/UI/blank.png' %}" width="64" height="64">
+            {% endif %}
+        </div>
+
+        <div class="turn_right_container">
+            <a href="{% url 'dungeon:dungeon_rotate' 'right'%}">
+                <img src="{% static 'dungeon/UI/turn_right.png' %}" width="64" height="64">
+            </a>
+        </div>
+
+        <div class="go_left_container">
+            {% if left %}
+            <a href="{% url 'dungeon:dungeon_traverse' 'left' %}">
+                <img src="{% static 'dungeon/UI/left_arrow.png' %}" width="64" height="64">
+            </a>
+            {% else %}
+                <img src="{% static 'dungeon/UI/blank.png' %}" width="64" height="64">
+            {% endif %}
+        </div>
+
+        <div class="go_backwards_container">
+            {% if backwards %}
+            <a href="{% url 'dungeon:dungeon_traverse' 'backwards' %}">
+                <img src="{% static 'dungeon/UI/down_arrow.png' %}" width="64" height="64">
+            </a>
+            {% else %}
+                <img src="{% static 'dungeon/UI/blank.png' %}" width="64" height="64">
+            {% endif %}
+        </div>
+
+        <div class="go_right_container">
+            {% if right %}
+            <a href="{% url 'dungeon:dungeon_traverse' 'right' %}">
+                <img src="{% static 'dungeon/UI/right_arrow.png' %}" width="64" height="64">
+            </a>
+            {% else %}
+                <img src="{% static 'dungeon/UI/blank.png' %}" width="64" height="64">
+            {% endif %}
+        </div>
+
+    </div>
+
+    <div class="player_info_container">
+        <h1>{{inventory.username}}</h1>
+        <label for="health_bar">Health:</label>
+        <progress value="{{health}}" max="{{inventory.max_health}}" id="health_bar">{{health}} / {{inventory.max_health}}</progress>
+        <h3>Action Points: {{inventory.action_points}}</h3>
+        {% if north%}
+            <h3>North</h3>
+        {% elif east %}
+            <h3>East</h3>
+        {% elif west %}
+            <h3>West</h3>
+        {% else %}
+            <h3>South</h3>
+        {% endif %}
+    </div>
+
+    
+</div>
+    
+
+{% endblock %}
