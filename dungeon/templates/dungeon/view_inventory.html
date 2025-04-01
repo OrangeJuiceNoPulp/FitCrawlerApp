@@ -3,43 +3,11 @@
 
 {% block content %}
 
+    <link rel="stylesheet" type="text/css" href="{% static 'dungeon/inventory.css' %}">
+
     <div class='error-message'>
         <p>{{ error }} </p>
     </div>
-
-    <style>
-        .container {
-            text-align: center;
-        }
-        .inventory_container {
-            display: grid;
-            grid-template-areas:
-                "sword boots"
-                "staff armor";
-            grid-template-columns: auto auto;
-    
-        }
-        .inventory_container > div.sword_container{
-            grid-area: sword;
-            justify-content: center;
-            text-align: center;
-        }
-        .inventory_container > div.boots_container{
-            grid-area: boots;
-            justify-content: center;
-            text-align: center;
-        }
-        .inventory_container > div.staff_container{
-            grid-area: staff;
-            justify-content: center;
-            text-align: center;
-        }
-        .inventory_container > div.armor_container{
-            grid-area: armor;
-            justify-content: center;
-            text-align: center;
-        }
-    </style>
 
     <div class="container">
         <h1>{{username}}</h1>

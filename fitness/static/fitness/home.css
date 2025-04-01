@@ -82,6 +82,12 @@ body {
     display: none;
 }
 
+.swapLeaderboard{
+    border: none;
+    border-radius: 5px;
+    background-color: #39FF14;
+}
+
 @media screen and (max-width: 600px) {
     body {
         overflow-y: auto;

@@ -21,6 +21,7 @@ body {
     position: fixed;
     width: 100%;
     top: 0;
+    z-index: 5;
 }
 
 .header h2 {
@@ -51,15 +52,21 @@ body {
 }
 
 .button {
+    display: inline-block;
     background-color: #39FF14; 
     color: black; 
     padding: 0.5rem 1rem;
     text-decoration: none;
     border-radius: 5px;
     margin-left: 0.5rem;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s, transform 0.2s;
     border: none;
     cursor: pointer;
+}
+
+.button:hover {
+    background-color: #28a828; 
+    transform: scale(1.1);
 }
 
 .profileButton {
@@ -71,10 +78,6 @@ body {
     transition: background-color 0.3s ease;
     border: none;
     cursor: pointer;
-}
-
-.button:hover {
-    background-color: #28a828; 
 }
 
 .header-space{

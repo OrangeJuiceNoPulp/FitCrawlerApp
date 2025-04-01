@@ -38,14 +38,19 @@ a {
 ul {
     list-style: none;
     padding: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 100vw;
 }
 
 li {
+    display: flex;
     background-color: #232323;
     padding: 1rem;
     border-radius: 10px;
     margin: 0.5rem 0;
-    width: 60%;
+    width: 15vw;
     transition: background-color 0.3s ease;
 }
 
@@ -56,6 +61,7 @@ li:hover {
 }
 
 li a {
+    width: 15vw;
     padding: 0.5rem 0;
     color: inherit;
 }

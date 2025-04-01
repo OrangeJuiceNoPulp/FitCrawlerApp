@@ -2,20 +2,25 @@
 {% load static %}
 
 {% block content %}
-<h1>Dungeons</h1>
 
-<ul>
-    {% for dungeon_id, name, description, difficulty_score, thumbnail in dungeon_info %}
-        <li>
-            <div>
-                <img src="{% static thumbnail %}" width="128" height="128">
-                <h2>{{name}}</h2>
-                <p>{{description}}</p>
-                <h3>Difficulty: {{difficulty_score}}</h3>
-                <h2><a href="{% url 'dungeon:dungeon_begin_exploration' dungeon_id %}">Explore</a></h2>
-            </div>
-        </li>
-    {% endfor %}
-</ul>
+    <link rel="stylesheet" type="text/css" href="{% static 'dungeon/dungeon_select.css' %}">
+    <div class="selectBody">
+        <h1>Dungeons</h1>
+
+        <ul>
+            {% for dungeon_id, name, description, difficulty_score, thumbnail in dungeon_info %}
+                <li>
+                    <div>
+                        <img src="{% static thumbnail %}" class="thumbnail">
+                        <h2>{{name}}</h2>
+                        <p>{{description}}</p>
+                        <h3>Difficulty: {{difficulty_score}}</h3>
+                        <h2><a href="{% url 'dungeon:dungeon_begin_exploration' dungeon_id %}">Explore</a></h2>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    
 
 {% endblock %}
