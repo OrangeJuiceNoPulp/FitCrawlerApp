@@ -11,8 +11,11 @@
     <h1>Daily Quests</h1>
 
     <p>Walked {{mins_walk}} minutes out of {{walk_goal}} minutes.</p>
+    <progress value="{{mins_walk}}" max="{{walk_goal}}"></progress>
     <p>Drank {{water}} Liters of water out of {{water_goal}} Liters.</p>
+    <progress value="{{water}}" max="{{water_goal}}"></progress>
     <p>Consumed {{fruit_veg}} servings of fruits and vegetables out of {{fruit_veg_goal}} servings.</p>
+    <progress value="{{fruit_veg}}" max="{{fruit_veg_goal}}"></progress>
 
     <p>
         <a href="{% url 'fitness:complete_daily' %}">

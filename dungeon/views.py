@@ -24,7 +24,7 @@ HEAL_BASE_COST = 3.5
 
 BASE_HEAL_AMOUNT = 5
 
-BASE_DAMAGE_AMOUNT = 5
+BASE_DAMAGE_AMOUNT = 0
 BASE_DEFENSE_AMOUNT = 0
 
 BASE_BATTLE_REWARD = 5
@@ -208,7 +208,7 @@ def battle_player_turn(user_id, user_inventory, enemy_stats, dungeon_layout, cur
 def battle_enemy_turn(user_id, user_inventory, enemy_stats, user_health):
     results = {}
     
-    attack_stength = 0.5*(BASE_DAMAGE_AMOUNT + enemy_stats['strength'])
+    attack_stength = BASE_DAMAGE_AMOUNT + enemy_stats['strength']
     defense_strength = BASE_DEFENSE_AMOUNT + user_inventory['armor_info']['stats']
     
     damage_amount = max(1, attack_stength - defense_strength)

@@ -356,11 +356,13 @@ def view_current_tasks(request):
             cursor.execute("""
                 SELECT id, name
                 FROM fitness_task
-                WHERE user_id = %s AND id NOT IN 
+                WHERE user_id = %s 
+                    AND STRFTIME('%%Y%%m%%d', %s) < STRFTIME('%%Y%%m%%d', end_date)
+                    AND id NOT IN 
                     (SELECT task_id FROM fitness_tasklog
                     WHERE user_id = %s AND DATE(time_completed) = DATE(%s))
                 """,
-                [request.user.id, request.user.id, datetime.datetime.now()]
+                [request.user.id, datetime.datetime.now(), request.user.id, datetime.datetime.now()]
             )
             task_rows = cursor.fetchall()
             
