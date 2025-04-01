@@ -23,7 +23,16 @@ DAILY_WALK = 30
 TASK_COMPLETION_REQUIREMENT = 0.75
 
 # Amount of action points to reward each daily quest
-DAILY_REWARD = 5
+DAILY_REWARD = 30
+
+# Amount of action points to reward for Fit Quest Completion
+DIFFICULTY_REWARD_MAP = {
+                'Noob':    20,
+                'Easy':    25,
+                'Medium':  30,
+                'Hard':    40,
+                'Expert':  50,
+            }
 
 def redirect_home(request):
     return redirect('fitness:home')
@@ -163,8 +172,8 @@ def assign_task(request, knight_id=None):
 
     if request.method == 'POST':
         #DEBUG DATA
-        print("DEBUG: knight_id from URL =", knight_id)
-        print("DEBUG POST DATA: ", request.POST)
+        #print("DEBUG: knight_id from URL =", knight_id)
+        #print("DEBUG POST DATA: ", request.POST)
 
         # Fetch form data from POST
         knight_id = request.POST.get('knight_id')
@@ -173,9 +182,9 @@ def assign_task(request, knight_id=None):
         sets = request.POST.get('sets', 1)
         difficulty_score = request.POST.get('difficulty_score', 'Medium')
         num_per_set = request.POST.get('num_per_set', 10)
-        days_of_week = request.POST.get('days_of_week', '')
+        #days_of_week = request.POST.get('days_of_week', '')
         end_date = request.POST.get('end_date')  # e.g. "2025-03-09" or empty
-        is_completed = False
+        #is_completed = False
 
         try:
             sets = int(sets)
@@ -204,9 +213,8 @@ def assign_task(request, knight_id=None):
             # Insert the new task
             cursor.execute("""
                 INSERT INTO fitness_task
-                  (user_id, exercise_id, name, sets, difficulty_score, num_per_set,
-                   days_of_week, end_date, is_completed)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                  (user_id, exercise_id, name, sets, difficulty_score, num_per_set, end_date)
+                VALUES (%s, %s, %s, %s, %s, %s, %s)
             """, [
                 knight_id,
                 exercise_id,
@@ -214,9 +222,7 @@ def assign_task(request, knight_id=None):
                 sets,
                 difficulty_score,
                 num_per_set,
-                days_of_week,
                 end_date or None,  # store NULL if blank
-                is_completed
             ])
 
         return redirect('fitness:home')
@@ -250,6 +256,7 @@ def assign_task(request, knight_id=None):
         return render(request, 'fitness/assign_task.html', context)
 
 # Joseph 3/8/25
+# Jason Modified 3/31/25
 @login_required
 def complete_task(request, task_pk):
     # Ensure the current user is a not FitGuildOfficer.
@@ -267,16 +274,15 @@ def complete_task(request, task_pk):
             row = cursor.fetchone()
 
             task_owner_id, difficulty = row
+            
+            # If the user doe not own the task, redirect to home
+            if task_owner_id != request.user.id:
+                return redirect('fitness:home')
+            
 
             # Decide how many points to give based on the difficulty
-            difficulty_map = {
-                'Noob':    2,
-                'Easy':    3,
-                'Medium':  5,
-                'Hard':    8,
-                'Expert':  10,
-            }
-            points_to_add = difficulty_map.get(difficulty, 0)
+            
+            points_to_add = DIFFICULTY_REWARD_MAP.get(difficulty, 0)
 
             # Insert into the TaskLog with 100% completion
             cursor.execute("""
@@ -284,13 +290,14 @@ def complete_task(request, task_pk):
                 VALUES (%s, %s, %s)
             """, [task_pk, 100, datetime.datetime.now()])
 
+            # "is_completed" column was removed
             # Set is_completed = TRUE
-            cursor.execute("""
-                UPDATE fitness_task
-                   SET is_completed = True
-                 WHERE id = %s
-                   AND user_id = %s
-            """, [task_pk, request.user.id])
+            # cursor.execute("""
+            #     UPDATE fitness_task
+            #        SET is_completed = True
+            #      WHERE id = %s
+            #        AND user_id = %s
+            # """, [task_pk, request.user.id])
 
             # Update the user’s action_points in dungeon_gamestats
             cursor.execute("""
@@ -310,10 +317,9 @@ def task_details(request, task_pk):
     else:
         with connection.cursor() as cursor:
             cursor.execute("""
-                SELECT id, name, sets, difficulty_score, num_per_set,
-                    days_of_week, end_date
-                FROM fitness_task
-                WHERE id = %s
+                SELECT t.id, t.name, t.sets, t.difficulty_score, t.num_per_set, t.end_date, e.id, e.name
+                FROM fitness_task t JOIN exercises_exercise e ON t.exercise_id = e.id
+                WHERE t.id = %s
                 AND user_id = %s
                 """, [task_pk, request.user.id]
             )
@@ -329,8 +335,10 @@ def task_details(request, task_pk):
                 "sets": row[2],
                 "difficulty_score": row[3],
                 "num_per_set": row[4],
-                "days_of_week": row[5],
-                "end_date": row[6],
+                "end_date": row[5],
+                "reward": DIFFICULTY_REWARD_MAP.get(row[3], 0), # Decide how many points to give based on the difficulty
+                "exercise_id": row[6],
+                "exercise_name": row[7],
             }
 
         return render(request, "fitness/task_details.html", {"task": task_dict})
@@ -348,9 +356,11 @@ def view_current_tasks(request):
             cursor.execute("""
                 SELECT id, name
                 FROM fitness_task
-                WHERE user_id = %s AND is_completed = False
+                WHERE user_id = %s AND id NOT IN 
+                    (SELECT task_id FROM fitness_tasklog
+                    WHERE user_id = %s AND DATE(time_completed) = DATE(%s))
                 """,
-                [request.user.id]
+                [request.user.id, request.user.id, datetime.datetime.now()]
             )
             task_rows = cursor.fetchall()
             
@@ -497,7 +507,10 @@ def complete_daily(request):
 def profile(request):
     user = request.user
     officer = None
-    if user.user_type == 'FitKnight':
-        officer = FitCrawlerUser.objects.filter(gym_id=user.gym_id, user_type='FitGuildOfficer').first()
+    
+    # Modified to display gym owner even if the user is a FitGuildOfficer
+    # - Jason 3/31/25
+    officer = FitCrawlerUser.objects.filter(id=user.gym_id).first()
+
 
     return render(request, 'fitness/profile.html', {'officer': officer})

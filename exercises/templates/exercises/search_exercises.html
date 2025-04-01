@@ -34,7 +34,7 @@
     </div>
 
     {% if user.is_authenticated and user.user_type == 'FitGuildOfficer' %}
-    <h2><a href="{% url 'exercises:create_exercise' %}">Add an exercise!</a></h2>
+    <h2><a href="{% url 'exercises:create_exercise' %}" class="button">Add an exercise!</a></h2>
     {% endif %}
 </div>
 
@@ -44,12 +44,13 @@
 
 
 <div class="footer">
-    {{ page_number }}
+    
     {% if previous %}
-    <a href="{% url 'exercises:search_exercises' %}?page={{previous}}&exercise_name={{search_query}}">Prev</a>
+    <h2><a href="{% url 'exercises:search_exercises' %}?page={{previous}}&exercise_name={{search_query}}" class="button">Prev</a></h2>
     {% endif %}
+    <h2 class="button"> {{ page_number }}
     {% if next %}
-    <a href="{% url 'exercises:search_exercises' %}?page={{next}}&exercise_name={{search_query}}">Next</a>
+    <h2><a href="{% url 'exercises:search_exercises' %}?page={{next}}&exercise_name={{search_query}}" class="button">Next</a></h2>
     {% endif %}
 
 </div>

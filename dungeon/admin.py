@@ -7,6 +7,7 @@ from dungeon.models import *
 admin.site.register(DungeonEnemy)
 admin.site.register(Dungeon)
 admin.site.register(DungeonExploration)
+admin.site.register(DungeonBattle)
 admin.site.register(GameStats)
 admin.site.register(Sword)
 admin.site.register(Boots)

@@ -10,10 +10,59 @@ from urllib.parse import urlencode
 
 import datetime
 import random
+import math
 
 # Create your views here.
 
 MOVEMENT_AP_BASE_COST = 5
+
+ATTACK_AP_BASE_COST = 2
+
+ESCAPE_AP_BASE_COST = 5
+
+HEAL_BASE_COST = 3.5
+
+BASE_HEAL_AMOUNT = 5
+
+BASE_DAMAGE_AMOUNT = 5
+BASE_DEFENSE_AMOUNT = 0
+
+BASE_BATTLE_REWARD = 5
+BASE_CHEST_REWARD = 25
+
+# Helper function for rewarding the player for opening a chest
+# - Jason 3/31/25
+def chest_reward(user_id, difficulty_level):
+    reward_amount = (BASE_CHEST_REWARD * difficulty_level)
+    
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            UPDATE dungeon_gamestats
+            SET coins = (coins + %s)
+            WHERE user_id = %s
+            """, [reward_amount,user_id])
+    
+    return reward_amount
+
+# Helper function for rewarding the player for defeating an enemy
+# - Jason 3/31/25
+def battle_reward(user_id, enemy_type, difficulty_level):
+    multiplier = 1
+    if enemy_type == 'Y':
+        multiplier = 2
+    elif enemy_type == 'Z':
+        multiplier = 3
+    
+    reward_amount = (BASE_BATTLE_REWARD * multiplier) + (2 * difficulty_level)
+    
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            UPDATE dungeon_gamestats
+            SET coins = (coins + %s)
+            WHERE user_id = %s
+            """, [reward_amount,user_id])
+    
+    return reward_amount
 
 # Helper function for getting player inventory contents
 # - Jason 3/16/25
@@ -78,12 +127,221 @@ def get_player_inventory(id):
     return player_inventory
 
 
+# Helper method to get enemy stats for battles
+# - Jason 3/31/25
+def get_enemy_stats(battle_id):
+    with connection.cursor() as cursor:
+        # Fetch the dungeon instance information
+            cursor.execute("""
+                SELECT e.name, e.strength, e.defense, e.max_health, b.enemy_health
+                FROM dungeon_dungeonbattle b JOIN dungeon_dungeonenemy e ON b.enemy_id = e.id
+                WHERE b.exploration_id = %s
+                """,
+                [battle_id]
+            )
+            enemy_info = cursor.fetchone()
+            
+            enemy_stats = {}
+            enemy_stats['name'] = enemy_info[0]
+            enemy_stats['strength'] = enemy_info[1]
+            enemy_stats['defense'] = enemy_info[2]
+            enemy_stats['health'] = enemy_info[4]
+            enemy_stats['max_health'] = enemy_info[3]
+            return enemy_stats
+            
+            
+# Helper method for player attack
+# - Jason 3/31/25
+def battle_player_turn(user_id, user_inventory, enemy_stats, dungeon_layout, current_location):
+    results = {}
+    
+    attack_stength = BASE_DAMAGE_AMOUNT + user_inventory['sword_info']['stats']
+    defense_strength = BASE_DEFENSE_AMOUNT + enemy_stats['defense']
+    
+    damage_amount = max(1, attack_stength - defense_strength)
+    results['damage_done'] = damage_amount
+    
+    
+    new_health = enemy_stats['health'] - damage_amount
+    
+    with connection.cursor() as cursor:
+        
+        # If the enemy is still alive
+        if new_health > 0:
+            results['defeat'] = False
+            
+            # Update the enemy health
+            
+            cursor.execute("""
+                UPDATE dungeon_dungeonbattle
+                SET enemy_health = %s
+                WHERE exploration_id = %s
+                """,
+                [new_health,user_id]
+            )
+            
+        # The enemy is defeated, so end the battle instance
+        else:
+            results['defeat'] = True
+            
+            cursor.execute("""
+                        DELETE FROM dungeon_dungeonbattle
+                        WHERE exploration_id = %s
+                    """, [user_id])
+            
+            # Update the layout so that there is no longer an enemy on the current space
+            updated_layout = dungeon_layout[:current_location] + '1' + dungeon_layout[current_location+1:] 
+            cursor.execute("""
+                UPDATE dungeon_dungeonexploration
+                SET dungeon_layout = %s
+                WHERE user_id = %s
+                """,
+                [updated_layout,user_id]
+            )
+            
+    
+    
+    return results
+
+# Helper method for enemy attack
+# - Jason 3/31/25
+def battle_enemy_turn(user_id, user_inventory, enemy_stats, user_health):
+    results = {}
+    
+    attack_stength = 0.5*(BASE_DAMAGE_AMOUNT + enemy_stats['strength'])
+    defense_strength = BASE_DEFENSE_AMOUNT + user_inventory['armor_info']['stats']
+    
+    damage_amount = max(1, attack_stength - defense_strength)
+    results['damage_done'] = damage_amount
+    
+    
+    new_health = user_health - damage_amount
+    
+    
+    with connection.cursor() as cursor:
+        
+        # If the user is still alive
+        if new_health > 0:
+            results['defeat'] = False
+            
+            # Update the user health
+            
+            cursor.execute("""
+                UPDATE dungeon_dungeonexploration
+                SET health = %s
+                WHERE user_id = %s
+                """,
+                [new_health,user_id]
+            )
+            
+        # The user is defeated, so end the dungeon exploration
+        else:
+            results['defeat'] = True
+            
+            # Remove the battle instance
+            cursor.execute("""
+                    DELETE FROM dungeon_dungeonbattle
+                    WHERE exploration_id = %s
+                """, [user_id])
+            
+            # Remove the exploration instance
+            cursor.execute("""
+                    DELETE FROM dungeon_dungeonexploration
+                    WHERE user_id = %s
+                """, [user_id])
+    
+    
+    return results
+
+@login_required
+def death_screen(request):
+    template_args = {}
+    template_args['death'] = True
+    return render(request, 'dungeon/end_screen.html', template_args)
+
+@login_required
+def complete_screen(request):
+    template_args = {}
+    template_args['complete'] = True
+    return render(request, 'dungeon/end_screen.html', template_args)
+
+@login_required
+def exit_screen(request):
+    template_args = {}
+    return render(request, 'dungeon/end_screen.html', template_args)
+
+# End the exploration instance of a dungeon
+@login_required
+def dungeon_exit(request):
+    
+    # Ensure the current user is a FitKnight.
+    if request.user.user_type != 'FitKnight':
+        return redirect('fitness:home')
+    
+    completed = False
+    
+    # Ensure that the user is already exploring a dungeon
+    if check_for_dungeon_exploration(request.user.id):
+        with connection.cursor() as cursor:
+        # Fetch the dungeon instance information
+            cursor.execute("""
+                SELECT e.current_location, e.dungeon_layout
+                FROM dungeon_dungeonexploration e
+                WHERE e.user_id = %s
+                """,
+                [request.user.id]
+            )
+            dungeon_info = cursor.fetchone()
+
+            current_location = dungeon_info[0]
+            layout = dungeon_info[1]
+            
+            # Check if the user has reached the end of the dungeon:
+            if layout[current_location] == 'E':
+                completed = True
+                cursor.execute("""
+                    UPDATE dungeon_gamestats
+                    SET dungeons_completed = (dungeons_completed + 1)
+                    WHERE user_id = %s
+                    """,
+                    [request.user.id]
+                )
+                
+            # Remove any battle instance
+            cursor.execute("""
+                    DELETE FROM dungeon_dungeonbattle
+                    WHERE exploration_id = %s
+                """, [request.user.id])
+            
+            # Remove the exploration instance
+            cursor.execute("""
+                    DELETE FROM dungeon_dungeonexploration
+                    WHERE user_id = %s
+                """, [request.user.id])
+            
+            
+        if completed:
+            # Redirect to the complete screen after completing dungeon
+            return redirect('dungeon:complete_screen')
+        
+        else:
+            # Redirect to the exit screen after exiting dungeon  
+            return redirect('dungeon:exit_screen')
+        
+    # Otherwise redirect to select screen
+    else:
+        return redirect('dungeon:dungeon_select')
+
 
 # Dungeon Select Screen
 # - Jason 3/16/25 Started
 # - Jason 3/24/25 Completed
 @login_required
 def dungeon_select(request):
+    
+    # Ensure the current user is a FitKnight.
+    if request.user.user_type != 'FitKnight':
+        return redirect('fitness:home')
 
     # Ensure that the user is not already exploring a dungeon
     if check_for_dungeon_exploration(request.user.id):
@@ -128,7 +386,7 @@ def movable_directions(dungeon_layout, dungeon_width, current_position, facing_d
     elif dungeon_layout[(current_position - dungeon_width)] == '0':
         north = False
 
-    if (current_position + dungeon_width) > len(dungeon_layout):
+    if (current_position + dungeon_width) >= len(dungeon_layout):
         south = False
     elif dungeon_layout[(current_position + dungeon_width)] == '0':
         south = False
@@ -247,37 +505,37 @@ def generate_dungeon(dungeon_schematic, wall_spawn, chest_spawn, common_spawn, u
         # conditional chest
         if layout[i] == 'c':
             if random.random() < chest_spawn:
-                layout[i] = 'C'
+                layout = layout[:i] + 'C' + layout[i+1:]
             else:
-                layout[i] = '1'
+                layout = layout[:i] + '1' + layout[i+1:]
 
         # conditional wall
         elif layout[i] == 'o':
             if random.random() < wall_spawn:
-                layout[i] = '0'
+                layout = layout[:i] + '0' + layout[i+1:]
             else:
-                layout[i] = '1'
+                layout = layout[:i] + '1' + layout[i+1:]
 
         # conditional common monster
         elif layout[i] == 'x':
             if random.random() < common_spawn:
-                layout[i] = 'X'
+                layout = layout[:i] + 'X' + layout[i+1:]
             else:
-                layout[i] = '1'
+                layout = layout[:i] + '1' + layout[i+1:]
 
         # conditional uncommon monster
         elif layout[i] == 'y':
             if random.random() < uncommon_spawn:
-                layout[i] = 'Y'
+                layout = layout[:i] + 'Y' + layout[i+1:]
             else:
-                layout[i] = '1'
+                layout = layout[:i] + '1' + layout[i+1:]
 
         # conditional boss monster
         elif layout[i] == 'z':
             if random.random() < boss_spawn:
-                layout[i] = 'Z'
+                layout = layout[:i] + 'Z' + layout[i+1:]
             else:
-                layout[i] = '1'
+                layout = layout[:i] + '1' + layout[i+1:]
 
     return layout
 
@@ -297,10 +555,111 @@ def check_for_dungeon_exploration(user_id):
         )
 
         return (cursor.fetchone() is not None)
+    
+
+# Helper function to determine whether the user is in a battle.
+# Returns True if the user is in a battle, otherwise returns false
+# - Jason 3/31/25
+def check_for_dungeon_battle(user_id):
+    with connection.cursor() as cursor:
+        # Check if the user already has a dungeon exploration
+        cursor.execute("""
+            SELECT exploration_id, enemy_id
+            FROM dungeon_dungeonbattle
+            WHERE exploration_id = %s
+            """,
+            [user_id]
+        )
+
+        return (cursor.fetchone() is not None)
 
 
 
-
+@login_required
+def heal(request):
+    # Ensure the current user is a FitKnight.
+    if request.user.user_type != 'FitKnight':
+        return redirect('fitness:home')
+    
+    # Ensure that the user is already exploring a dungeon
+    if check_for_dungeon_exploration(request.user.id):
+        
+        inventory = get_player_inventory(request.user.id)
+        
+        max_health = inventory['max_health']
+        
+        # Calculate the healing cost (formula subject to change)
+        heal_cost = HEAL_BASE_COST
+        heal_amount = BASE_HEAL_AMOUNT * inventory['staff_info']['stats']
+        
+        # Determine whether the player is in battle
+        in_battle = check_for_dungeon_battle(request.user.id)
+        
+        
+        # If the user has enough action points to heal:
+        if inventory['action_points'] >= heal_cost:
+            
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                               SELECT user_id, health
+                               FROM dungeon_dungeonexploration
+                               WHERE user_id = %s
+                               """,
+                               [request.user.id]
+                               )
+                
+                current_health = cursor.fetchone()[1]
+                
+                # Deduct action points
+                cursor.execute("""
+                    UPDATE dungeon_gamestats
+                    SET action_points = (action_points - %s)
+                    WHERE user_id = %s
+                    """,
+                    [heal_cost, request.user.id]
+                )
+                new_health = min(max_health, heal_amount + current_health)
+                # Heal health
+                cursor.execute("""
+                    UPDATE dungeon_dungeonexploration
+                    SET health = %s
+                    WHERE user_id = %s
+                    """,
+                    [new_health, request.user.id]
+                )
+                
+                # If the user is in a battle, the enemy takes a turn afterward
+                if in_battle:
+                    enemy_stats = get_enemy_stats(request.user.id)
+                    
+                    # Then, the enemy attacks
+                    enemy_results = battle_enemy_turn(request.user.id, inventory, enemy_stats, new_health)
+                    # If the player is defeated
+                    if enemy_results['defeat']:
+                        return redirect('dungeon:death_screen')
+                    
+                    return redirect(reverse('dungeon:dungeon_battle') + '?' + urlencode({'player_heal':heal_amount}) + '&' + urlencode({'enemy_damage':enemy_results['damage_done']}) + '&' + urlencode({'enemy_type':enemy_stats['name']} ))
+                
+                else:
+                    return redirect('dungeon:dungeon_view')
+            
+        # Otherwise they are too exhausted to heal
+        else:
+            if in_battle:
+                return redirect(reverse('dungeon:dungeon_battle') + '?' + urlencode({'exhausted':True}))   
+            else:
+                return redirect(reverse('dungeon:dungeon_view') + '?' + urlencode({'exhausted':True}))   
+                
+        
+            
+        
+        
+        
+    
+    # Otherwise send them to the dungeon select screen
+    else:
+        return redirect('dungeon:dungeon_select')
+    
 
 
 # Initializes a dungeon exploration instance for the user.
@@ -308,6 +667,10 @@ def check_for_dungeon_exploration(user_id):
 # - Jason 3/24/25 Finished
 @login_required
 def dungeon_begin_exploration(request, dungeon_pk):
+    # Ensure the current user is a FitKnight.
+    if request.user.user_type != 'FitKnight':
+        return redirect('fitness:home')
+    
     # Ensure that the user has gamestats
     check_and_create_game_stats(request.user.id)
 
@@ -354,21 +717,30 @@ def dungeon_begin_exploration(request, dungeon_pk):
     
     return redirect('dungeon:dungeon_view')
 
-# WIP for dungeon crawler implementation
-# - Jason 3/24/25 Started
 @login_required
-def dungeon_view(request):
-
-    # Ensure that the user is already exploring a dungeon,
-    # if they aren't, then redirect them to the select screen
-    if not check_for_dungeon_exploration(request.user.id):
-        return redirect('dungeon:dungeon_select')
+def dungeon_battle_view(request):
+    # Ensure the current user is a FitKnight.
+    if request.user.user_type != 'FitKnight':
+        return redirect('fitness:home')
+    
+    # Ensure that the user is already in a battle,
+    # if they aren't then redirect them to the dungeon view
+    if not check_for_dungeon_battle(request.user.id):
+        return redirect('dungeon:dungeon_view')
+    
     
     template_args = {}
     
-    # Flag to display message if the user's movement fails due to exhaustion
+    # Flag to display message if the user's action fails due to exhaustion
     if request.GET.get('exhausted'):
-        template_args['exhausted'] = True
+        template_args['status'] = 'You are too exhausted to do that.'
+        
+    if request.GET.get('player_damage'):
+        template_args['status'] = '\nYou did ' + request.GET.get('player_damage') + ' damage.\n' + request.GET.get('enemy_type') + ' did ' + request.GET.get('enemy_damage') + ' damage.'
+    
+    
+    if request.GET.get('player_heal'):
+        template_args['status'] = '\nYou healed ' + request.GET.get('player_heal') + ' health.\n' + request.GET.get('enemy_type') + ' did ' + request.GET.get('enemy_damage') + ' damage.'
     
     with connection.cursor() as cursor:
         # Fetch the dungeon instance information
@@ -386,8 +758,316 @@ def dungeon_view(request):
         direction = dungeon_info[2]
         layout = dungeon_info[1]
 
-        template_args['inventory'] = get_player_inventory(request.user.id)
+        inventory = get_player_inventory(request.user.id)
+        template_args['inventory'] = inventory
         template_args['health'] = dungeon_info[8]
+        
+        template_args['movement_cost'] = MOVEMENT_AP_BASE_COST * inventory['boots_info']['stats']
+        template_args['heal_cost'] = HEAL_BASE_COST 
+        template_args['heal_amount'] = BASE_HEAL_AMOUNT * inventory['staff_info']['stats']
+        
+        template_args['attack_cost'] = ATTACK_AP_BASE_COST
+        template_args['escape_cost'] = ESCAPE_AP_BASE_COST
+
+        movable = movable_directions(layout, dungeon_info[3], current_location, direction)
+
+        wall_string = 'W'
+
+        if movable['l'] > -1:
+            wall_string = wall_string + 'l'
+            template_args['left'] = True
+        
+        if movable['f'] > -1:
+            wall_string = wall_string + 'f'
+            template_args['forwards'] = True
+
+        if movable['r'] > -1:
+            wall_string = wall_string + 'r'
+            template_args['right'] = True
+
+        if movable['b'] > -1:
+            template_args['backwards'] = True
+
+        wall_string = wall_string + '.png'
+
+        dungeon_sprite_path = 'dungeon/dungeon_sprites/default/'
+        if dungeon_info[4]:
+            dungeon_sprite_path = 'dungeon/dungeon_sprites/' + dungeon_info[4] + '/'
+
+        template_args['background'] = dungeon_sprite_path + wall_string
+        
+        if direction == 'N':
+            template_args['north'] = True
+        elif direction == 'E':
+            template_args['east'] = True
+        elif direction == 'W':
+            template_args['west'] = True
+        # Otherwise, south
+        else:
+            template_args['south'] = True
+
+        
+        cursor.execute("""
+            SELECT e.name, CONCAT('dungeon/enemies/', COALESCE(e.sprite_path, 'default.png')), b.enemy_health, e.max_health
+            FROM dungeon_dungeonbattle b JOIN dungeon_dungeonenemy e ON b.enemy_id = e.id
+            WHERE b.exploration_id = %s
+            """,
+            [request.user.id]
+            )
+        monster_info = cursor.fetchone()
+        template_args['monster'] = monster_info[1]
+        template_args['monster_name'] = monster_info[0]
+        template_args['monster_max_health'] =  monster_info[3]
+        template_args['monster_health'] =  monster_info[2]
+     
+
+    return render(request, 'dungeon/battle_view.html', template_args)
+
+@login_required
+def battle_attack(request):
+    
+    # Ensure the current user is a FitKnight.
+    if request.user.user_type != 'FitKnight':
+        return redirect('fitness:home')
+    
+    # Ensure that the user is in a battle,
+    # if they aren't, then redirect them to the dungeon view screen.
+    if not check_for_dungeon_battle(request.user.id):
+        return redirect('dungeon:dungeon_view')
+    
+    inventory = get_player_inventory(request.user.id)
+    enemy_stats = get_enemy_stats(request.user.id)
+    
+    # Ensure the user has enough AP to attack
+    new_AP = inventory['action_points'] - ATTACK_AP_BASE_COST
+    
+    if new_AP < 0:
+        return redirect(reverse('dungeon:dungeon_battle') + '?' + urlencode({'exhausted':True}))   
+    
+
+    
+    with connection.cursor() as cursor:
+        # Fetch the dungeon instance information
+        cursor.execute("""
+            SELECT e.current_location, e.dungeon_layout, e.health, d.difficulty_quantifer
+            FROM dungeon_dungeonexploration e JOIN dungeon_dungeon d ON e.dungeon_id = d.id
+            WHERE e.user_id = %s
+            """,
+            [request.user.id]
+        )
+        dungeon_info = cursor.fetchone()
+        user_health = dungeon_info[2]
+        layout = dungeon_info[1]
+        location = dungeon_info[0]
+        difficulty_level = math.ceil(dungeon_info[3])
+        
+        enemy_type = layout[location]
+        
+        # Update the player's action points
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                UPDATE dungeon_gamestats
+                SET action_points = %s
+                WHERE user_id = %s
+                """, [new_AP,request.user.id])
+        
+        # First, the user attacks
+        player_results = battle_player_turn(request.user.id, inventory, enemy_stats, layout, location)
+        
+        # If the enemy is defeated
+        if player_results['defeat']:
+            rewarded = battle_reward(request.user.id, enemy_type, difficulty_level)
+            
+            return redirect(reverse('dungeon:dungeon_view') + '?' + urlencode({'battle_earn':rewarded}))  
+        
+        
+        # Then, the enemy attacks
+        enemy_results = battle_enemy_turn(request.user.id, inventory, enemy_stats, user_health)
+        
+        # If the player is defeated
+        if enemy_results['defeat']:
+            return redirect('dungeon:death_screen')
+        
+        
+        
+    return redirect(reverse('dungeon:dungeon_battle') + '?' + urlencode({'player_damage':player_results['damage_done']}) + '&' + urlencode({'enemy_damage':enemy_results['damage_done']}) + '&' + urlencode({'enemy_type':enemy_stats['name']} ))  
+        
+        
+# User opens a chest and receives its rewards
+# - Jason 3/31/25
+@login_required
+def open_chest(request):
+    
+    # Ensure the current user is a FitKnight.
+    if request.user.user_type != 'FitKnight':
+        return redirect('fitness:home')
+    
+    # Ensure that the user is already exploring a dungeon,
+    # if they aren't, then redirect them to the select screen
+    if not check_for_dungeon_exploration(request.user.id):
+        return redirect('dungeon:dungeon_select')
+    
+    
+    with connection.cursor() as cursor:
+        # Fetch the dungeon instance information
+        cursor.execute("""
+            SELECT e.current_location, e.dungeon_layout, d.difficulty_quantifer
+            FROM dungeon_dungeonexploration e JOIN dungeon_dungeon d ON e.dungeon_id = d.id
+            WHERE e.user_id = %s
+            """,
+            [request.user.id]
+        )
+        dungeon_info = cursor.fetchone()
+        current_location = dungeon_info[0]
+        current_layout = dungeon_info[1]
+        difficulty = math.ceil(dungeon_info[2])
+        
+        
+        
+        # If the user is standing on a chest
+
+        if current_layout[current_location] == 'C':
+            new_layout = current_layout[:current_location] + '1' + current_layout[current_location+1:] 
+            
+            # Reward the player
+            rewarded = chest_reward(request.user.id, difficulty)
+            
+            # Remove the chest
+            cursor.execute("""
+                UPDATE dungeon_dungeonexploration
+                SET dungeon_layout = %s
+                WHERE user_id = %s
+                """, [new_layout, request.user.id])
+            
+            return redirect(reverse('dungeon:dungeon_view') + '?' + urlencode({'chest_earn':rewarded}))  
+        
+        
+    
+    # Otherwise the user isn't on a chest, so redirect them to the dungeon view
+    
+    return redirect('dungeon:dungeon_view')
+            
+    
+    
+    
+
+# Lets the user escape from a battle at the cost of AP
+# - Jason 3/31/25
+@login_required
+def battle_retreat(request):
+    # Ensure the current user is a FitKnight.
+    if request.user.user_type != 'FitKnight':
+        return redirect('fitness:home')
+    
+    # Ensure that the user is in a battle,
+    # if they aren't, then redirect them to the dungeon view.
+    if not check_for_dungeon_battle(request.user.id):
+        return redirect('dungeon:dungeon_view')
+    
+    inventory = get_player_inventory(request.user.id)
+    
+    # Ensure the user has enough AP to flee
+    new_AP = inventory['action_points'] - ESCAPE_AP_BASE_COST
+    
+    if new_AP < 0:
+        return redirect(reverse('dungeon:dungeon_battle') + '?' + urlencode({'exhausted':True}))   
+    
+    
+    # Update the player's action points
+    with connection.cursor() as cursor:
+        cursor.execute("""
+            UPDATE dungeon_gamestats
+            SET action_points = %s
+            WHERE user_id = %s
+            """, [new_AP,request.user.id])
+        
+        # Move the user out of the battle
+        cursor.execute("""
+            SELECT current_location, previous_location 
+            FROM dungeon_dungeonexploration
+            WHERE user_id = %s
+            """, [request.user.id])
+        
+        prev_location = cursor.fetchone()[1]
+        
+        # Move the user out of the battle
+        cursor.execute("""
+            UPDATE dungeon_dungeonexploration
+            SET current_location = %s
+            WHERE user_id = %s
+            """, [prev_location, request.user.id])
+        
+        # Delete the battle instance
+        cursor.execute("""
+                        DELETE FROM dungeon_dungeonbattle
+                        WHERE exploration_id = %s
+                    """, [request.user.id])
+        
+        
+    
+    return redirect('dungeon:dungeon_view')
+        
+    
+    
+    
+    
+
+# WIP for dungeon crawler implementation
+# - Jason 3/24/25 Started
+@login_required
+def dungeon_view(request):
+    
+    # Ensure the current user is a FitKnight.
+    if request.user.user_type != 'FitKnight':
+        return redirect('fitness:home')
+
+    # Ensure that the user is already exploring a dungeon,
+    # if they aren't, then redirect them to the select screen
+    if not check_for_dungeon_exploration(request.user.id):
+        return redirect('dungeon:dungeon_select')
+    
+    # Ensure that the user is not already in a battle,
+    # if they are, then redirect them to the battle screen.
+    if check_for_dungeon_battle(request.user.id):
+        return redirect('dungeon:dungeon_battle')
+    
+    
+    
+    template_args = {}
+    
+    # Flag to display message if the user's movement fails due to exhaustion
+    if request.GET.get('exhausted'):
+        template_args['status'] = 'You are too exhausted to move.'
+        
+    if request.GET.get('chest_earn'):
+        template_args['status'] = 'You found ' + request.GET.get('chest_earn') + ' coins in the chest.'
+        
+    if request.GET.get('battle_earn'):
+        template_args['status'] = 'You found ' + request.GET.get('battle_earn') + ' coins after the battle.'
+    
+    with connection.cursor() as cursor:
+        # Fetch the dungeon instance information
+        cursor.execute("""
+            SELECT e.current_location, e.dungeon_layout, e.direction, d.width, d.sprite_folder, 
+                       d.common_monster_id, d.uncommon_monster_id, d.boss_monster_id, e.health
+            FROM dungeon_dungeonexploration e JOIN dungeon_dungeon d ON e.dungeon_id = d.id
+            WHERE e.user_id = %s
+            """,
+            [request.user.id]
+        )
+        dungeon_info = cursor.fetchone()
+
+        current_location = dungeon_info[0]
+        direction = dungeon_info[2]
+        layout = dungeon_info[1]
+
+        inventory = get_player_inventory(request.user.id)
+        template_args['inventory'] = inventory
+        template_args['health'] = dungeon_info[8]
+        
+        template_args['movement_cost'] = MOVEMENT_AP_BASE_COST * inventory['boots_info']['stats']
+        template_args['heal_cost'] = HEAL_BASE_COST 
+        template_args['heal_amount'] = BASE_HEAL_AMOUNT * inventory['staff_info']['stats']
 
         movable = movable_directions(layout, dungeon_info[3], current_location, direction)
 
@@ -428,8 +1108,12 @@ def dungeon_view(request):
 
         # Check if the user is standing on a chest
         if layout[current_location] == 'C':
+            print("chest debug")
             template_args['chest'] = dungeon_sprite_path + 'chest' + direction + '.png'
 
+        # Check if the user is standing on the exit
+        if layout[current_location] == 'E':
+            template_args['portal'] = dungeon_sprite_path + 'portal.png'
 
         monster = -1
         # Check if the user is standing on a common monster
@@ -444,19 +1128,27 @@ def dungeon_view(request):
         if layout[current_location] == 'Z':
             monster = dungeon_info[7]
 
-        # Get the monster sprite
+        # Get the monster info
         if monster > -1:
-            print(monster)
             cursor.execute("""
-            SELECT name, CONCAT('dungeon/enemies/' ,COALESCE(sprite_path, 'default.png'))
+            SELECT name, max_health
             FROM dungeon_dungeonenemy
             WHERE id = %s
             """,
             [monster]
             )
-            monster_info = cursor.fetchone()
-            print(monster_info[1])
-            template_args['monster'] = monster_info[1]
+            monster_health = cursor.fetchone()[1]
+            
+            # Create a battle instance
+            cursor.execute("""
+                    INSERT INTO dungeon_dungeonbattle
+                    (exploration_id, enemy_id, enemy_health)
+                    VALUES (%s, %s, %s)
+                    """,
+                    [request.user.id, monster, monster_health]
+                    )
+            
+            return redirect('dungeon:dungeon_battle')
      
 
     return render(request, 'dungeon/view_dungeon.html', template_args)
@@ -465,6 +1157,15 @@ def dungeon_view(request):
 # WIP for dungeon crawler implementation
 # - Jason 3/24/25 Started
 def dungeon_traverse(request, direction):
+    # Ensure the current user is a FitKnight.
+    if request.user.user_type != 'FitKnight':
+        return redirect('fitness:home')
+    
+    # Ensure that the user is not already in a battle,
+    # if they are, then redirect them to the battle screen.
+    if check_for_dungeon_battle(request.user.id):
+        return redirect('dungeon:dungeon_battle')
+    
     # Determine whether the user has enough action points to move
     inventory = get_player_inventory(request.user.id)
     
@@ -552,6 +1253,10 @@ def dungeon_traverse(request, direction):
 # - Jason 3/24/25 Started
 def dungeon_rotate(request, direction):
     
+    # Ensure the current user is a FitKnight.
+    if request.user.user_type != 'FitKnight':
+        return redirect('fitness:home')
+    
     with connection.cursor() as cursor:
         # Fetch the direction the user is currently facing
         cursor.execute("""
@@ -617,6 +1322,10 @@ def dungeon_rotate(request, direction):
 # - Jason 3/16/25
 @login_required
 def view_inventory(request):
+    # Ensure the current user is a FitKnight.
+    if request.user.user_type != 'FitKnight':
+        return redirect('fitness:home')
+    
     # Ensure that the user has gamestats
     check_and_create_game_stats(request.user.id)
 
@@ -628,6 +1337,10 @@ def view_inventory(request):
 # - Jason 3/8/25, Updated Jason 3/16/25
 @login_required
 def view_milestones(request):
+    # Ensure the current user is a FitKnight.
+    if request.user.user_type != 'FitKnight':
+        return redirect('fitness:home')
+    
     # Ensure that the user has gamestats
     check_and_create_game_stats(request.user.id)
 
@@ -711,6 +1424,10 @@ def view_milestones(request):
 
 @login_required
 def complete_milestone(request, milestone_pk):
+    # Ensure the current user is a FitKnight.
+    if request.user.user_type != 'FitKnight':
+        return redirect('fitness:home')
+    
     # Ensure that the user has gamestats
     check_and_create_game_stats(request.user.id)
 
@@ -732,8 +1449,6 @@ def complete_milestone(request, milestone_pk):
         
         # Otherwise, check if the user has actually completed the milestone
         else:
-
-            print('checking for completion...')
 
             # Determine the total number of each difficulty task the user has completed
             tasks_completed = []

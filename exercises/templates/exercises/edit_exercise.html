@@ -1,0 +1,33 @@
+{% extends 'fitness/header.html' %}
+
+{% block content %}
+
+<h1>Edit Exercise</h1>
+
+<div class='error-message'>
+    <p>{{ error }} </p>
+</div>
+
+
+<form method="POST" class="create-exercise-form">
+    {% csrf_token %}
+    <p>
+        <h2 id="id_exercise_name">Exercise Name: {{exercise_name}}<h2>
+    </p>
+    
+    <p>
+        <label for="id_exercise_description">Instructions:</label>
+        <textarea type="text" name="description" maxlength="511" required id="id_exercise_description">{{exercise_description}}</textarea>
+    </p>
+    
+    <p>
+        <label for="id_video_link">Video Link:</label>
+        <input type="text" name="video_link" id="id_video_link" value="{{exercise_video_link}}">
+    </p>
+
+    <button type="submit">Submit</button>
+</form>
+
+
+
+{% endblock %}

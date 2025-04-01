@@ -97,6 +97,40 @@ def signup(request):
             # Passwords didn't match, so display an error
             return render(request, 'gym/signup.html', {'error':'Passwords did not match!'})
     
+@login_required
+def change_password(request):
+    # Ensure the user is already logged in
+    if not request.user.is_authenticated:
+        # Otherwise, redirect them to the home page
+        return redirect(homepage_url)
+    
+    if request.method == 'GET':
+        # The user is requesting the change password page
+        return render(request, 'gym/change_password.html')
+    else:
+        # The user is already at the change password page, trying to change their password with a POST request
+        
+        user = authenticate(request, username=request.user.username, password=request.POST['original_password'])
+        if user is not None:
+            # User is successfully authenticated, so change their password
+            
+            # Ensure passwords match
+            if request.POST['new_password1'] == request.POST['new_password2']:
+                user.set_password(request.POST['new_password1'])
+                user.save()
+                
+                # Log the user back in because changing the password logs them out
+                login_user(request, user)
+                
+                return redirect('fitness:profile')
+                
+            else:
+                # Passwords didn't match, so display an error
+                return render(request, 'gym/change_password.html', {'error':'Passwords did not match!'})
+        
+        else:
+            # User entered the incorrect password
+            return render(request, 'gym/change_password.html', {'error':'Incorrect Password!'})
 
 # The below features are new to this project, only Django Docs were referenced when necessary.
 # https://docs.djangoproject.com/en/5.1/topics/db/sql/
@@ -181,8 +215,8 @@ def remove_member(request, knight_id):
     officer_gym_id = request.user.gym_id
 
     if not officer_gym_id:
-        # if the offcer does not have a gym for some reason, epic fail lol
-        raise Http404("Illegal Operation: You do not own a gym dumbass")
+        # if the officer does not have a gym for some reason, epic fail lol
+        raise Http404("Failed Operation: You do not own a gym.")
     
     if request.method == 'POST':
         # remove the knight
@@ -212,7 +246,15 @@ def remove_member(request, knight_id):
     
     else:
         # if GET, show a confirmation
-        return render(request, 'gym/remove_member.html', {'knight_id': knight_id})
+        with connection.cursor() as cursor:
+            # verify the knight is part of the gym
+            cursor.execute("""SELECT id, username
+                FROM gym_fitcrawleruser
+                WHERE id = %s
+            """, [knight_id])
+            knight_name = cursor.fetchone()[1]
+        
+        return render(request, 'gym/remove_member.html', {'knight_id': knight_id, 'knight_name':knight_name})
 
 # Joe Marchione            
 @login_required

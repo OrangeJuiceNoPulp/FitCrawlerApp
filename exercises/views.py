@@ -157,4 +157,44 @@ def view_exercise(request, exercise_pk):
 
         return render(request, 'exercises/view_exercise.html', context)
     
+
+
+
+@login_required
+def edit_exercise(request, exercise_pk):
+    # User must be a FitGuildOfficer
+    if request.user.user_type != "FitGuildOfficer":
+            # If not, then redirect to the homepage
+            return redirect(homepage_url)
+    else:
+        if request.method == 'GET':
+            # The user is requesting the edit exercise page
+            template_args = {}
+            
+            with connection.cursor() as cursor:
+                cursor.execute("""
+                    SELECT id, name, description, video_link
+                    FROM exercises_exercise
+                    WHERE id = %s
+                    """,[exercise_pk])
+                row = cursor.fetchone()
+                
+                template_args['exercise_id'] = row[0]
+                template_args['exercise_name'] = row[1]
+                template_args['exercise_description'] = row[2]
+                template_args['exercise_video_link'] = row[3]
+            
+            return render(request, 'exercises/edit_exercise.html', template_args)
+        else:
+            # The user is already at the edit exercise page, trying to edit an exercise with a POST request
+            with connection.cursor() as cursor:
+                # Update the exercise in the database
+                cursor.execute("""
+                               UPDATE exercises_exercise 
+                               SET description = %s, video_link = %s
+                               WHERE id = %s
+                               """,
+                               [request.POST['description'], request.POST['video_link'], exercise_pk])
     
+                # Redirect the user to the viewing page for the recently edited exercise
+                return redirect('exercises:view_exercise', exercise_pk)

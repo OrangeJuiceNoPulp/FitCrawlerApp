@@ -43,10 +43,10 @@
 <div class="footer">
     {{ page_number }}
     {% if previous %}
-    <a href="{% url 'fitness:search_knights' %}?page={{previous}}&knight_name={{search_query}}">Prev</a>
+    <a href="{% url 'gym:search_knights' %}?page={{previous}}&knight_name={{search_query}}">Prev</a>
     {% endif %}
     {% if next %}
-    <a href="{% url 'fitness:search_knights' %}?page={{next}}&knight_name={{search_query}}">Next</a>
+    <a href="{% url 'gym:search_knights' %}?page={{next}}&knight_name={{search_query}}">Next</a>
     {% endif %}
 
 </div>

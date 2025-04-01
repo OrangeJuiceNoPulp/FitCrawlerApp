@@ -19,7 +19,7 @@
         <div class="row">
             <p class="text">{{user.username}}</p>
             <p class="text">{{user.email}}</p>
-            <a class="button">Change Password</a>
+            <h4><a href="{% url 'gym:change_password' %}" class="button">Change Password</a></h4>
         </div>
         <div class="row">
             {% if officer %}

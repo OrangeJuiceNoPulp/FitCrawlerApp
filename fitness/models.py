@@ -20,9 +20,12 @@ class Task(models.Model):
     sets = models.IntegerField()
     difficulty_score = models.CharField(max_length=31, choices=DIFFICULTIES, default='Medium')
     num_per_set = models.IntegerField()
-    days_of_week = models.CharField(max_length=15)
+    
+    # Ability to assign tasks for certain days was removed.
+    # Instead, tasks can be completed every day until the end date.
+    #days_of_week = models.CharField(max_length=15)
+    
     end_date = models.DateTimeField(null=True)
-    is_completed = models.BooleanField(default=False)
     
     user = models.ForeignKey(FitCrawlerUser, on_delete=models.CASCADE)
     exercise = models.ForeignKey(Exercise, on_delete=models.CASCADE)

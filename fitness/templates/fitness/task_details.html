@@ -5,18 +5,27 @@
 
     <h1>Task: {{ task.name }}</h1>
 
+    <p> Exercise: 
+        <a href="{% url 'exercises:view_exercise' task.exercise_id %}">
+            {{task.exercise_name}}
+        </a>
+    </p>
+
     <p>Sets: {{ task.sets }}</p>
     <p>Number per Set: {{ task.num_per_set }}</p>
     <p>Difficulty: {{ task.difficulty_score }}</p>
     <!-- <p>Days of Week: {{ task.days_of_week }}</p> -->
     <p>End Date: {{ task.end_date }}</p>
+
+    
     <div class="rewardDiv">
-        <img src="{% static 'fitness/armor_default.png' %}" alt="FitCrawler Logo" class="item">
+        <p>Reward: {{ task.reward }} Action Points</p>
+        <!-- <img src="{% static 'fitness/armor_default.png' %}" alt="FitCrawler Logo" class="item"> -->
      </div>
 
     <form action="{% url 'fitness:complete_task' task_pk=task.id %}" method="POST">
         {% csrf_token %}
-        <button type="submit">Done</button>
+        <button type="submit">Mark As Complete</button>
     </form>
 
     <p>

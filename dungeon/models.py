@@ -17,8 +17,8 @@ STARTING_ACTION_POINTS = 0
 class DungeonEnemy(models.Model):
     # Columns
     name = models.CharField(max_length=63)
-    strength = models.IntegerField()
-    defense = models.IntegerField()
+    strength = models.FloatField()
+    defense = models.FloatField()
     max_health = models.IntegerField()
 
     sprite_path = models.CharField(max_length=63, blank=True, null=True)
@@ -82,7 +82,7 @@ class DungeonExploration(models.Model):
     previous_location = models.IntegerField()
     direction = models.CharField(max_length=7)
     
-    health = models.IntegerField()
+    health = models.FloatField()
     
     exploration_start = models.DateTimeField(default=now)
     
@@ -91,6 +91,16 @@ class DungeonExploration(models.Model):
     
     def __str__(self):
         return str(self.user) + ': ' + str(self.dungeon) 
+    
+    
+class DungeonBattle(models.Model):
+    exploration = models.OneToOneField(DungeonExploration, on_delete=models.CASCADE, related_name='dungeon_battle', primary_key=True)
+    
+    enemy = models.ForeignKey(DungeonEnemy, on_delete=models.CASCADE)
+    enemy_health = models.FloatField()
+    
+    def __str__(self):
+        return str(self.exploration) + ': ' + str(self.enemy) 
     
 class Sword(models.Model):
     # Columns

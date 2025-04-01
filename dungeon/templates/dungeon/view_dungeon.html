@@ -14,11 +14,15 @@
     <div class="screen_container">
         <div class="dungeon_screen_container">
             {% if chest %}
+            <a class="dungeon_overlay" href="{% url 'dungeon:open_chest'%}">
                 <img class="dungeon_overlay" src="{% static chest %}" width="512" height="384">
+            </a>
             {% endif %}
 
-            {% if monster %}
-                <img class="dungeon_overlay" src="{% static monster %}" width="512" height="384">
+            {% if portal %}
+            <a class="dungeon_overlay" href="{% url 'dungeon:dungeon_exit'%}">
+                <img class="dungeon_overlay" src="{% static portal %}" width="512" height="384">
+            </a> 
             {% endif %}
 
             <img class="dungeon_background" src="{% static background %}" width="512" height="384">
@@ -104,18 +108,33 @@
 
         <div class="player_info_container">
             <h1>{{inventory.username}}</h1>
-            <label for="health_bar">Health:</label>
+            <label for="health_bar">Health: {{health}} / {{inventory.max_health}}</label>
             <progress value="{{health}}" max="{{inventory.max_health}}" id="health_bar">{{health}} / {{inventory.max_health}}</progress>
+
+
+            <h4>Heal Cost (+{{heal_amount}} Health): {{heal_cost}} AP</h4>
+            <h2><a href="{% url 'dungeon:heal' %}" class="button" id="heal_button">Heal</a></h2>
+
             <h3>Action Points: {{inventory.action_points}}</h3>
-            {% if north%}
-                <h3>North</h3>
-            {% elif east %}
-                <h3>East</h3>
-            {% elif west %}
-                <h3>West</h3>
+            <h4>Movement Cost: {{movement_cost}} AP</h4>
+            <h4>Coins: {{inventory.coins}}</h4>
+            {% if status %}
+            <h4>Status: {{status}}</h4>
             {% else %}
-                <h3>South</h3>
+            <h4>Status: You feel strong.</h4>
             {% endif %}
+
+            {% if north %}
+                <img src="{% static 'dungeon/UI/compass_north.png' %}" width="64" height="64">
+            {% elif east %}
+                <img src="{% static 'dungeon/UI/compass_east.png' %}" width="64" height="64">
+            {% elif west %}
+                <img src="{% static 'dungeon/UI/compass_west.png' %}" width="64" height="64">
+            {% else %}
+                <img src="{% static 'dungeon/UI/compass_south.png' %}" width="64" height="64">
+            {% endif %}
+
+            <h2><a href="{% url 'dungeon:dungeon_exit' %}" class="button" id="heal_button">Exit Dungeon</a></h2>
         </div>
     </div>
     
