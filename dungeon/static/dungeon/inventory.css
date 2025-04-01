@@ -1,0 +1,48 @@
+
+body{
+    background-color: #181818;
+}
+
+.container {
+    text-align: center;
+}
+
+.inventory_container {
+    display: grid;
+    grid-template-areas:
+        "sword boots"
+        "staff armor";
+    grid-template-columns: auto auto;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.inventory_container > div {
+    background-color: #232323;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(255, 221, 87, 0.5);
+    transition: transform 0.3s ease-in-out;
+}
+
+.inventory_container > div:hover {
+    transform: scale(1.05);
+    z-index: 0;
+}
+
+.inventory_container img {
+    border-radius: 5px;
+}
+
+.container h2, h3 {
+    color: #ffdd57;
+    text-shadow: 2px 2px 5px rgba(255, 221, 87, 0.8);
+}
+
+a{
+    color: #ffdd00;
+}
