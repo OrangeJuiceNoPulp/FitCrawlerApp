@@ -62,7 +62,7 @@ select {
 }
 
 button {
-    background-color: #ffdd57;
+    background-color: #39FF14;
     color: #232323;
     font-size: 1.2rem;
     font-weight: bold;
@@ -76,7 +76,7 @@ button {
 }
 
 button:hover {
-    background-color: #f4c430;
+    background-color: #28a828;
     transform: scale(1.05);
 }
 

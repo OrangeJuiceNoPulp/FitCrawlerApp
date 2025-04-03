@@ -4,7 +4,7 @@
 
 body {
     font-family: 'Rajdhani', sans-serif;
-    background-color: #121212;
+    background-color: #181818;
     color: white;
     margin: 0;
     padding: 0;
@@ -24,9 +24,9 @@ h1 {
 }
 
 form {
-    background-color: #232323;
-    padding: 1.5rem;
-    border-radius: 10px;
+    background-color: #121212;
+    padding: 5vw;
+    border-radius:50px;
     box-shadow: 0px 4px 10px rgba(255, 221, 87, 0.3);
     width: 60%;
     max-width: 500px;
@@ -63,7 +63,7 @@ select {
 }
 
 button {
-    background-color: #ffdd57;
+    background-color: #35FF14;
     color: #232323;
     font-size: 1.2rem;
     font-weight: bold;
@@ -77,6 +77,6 @@ button {
 }
 
 button:hover {
-    background-color: #f4c430;
+    background-color: #35FF90;
     transform: scale(1.05);
 }

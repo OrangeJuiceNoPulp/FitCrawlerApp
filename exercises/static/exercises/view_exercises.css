@@ -4,7 +4,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
 
 body {
-    background-color: #282828;
+    background-color: #181818;
     color: white;
     font-family: "Rajdhani", sans-serif;
     margin: 0;
@@ -14,6 +14,7 @@ body {
     align-items: center;
     justify-content: center;
     min-height: 100vh;
+    padding-top: 8vh;
 }
 
 .container {
@@ -24,9 +25,9 @@ body {
     width: 80%;
     max-width: 900px;
     padding: 1.5rem;
-    background-color: #1c1c1c;
+    background-color: #121212;
     border-radius: 0.75rem;
-    box-shadow: 0 0 10px rgba(57, 255, 20, 0.4);
+    box-shadow: 3px 3px 8px rgba(255, 221, 87, 0.9);
 }
 
 .detail_div {

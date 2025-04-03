@@ -1,8 +1,9 @@
 {% extends 'fitness/header.html' %}
-
-
+{% load static %}
 {% block content%}
+<link rel="stylesheet" type="text/css" href="{% static 'fitness/complete_daily.css' %}">
 
+<div class="container">
     <h1>Report Daily Progress</h1>
 
     <div class='error-message'>
@@ -28,5 +29,6 @@
 
         <button type="submit" class="submit-button">Submit</button>
     </form>
+</div>
 
 {% endblock %}

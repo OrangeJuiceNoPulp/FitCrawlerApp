@@ -1,20 +1,25 @@
 <!-- Joseph Marchione 3/18/2025 -->
 {% extends 'fitness/header.html' %}
-
+{% load static %}
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'gym/remove_knights.css' %}">
 
-<h1>Remove Knight</h1>
-<p>Are you sure you want to remove Knight {{ knight_name }} from your gym?</p>
+<div class="container">
+    <h1>Remove Knight</h1>
+    <p>Are you sure you want to remove Knight #{{ knight_name }} from your gym?</p>
 
-<!-- Yes Button (POST) -->
-<form method="POST">
-    {% csrf_token %}
-    <button type="submit">Yes, remove this Knight</button>
-</form>
+    <div class="buttons">
+        <!-- Yes Button (POST) -->
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="yesButton">Yes, remove this Knight</button>
+        </form>
 
-<!-- No Button (GET) simply goes back -->
-<form action="{% url 'gym:search_knights' %}">
-    <button type="submit">No</button>
-</form>
+        <!-- No Button (GET) simply goes back -->
+        <form action="{% url 'gym:search_knights' %}">
+            <button type="submit" class="noButton">No</button>
+        </form>
+    </div>
+</div>
 
 {% endblock %}

@@ -1,33 +1,40 @@
 {% extends 'fitness/header.html' %}
-
+{% load static %}
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'exercises/create_exercise.css' %}">
 
-<h1>Create Exercise</h1>
+<div class="container">
+    <h1>Create Exercise</h1>
 
-<div class='error-message'>
-    <p>{{ error }} </p>
+    <div class='error-message'>
+        <p>{{ error }} </p>
+    </div>
+
+
+    <form method="POST" class="create-exercise-form">
+        {% csrf_token %}
+        <div class="left">
+            <p>
+                <label for="id_exercise_name">Exercise Name:</label>
+                <input type="text" name="exercise_name" maxlength="255" required id="id_exercise_name">
+            </p>
+        
+            <p>
+                <label for="id_video_link">Video Link:</label>
+                <input type="text" name="video_link" id="id_video_link">
+            </p>
+        </div>
+        <div class="right">
+            <p>
+                <label for="id_exercise_description">Instructions:</label>
+                <textarea type="text" name="description" maxlength="511" required id="id_exercise_description"></textarea>
+            </p>
+        
+            <button type="submit">Create</button>
+        </div>
+    </form>
 </div>
 
-
-<form method="POST" class="create-exercise-form">
-    {% csrf_token %}
-    <p>
-        <label for="id_exercise_name">Exercise Name:</label>
-        <input type="text" name="exercise_name" maxlength="255" required id="id_exercise_name">
-    </p>
-    
-    <p>
-        <label for="id_exercise_description">Instructions:</label>
-        <textarea type="text" name="description" maxlength="511" required id="id_exercise_description"></textarea>
-    </p>
-    
-    <p>
-        <label for="id_video_link">Video Link:</label>
-        <input type="text" name="video_link" id="id_video_link">
-    </p>
-
-    <button type="submit">Create</button>
-</form>
 
 
 
