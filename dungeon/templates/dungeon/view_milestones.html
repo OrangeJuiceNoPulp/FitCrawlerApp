@@ -1,26 +1,27 @@
 {% extends 'fitness/header.html' %}
-
-
+{% load static %}
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'dungeon/view_milestones.css' %}">
+
 
     <div class='error-message'>
         <p>{{ error }} </p>
     </div>
 
-    
+    <div class="container">
+        <h1>Total Progress</h1>
 
-    <h1>Total Progress</h1>
+        <p>{{noob_tasks}} Noob Quests</p>
+        <p>{{easy_tasks}} Easy Quests</p>
+        <p>{{medium_tasks}} Medium Quests</p>
+        <p>{{hard_tasks}} Hard Quests</p>
+        <p>{{expert_tasks}} Expert Quests</p>
 
-    <p>{{noob_tasks}} Noob Quests</p>
-    <p>{{easy_tasks}} Easy Quests</p>
-    <p>{{medium_tasks}} Medium Quests</p>
-    <p>{{hard_tasks}} Hard Quests</p>
-    <p>{{expert_tasks}} Expert Quests</p>
-
-    <p>{{total_walk}} Minutes Walked</p>
-    <p>{{total_water}} L Water Drank</p>
-    <p>{{total_fruit_veg}} Servings of Fruit and Vegetables Consumed</p>
-    <p>{{total_dungeons}} Dungeons Explored</p>
+        <p>{{total_walk}} Minutes Walked</p>
+        <p>{{total_water}} L Water Drank</p>
+        <p>{{total_fruit_veg}} Servings of Fruit and Vegetables Consumed</p>
+        <p>{{total_dungeons}} Dungeons Explored</p>
+    </div>
 
     <h1>Milestones</h1>
 
@@ -125,7 +126,7 @@
                         </p>
                         {% endif %}
                     
-                    <h4><a href="{% url 'dungeon:complete_milestone' milestone_id %}" class="button">Claim Reward</a></h4>
+                    <h4><a href="{% url 'dungeon:complete_milestone' milestone_id %}" class="claimButton">Claim Reward</a></h4>
                 </div>
             </li>    
         {% endif %}

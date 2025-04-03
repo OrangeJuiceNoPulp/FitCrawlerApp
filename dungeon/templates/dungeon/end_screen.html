@@ -1,22 +1,22 @@
 {% extends 'fitness/header.html' %}
 {% load static %}
-
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'dungeon/end_screen.css' %}">
 
-{% if death %}
-<h1>You Died</h1>
+<div class="container">
+    {% if death %}
+    <h1>You Died</h1>
 
-<h2><a href="{% url 'dungeon:dungeon_select' %}" class="button">Try Again</a></h2>
-{% elif complete %}
-<h1>You completed the dungeon!</h1>
+    <h2><a href="{% url 'dungeon:dungeon_select' %}" class="button">Try Again</a></h2>
+    {% elif complete %}
+    <h1>You completed the dungeon!</h1>
 
-<h2><a href="{% url 'dungeon:dungeon_select' %}" class="button">Select New Dungeon</a></h2>
-{% else %}
-<h1>You safely exited the dungeon.</h1>
+    <h2><a href="{% url 'dungeon:dungeon_select' %}" class="button">Select New Dungeon</a></h2>
+    {% else %}
+    <h1>You safely exited the dungeon.</h1>
 
-<h2><a href="{% url 'dungeon:dungeon_select' %}" class="button">Select New Dungeon</a></h2>
-{% endif %}
-
-
+    <h2><a href="{% url 'dungeon:dungeon_select' %}" class="button">Select New Dungeon</a></h2>
+    {% endif %}
+</div>
 
 {% endblock %}

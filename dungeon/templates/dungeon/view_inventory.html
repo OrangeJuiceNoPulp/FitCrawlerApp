@@ -10,42 +10,43 @@
     </div>
 
     <div class="container">
-        <h1>{{username}}</h1>
-        <h3>Max Health: {{max_health}}</h3>
-        <h3>Action Points: {{action_points}}</h3>
-        <h3>Coins: {{coins}}</h3>
-        <h3><a href="{% url 'dungeon:view_milestones' %}">Milestones</a></h3>
+        <div class="info_container">
+            <h1>{{username}}</h1>
+            <h3>Max Health: {{max_health}}</h3>
+            <h3>Action Points: {{action_points}}</h3>
+            <h3>Coins: {{coins}}</h3>
+            <h3><a href="{% url 'dungeon:view_milestones' %}">Milestones</a></h3>
+        </div>
+    
+        <div class="inventory_container">
+            <div class="sword_container">
+                <img src="{% static sword_info.path %}" width="128" height="128">
+                <h2>{{sword_info.name}}</h2>
+                <h3>Rank: {{sword_info.rank}}</h3>
+                <h3>Strength Boost: {{sword_info.stats}}</h3>
+            </div>
+        
+            <div class="boots_container">
+                <img src="{% static boots_info.path %}" width="128" height="128">
+                <h2>{{boots_info.name}}</h2>
+                <h3>Rank: {{boots_info.rank}}</h3>
+                <h3>Speed: {{boots_info.stats}}</h3>
+            </div>
+        
+            <div class="staff_container">
+                <img src="{% static staff_info.path %}" width="128" height="128">
+                <h2>{{staff_info.name}}</h2>
+                <h3>Rank: {{staff_info.rank}}</h3>
+                <h3>Healing: {{staff_info.stats}}</h3>
+            </div>
+        
+            <div class="armor_container">
+                <img src="{% static armor_info.path %}" width="128" height="128">
+                <h2>{{armor_info.name}}</h2>
+                <h3>Rank: {{armor_info.rank}}</h3>
+                <h3>Protection: {{armor_info.stats}}</h3>
+            </div>
+        </div>
     </div>
-
-    <div class="inventory_container">
-        <div class="sword_container">
-            <img src="{% static sword_info.path %}" width="128" height="128">
-            <h2>{{sword_info.name}}</h2>
-            <h3>Rank: {{sword_info.rank}}</h3>
-            <h3>Strength Boost: {{sword_info.stats}}</h3>
-        </div>
-    
-        <div class="boots_container">
-            <img src="{% static boots_info.path %}" width="128" height="128">
-            <h2>{{boots_info.name}}</h2>
-            <h3>Rank: {{boots_info.rank}}</h3>
-            <h3>Speed: {{boots_info.stats}}</h3>
-        </div>
-    
-        <div class="staff_container">
-            <img src="{% static staff_info.path %}" width="128" height="128">
-            <h2>{{staff_info.name}}</h2>
-            <h3>Rank: {{staff_info.rank}}</h3>
-            <h3>Healing: {{staff_info.stats}}</h3>
-        </div>
-    
-        <div class="armor_container">
-            <img src="{% static armor_info.path %}" width="128" height="128">
-            <h2>{{armor_info.name}}</h2>
-            <h3>Rank: {{armor_info.rank}}</h3>
-            <h3>Protection: {{armor_info.stats}}</h3>
-        </div>
-    </div>
-    
 
 {% endblock %}

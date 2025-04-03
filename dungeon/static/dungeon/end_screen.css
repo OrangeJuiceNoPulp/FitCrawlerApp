@@ -1,0 +1,56 @@
+/* Designed by Brendon Wolfe on April 1st */
+
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
+
+body {
+    background-color: #181818;
+    padding-top: 15vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #121212;
+    width: 60%;
+    max-width: 600px;
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 2px 2px 15px rgba(255, 221, 87, 0.8);
+    text-align: center;
+}
+
+h1 {
+    color: #ffdd57;
+    text-shadow: 2px 2px 10px rgba(255, 221, 87, 0.8);
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+h2 {
+    margin-top: 1rem;
+}
+
+.button {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: #39FF14;
+    color: #121212;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    text-decoration: none;
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.7);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.button:hover {
+    background-color: #2ECC71;
+    box-shadow: 0 0 15px rgba(46, 204, 113, 0.8);
+}

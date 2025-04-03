@@ -4,20 +4,51 @@ body{
 }
 
 .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 80%;
+    margin: 10vh auto;
+    padding: 20px;
+    background-color: #121212;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px rgba(255, 221, 87, 0.8);
+}
+
+.info_container {
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: 100%;
+}
+
+.info_container a {
+    background-color: #39FF14;
+    padding: 0 1vw;
+    border-radius: 5px;
+    color: #181818;
+    text-shadow: none;
+    transition: transform 0.3s ease-in-out;
+}
+
+.info_container a:hover{
+    background-color: #28a828;
+    transform: scale(1.05);
 }
 
 .inventory_container {
-    display: grid;
-    grid-template-areas:
-        "sword boots"
-        "staff armor";
-    grid-template-columns: auto auto;
-    gap: 20px;
-    justify-content: center;
+    display: flex;
+    justify-content: space-evenly;
     align-items: center;
-    padding: 20px;
+    padding: 1vw;
     border-radius: 10px;
+    width: 100%;
+}
+
+.inventory_container h3 {
+    font-size: 14px;
 }
 
 .inventory_container > div {
@@ -25,7 +56,7 @@ body{
     padding: 15px;
     border-radius: 8px;
     text-align: center;
-    box-shadow: 0 0 10px rgba(255, 221, 87, 0.5);
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.6);
     transition: transform 0.3s ease-in-out;
 }
 
@@ -41,8 +72,4 @@ body{
 .container h2, h3 {
     color: #ffdd57;
     text-shadow: 2px 2px 5px rgba(255, 221, 87, 0.8);
-}
-
-a{
-    color: #ffdd00;
 }

@@ -1,8 +1,7 @@
 {% extends 'fitness/header.html' %}
-
+{% load static %}
 {% block content %}
-
-<h1>Edit Exercise</h1>
+<link rel="stylesheet" type="text/css" href="{% static 'exercises/edit_exercise.css' %}">
 
 <div class='error-message'>
     <p>{{ error }} </p>
@@ -11,6 +10,7 @@
 
 <form method="POST" class="create-exercise-form">
     {% csrf_token %}
+    <h1>Edit Exercise</h1>
     <p>
         <h2 id="id_exercise_name">Exercise Name: {{exercise_name}}<h2>
     </p>

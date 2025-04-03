@@ -74,18 +74,34 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-evenly;
+    justify-content: space-between;
     width: 80%;
 }
 
+ul {
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+}
+
+
 .logoDivHome{
     display: none;
+}
+
+.form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 5vh;
 }
 
 .swapLeaderboard{
     border: none;
     border-radius: 5px;
     background-color: #39FF14;
+    cursor: pointer;
 }
 
 @media screen and (max-width: 600px) {
@@ -150,5 +166,9 @@ body {
         justify-content: center;
         width: 15%;
         height: 10vh;
+    }
+
+    .form{
+        margin-bottom: 10%;
     }
 }

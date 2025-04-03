@@ -2,82 +2,8 @@
 {% load static %}
 
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'dungeon/battle_view.css' %}">
 
-    <style>
-        
-        .screen_container {
-            position: relative;
-            top: 20px;
-            display: grid;
-            grid-template-areas:
-                "dungeon_screen inventory"
-                "actions player_info";
-            grid-template-columns: 70% 30%;
-        }
-        .screen_container > player_info_container {
-            grid-area: player_info;
-            text-align: center;
-            justify-content: center;
-        }
-        .screen_container > .actions_container {
-            position: relative;
-            top: 100px;
-            grid-area: actions;
-            display: grid;
-            grid-template-areas:
-                "top_left top_right"
-                "bottom_left bottom_right";
-            grid-template-columns: auto auto;
-        }
-
-
-        
-        
-        .screen_container > .dungeon_screen_container {
-            grid-area: dungeon_screen;
-        }
-        .dungeon_screen_container > .dungeon_overlay {
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            z-index: 1;
-        }
-        .dungeon_screen_container > .dungeon_background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 0;
-        }
-        .screen_container > .inventory_container {
-            grid-area: inventory;
-            display: grid;
-            grid-template-areas:
-                "sword boots"
-                "staff armor";
-            grid-template-columns: auto auto;
-    
-        }
-        .inventory_container > div.sword_container{
-            grid-area: sword;
-            justify-content: center;
-            text-align: center;
-        }
-        .inventory_container > div.boots_container{
-            grid-area: boots;
-            justify-content: center;
-            text-align: center;
-        }
-        .inventory_container > div.staff_container{
-            grid-area: staff;
-            justify-content: center;
-            text-align: center;
-        }
-        .inventory_container > div.armor_container{
-            grid-area: armor;
-            justify-content: center;
-            text-align: center;
-        }
-    </style>
 
     <div class="screen_container">
         <div class="dungeon_screen_container">
@@ -116,21 +42,21 @@
 
     <div class="actions_container">
         
-        <h2><a href="{% url 'dungeon:battle_attack' %}" class="button" id="heal_button">Attack [{{attack_cost}} AP]</a></h2>
-        <h2><a href="{% url 'dungeon:heal' %}" class="button" id="heal_button">Heal [{{heal_cost}} AP]</a></h2>
-        <h2><a href="{% url 'dungeon:battle_retreat' %}" class="button" id="heal_button">Flee Battle [{{escape_cost}} AP]</a></h2>
-        <h2><a href="{% url 'dungeon:dungeon_exit' %}" class="button" id="heal_button">Leave Dungeon [0 AP]</a></h2>
+        <h2><a href="{% url 'dungeon:battle_attack' %}" class="actionButton" id="heal_button">Attack [{{attack_cost}} AP]</a></h2>
+        <h2><a href="{% url 'dungeon:heal' %}" class="actionButton" id="heal_button">Heal [{{heal_cost}} AP]</a></h2>
+        <h2><a href="{% url 'dungeon:battle_retreat' %}" class="actionButton" id="heal_button">Flee Battle [{{escape_cost}} AP]</a></h2>
+        <h2><a href="{% url 'dungeon:dungeon_exit' %}" class="actionButton" id="heal_button">Leave Dungeon [0 AP]</a></h2>
 
     </div>
 
     <div class="player_info_container">
         <h1>{{monster_name}}</h1>
         <label for="enemy_health_bar">Health: {{monster_health}} / {{monster_max_health}}</label>
-        <progress value="{{monster_health}}" max="{{monster_max_health}}" id="enemy_health_bar">{{monster_health}} / {{monster_max_health}}</progress>
+        <progress value="{{monster_health}}" max="{{monster_max_health}}" id="enemy_health_bar" class="monster_health">{{monster_health}} / {{monster_max_health}}</progress>
 
         <h1>{{inventory.username}}</h1>
         <label for="health_bar">Health: {{health}} / {{inventory.max_health}}</label>
-        <progress value="{{health}}" max="{{inventory.max_health}}" id="health_bar">{{health}} / {{inventory.max_health}}</progress>
+        <progress value="{{health}}" max="{{inventory.max_health}}" id="health_bar" class="player_health">{{health}} / {{inventory.max_health}}</progress>
 
 
         <h4>Heal Cost (+{{heal_amount}} Health): {{heal_cost}} AP</h4>
