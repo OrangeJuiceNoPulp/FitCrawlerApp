@@ -13,7 +13,9 @@
     <body> 
         <header class="header">
             <div class="logoDiv">
-               <img src="{% static 'fitness/fitcrawlerLogo.png' %}" alt="FitCrawler Logo" class="logo">
+                <a href="{% url 'fitness:home' %}" class="home_link_logo">
+                    <img src="{% static 'fitness/fitcrawlerLogo.png' %}" alt="FitCrawler Logo" class="logo">
+                </a>
             </div>
             <div class="buttonDiv">
                 <h2><a href="{% url 'fitness:home' %}" class="button">Home</a></h2>

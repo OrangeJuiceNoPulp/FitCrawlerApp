@@ -54,7 +54,7 @@ class FitCrawlerUserAdmin(UserAdmin):
     list_filter = ['user_type', 'is_admin']
     
     fieldsets = [
-        (None, {'fields': ['username', 'email', 'password']}),
+        (None, {'fields': ['username', 'email', 'password', 'profile_pic']}),
         ('User Type', {'fields': ['user_type']}),
         ('Gym', {'fields': ['gym']}),
         ('Permissions', {'fields': ['is_admin']}),
