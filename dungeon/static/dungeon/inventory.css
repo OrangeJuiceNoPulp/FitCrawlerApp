@@ -30,6 +30,7 @@ body{
     border-radius: 5px;
     color: #181818;
     text-shadow: none;
+    text-decoration: none;
     transition: transform 0.3s ease-in-out;
 }
 

@@ -14,6 +14,16 @@ import datetime
 
 NUM_ENTRIES_PER_PAGE = 10
 
+# Profile Picture filenames
+PROFILE_PICS = [
+    'default.png',
+    'p2.png',
+    'p3.png',
+    'p4.png',
+    'p5.png',
+    'p6.png',
+]
+
 # Amount of daily progress in order to earn the daily reward
 DAILY_WATER = 1.5
 DAILY_FRUIT_VEG = 3
@@ -44,7 +54,7 @@ def view_leaderboard(gym_id, num_entries):
         if gym_id:
             global_board = False
             cursor.execute("""
-                SELECT u.username, g.coins
+                SELECT u.username, g.coins, CONCAT('gym/pfp/', COALESCE(u.profile_pic, 'default.png'))
                 FROM gym_fitcrawleruser u JOIN dungeon_gamestats g
                         ON u.id = g.user_id
                 WHERE u.gym_id = %s
@@ -56,7 +66,7 @@ def view_leaderboard(gym_id, num_entries):
         else:
             global_board = True
             cursor.execute("""
-                SELECT u.username, g.coins
+                SELECT u.username, g.coins, CONCAT('gym/pfp/', COALESCE(u.profile_pic, 'default.png'))
                 FROM gym_fitcrawleruser u JOIN dungeon_gamestats g
                         ON u.id = g.user_id
                 
@@ -514,5 +524,24 @@ def profile(request):
     # - Jason 3/31/25
     officer = FitCrawlerUser.objects.filter(id=user.gym_id).first()
 
+    pfp = 'gym/pfp/' + user.profile_pic
 
-    return render(request, 'fitness/profile.html', {'officer': officer})
+    return render(request, 'fitness/profile.html', {'officer': officer, 'pfp':pfp})
+
+@login_required
+def set_profile_picture(request, profile_pic):
+    new_pfp = profile_pic
+    if new_pfp >= len(PROFILE_PICS):
+        new_pfp = 0
+        
+    with connection.cursor() as cursor:
+        
+        cursor.execute("""
+                    UPDATE gym_fitcrawleruser
+                    SET profile_pic = %s
+                    WHERE id = %s
+                    """,
+                    [PROFILE_PICS[new_pfp],request.user.id]
+                    )
+    
+    return redirect('fitness:profile')

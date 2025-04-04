@@ -45,6 +45,9 @@ class FitCrawlerUser(AbstractBaseUser):
     # Use gym_id for database lookups
     gym = models.ForeignKey('gym.Gym', on_delete=models.SET_NULL, null=True, blank=True)
     
+    # Filename for profile picture in static profile picture path
+    profile_pic = models.CharField(max_length=63, default='default.png')
+    
     # Password Field is inherited from AbstractBaseUser
     
     # Fields necessary for Django admin backend

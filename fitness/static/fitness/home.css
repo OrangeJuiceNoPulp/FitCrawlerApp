@@ -78,11 +78,34 @@ body {
     width: 80%;
 }
 
-ul {
-    list-style: none; 
-    padding: 0; 
-    margin: 0; 
+.leaderboard h1 {
+    color: #ffdd57;
+    font-size: 2rem;
+    text-shadow: 2px 2px 5px rgba(255, 221, 87, 0.8);
+    margin-bottom: 1rem;
 }
+
+.leaderboard h3 {
+    color: #ffdd57;
+    font-size: 1.25rem;
+    text-shadow: 2px 2px 5px rgba(255, 221, 87, 0.8);
+    margin-bottom: 1rem;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: 100%;
+    width: 100%;
+}
+
+.board_user {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 60%;
+}
+
 
 
 .logoDivHome{

@@ -7,12 +7,17 @@
 
 <body>
     <div class="left">
-        <img href class="profilePic">
-        <p class="badgeTitle">Badges</p>
+        <img src="{% static pfp %}" class="profilePic">
+        <p class="badgeTitle">Profile Pictures</p>
         <div class="badgeContainer">
-            <img href class="badges">
-            <img href class="badges">
-            <img href class="badges">
+            <a href="{% url 'fitness:set_profile_picture' 0 %}"><img src="{% static 'gym/pfp/default.png' %}" class="badges"></a>
+            <a href="{% url 'fitness:set_profile_picture' 1 %}"><img src="{% static 'gym/pfp/p2.png' %}" class="badges"></a>
+            <a href="{% url 'fitness:set_profile_picture' 2 %}"><img src="{% static 'gym/pfp/p3.png' %}" class="badges"></a>
+        </div>
+        <div class="badgeContainer">
+            <a href="{% url 'fitness:set_profile_picture' 3 %}"><img src="{% static 'gym/pfp/p4.png' %}" class="badges"></a>
+            <a href="{% url 'fitness:set_profile_picture' 4 %}"><img src="{% static 'gym/pfp/p5.png' %}" class="badges"></a>
+            <a href="{% url 'fitness:set_profile_picture' 5 %}"><img src="{% static 'gym/pfp/p6.png' %}" class="badges"></a>
         </div>
     </div>
     <div class="right">

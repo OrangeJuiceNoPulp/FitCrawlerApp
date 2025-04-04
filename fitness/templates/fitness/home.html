@@ -56,11 +56,16 @@
                 <h1>{{ user.gym.name }} Leaderboard</h1>
             {% endif %}
             
-            <ul>
-                {% for l_user_name, l_coins in leaderboard %}
-                        <h3>{{l_user_name}} - {{l_coins}}</h3>
+            <ul class="board">
+                {% for l_user_name, l_coins, l_pfp in leaderboard %}
+                        <div class="board_user">
+                            <img src="{% static l_pfp %}" class="board_pfp">
+                            <h3>{{l_user_name}} </h3>
+                            <h3> - </h3>
+                            <h3>{{l_coins}}</h3>
+                        </div>
                 {% endfor %}
-            </ul>
+                    </ul>
 
             <form method="GET" class="leaderboard form">
                 {% if user.is_authenticated and user.gym and global_board %}
