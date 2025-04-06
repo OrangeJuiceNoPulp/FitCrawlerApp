@@ -35,6 +35,28 @@ a {
     transition: color 0.3s ease;
 }
 
+.report_progress {
+    margin-top: 5vh;
+}
+
+.report_progress a {
+    background-color: #ffdd57;
+    color: #232323;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+    
+}
+
+.report_progress a:hover {
+    background-color: #f4c430;
+    transform: scale(1.05);
+}
+
 ul {
     list-style: none;
     padding: 0;
@@ -52,7 +74,7 @@ li {
     margin: 0.5rem 0;
     width: 15vw;
     transition: background-color 0.3s ease;
-    box-shadow: 0px 0px 15px #39FF14;
+    box-shadow: 0px 0px 15px #ffdd57;
 }
 
 li:hover {
@@ -64,6 +86,11 @@ li:hover {
 li a {
     width: 15vw;
     padding: 0.5rem 0;
-    color: inherit;
+    color: #ffdd57;
+    text-shadow: none;
+}
+
+li a:hover {
+    color: #232323;
 }
 

@@ -27,6 +27,7 @@ ul {
     padding: 1.5rem 4.5rem;
     box-shadow: 0rem 0rem 1rem rgb(55, 255, 25, 0.5);
     border-radius: .625rem;
+    list-style-type: none;
 }   
 
 li {
@@ -36,15 +37,16 @@ li {
     border-top: pink;
     border-style: solid;
     border-width: 0 0 1px 0;
+    text-align: center;
 }
 
 ul li a {
-    color: #00d9ff;
+    color: white;
     text-decoration: none;
 }
 
 ul li a:hover{
-    color: #00a6ed;
+    color: #28a828;
 }
 
 .search-exercises-form {
@@ -110,13 +112,37 @@ ul li a:hover{
 }
 
 .footer a {
-    color: purple;
     text-decoration: none;
-    font-size: 1.1rem;
 }
 
-.footer a:hover {
-    color: #7040a0;
+
+.active_next {
+    background-color: #39FF14;
+    color: black;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.active_next:hover {
+    background-color: #28a828;
+    transform: scale(1.05);
+}
+
+.inactive_next {
+    background-color: #232323;
+    color: #28a828;
+    font-size: 1.1rem;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: default ;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 .container{
@@ -152,6 +178,7 @@ ul li a:hover{
         width: 70%;
         padding: 1rem;
         border-radius: 20px;
+        margin-bottom: 10%;
     }
 
     ul {
@@ -173,14 +200,16 @@ ul li a:hover{
     }
 
     .footer {
+        flex-direction: column;
         position: fixed;
         bottom: 12%;
         right: 0;
-        width: 10%;
+        width: 15%;
         text-align: center;
         background-color: #181818;
         padding: 0.5rem;
         border: 1px solid #39FF14;
+        overflow: hidden;
     }
 
     .logoDivSearch{
@@ -197,4 +226,13 @@ ul li a:hover{
         padding: 1vh 1vh;
         margin-left: .5vh;
     }
+
+    .active_next {
+        font-size: 1.0rem;
+    }
+
+    .inactive_next {
+        font-size: 1.0rem;
+    }
+
 }

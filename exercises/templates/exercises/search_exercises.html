@@ -45,12 +45,17 @@
 
 <div class="footer">
     
-    <h2> {{ page_number }} </h2>
+    
     {% if previous %}
-    <h2><a href="{% url 'exercises:search_exercises' %}?page={{previous}}&exercise_name={{search_query}}">Prev</a></h2>
+    <h2><a href="{% url 'exercises:search_exercises' %}?page={{previous}}&exercise_name={{search_query}}" class="active_next">Prev</a></h2>
+    {% else %}
+    <h2 class="inactive_next">Prev</h2>
     {% endif %}
+    <h2> {{ page_number }} </h2>
     {% if next %}
-    <h2><a href="{% url 'exercises:search_exercises' %}?page={{next}}&exercise_name={{search_query}}">Next</a></h2>
+    <h2><a href="{% url 'exercises:search_exercises' %}?page={{next}}&exercise_name={{search_query}}" class="active_next">Next</a></h2>
+    {% else %}
+    <h2 class="inactive_next">Next</h2>
     {% endif %}
 
 </div>

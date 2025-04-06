@@ -76,6 +76,7 @@ body {
     align-items: center;
     justify-content: space-between;
     width: 80%;
+
 }
 
 .leaderboard h1 {
@@ -96,6 +97,7 @@ body {
     display: grid;
     grid-template-columns: 100%;
     width: 100%;
+    overflow-y: auto;
 }
 
 .board_user {

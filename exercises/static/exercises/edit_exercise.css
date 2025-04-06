@@ -33,7 +33,10 @@ body {
 }
 
 h1 {
-    font-size: 1.2rem;
+    color: #ffdd57;
+    font-size: 2rem;
+    text-shadow: 2px 2px 5px rgba(255, 221, 87, 0.8);
+    margin-bottom: 1rem;
 }
 
 h2 {
