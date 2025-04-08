@@ -23,10 +23,10 @@
         <input type="password" name="password" maxlength="63" required id="id_password">
         </p>
 
-        <button type="submit">Login</button>
+        <button type="submit" class="loginButton">Login</button>
     </form>
     <p>Don't have an account?</p>
-    <h2><a href="{% url 'gym:signup' %}">Sign Up</a></h2>
+    <h2><a href="{% url 'gym:signup' %}" class="signupButton">Sign Up</a></h2>
 </body>
 
 {% endblock %}

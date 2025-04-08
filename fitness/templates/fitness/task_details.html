@@ -3,36 +3,37 @@
 {% load static %}
 {% block content%}
 <link rel="stylesheet" type="text/css" href="{% static 'fitness/task_details.css' %}">
+    <div class="container">
+        <h1>Task: {{ task.name }}</h1>
 
-    <h1>Task: {{ task.name }}</h1>
+        <p> Exercise: 
+            <a href="{% url 'exercises:view_exercise' task.exercise_id %}" class="aButton">
+                {{task.exercise_name}}
+            </a>
+        </p>
 
-    <p> Exercise: 
-        <a href="{% url 'exercises:view_exercise' task.exercise_id %}" class="aButton">
-            {{task.exercise_name}}
-        </a>
-    </p>
+        <p>Sets: {{ task.sets }}</p>
+        <p>Number per Set: {{ task.num_per_set }}</p>
+        <p>Difficulty: {{ task.difficulty_score }}</p>
+        <!-- <p>Days of Week: {{ task.days_of_week }}</p> -->
+        <p>End Date: {{ task.end_date }}</p>
 
-    <p>Sets: {{ task.sets }}</p>
-    <p>Number per Set: {{ task.num_per_set }}</p>
-    <p>Difficulty: {{ task.difficulty_score }}</p>
-    <!-- <p>Days of Week: {{ task.days_of_week }}</p> -->
-    <p>End Date: {{ task.end_date }}</p>
+        
+        <div class="rewardDiv">
+            <p>Reward: {{ task.reward }} Action Points</p>
+            <!-- <img src="{% static 'fitness/armor_default.png' %}" alt="FitCrawler Logo" class="item"> -->
+        </div>
 
-    
-    <div class="rewardDiv">
-        <p>Reward: {{ task.reward }} Action Points</p>
-        <!-- <img src="{% static 'fitness/armor_default.png' %}" alt="FitCrawler Logo" class="item"> -->
-     </div>
+        <form action="{% url 'fitness:complete_task' task_pk=task.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">Mark As Complete</button>
+        </form>
 
-    <form action="{% url 'fitness:complete_task' task_pk=task.id %}" method="POST">
-        {% csrf_token %}
-        <button type="submit">Mark As Complete</button>
-    </form>
+        <p>
+            <a href="{% url 'fitness:view_current_tasks' %}" class="aButton">
+            Return to Tasks
+            </a>
+        </p>
 
-    <p>
-        <a href="{% url 'fitness:view_current_tasks' %}" class="aButton">
-        Return to Tasks
-        </a>
-    </p>
-
-{% endblock %}
+    {% endblock %}
+    </div>

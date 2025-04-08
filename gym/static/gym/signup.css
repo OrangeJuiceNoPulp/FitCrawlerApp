@@ -74,14 +74,14 @@ button:hover {
     transform: scale(1.05);
 }
 
-a {
+.loginButton {
     text-decoration: none;
     color: #ffdd57;
     font-weight: bold;
     transition: color 0.3s ease;
 }
 
-a:hover {
+.loginButton:hover {
     color: #f4c430;
 }
 

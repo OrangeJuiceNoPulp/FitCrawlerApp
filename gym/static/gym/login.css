@@ -49,7 +49,7 @@ input {
     font-size: 1rem;
 }
 
-button {
+.loginButton {
     background-color: #39FF14;
     color: #232323;
     font-size: 1.2rem;
@@ -63,18 +63,18 @@ button {
     margin-top: 2vh;
 }
 
-button:hover {
+.loginButton:hover {
     background-color: #28a828;
     transform: scale(1.05);
 }
 
-a {
+.signupButton {
     text-decoration: none;
     color: #ffdd57;
     font-weight: bold;
     transition: color 0.3s ease;
 }
 
-a:hover {
+.signupButton:hover {
     color: #f4c430;
 }
