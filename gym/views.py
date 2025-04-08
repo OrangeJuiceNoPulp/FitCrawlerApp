@@ -256,7 +256,7 @@ def remove_member(request, knight_id):
         
         return render(request, 'gym/remove_member.html', {'knight_id': knight_id, 'knight_name':knight_name})
 
-# Joe Marchione            
+# Joe Marchione & Brendon Wolfe          
 @login_required
 def list_applications(request):
     # Must be FitGuildOfficer with a gym
@@ -287,7 +287,7 @@ def list_applications(request):
     
     return render(request, 'gym/applications.html', {'applications': applications})
 
-# Joe Marchione
+# Joe Marchione & Brendon Wolfe
 @login_required
 def process_application(request):
     # Must be FitGuildOfficer with a gym
@@ -349,7 +349,7 @@ def process_application(request):
 
 NUM_ENTRIES_PER_PAGE = 10
 
-# Joe Marchione
+# Joe Marchione & Brendon Wolfe
 @login_required
 def search_knights(request):
     # Ensure the current user is a FitGuildOfficer with a gym.
