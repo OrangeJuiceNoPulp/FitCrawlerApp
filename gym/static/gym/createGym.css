@@ -1,5 +1,6 @@
 /* Designed by Brendon Wolfe on February 10th */
 /* Modified by Brendon Wolfe for responsive design on February 17th */
+/* Modified by Brendon Wolfe for consistency on April 6th */
 
 /* This imports our text's font from Google */
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
@@ -13,13 +14,13 @@ body {
 h1 {
     color: #ffdd57; 
     text-align: center;
-    font-size: 50px;
+    font-size: 2.5rem;
 }
 
 .create-gym-form {
     background-color: #121212;
-    padding: 20px;
-    max-width: 500px;
+    padding: 3vh;
+    max-width: 45vw;
     margin: auto;
     border-radius: 10px;
     box-shadow: 0px 0px 15px rgba(255, 221, 87, 0.3);
@@ -27,15 +28,15 @@ h1 {
 
 label {
     display: block;
-    margin-top: 10px;
+    margin-top: 1.5vh;
     font-weight: bold;
 }
 
 input, textarea {
     background-color: #282828;
     width: 100%;
-    padding: 10px 0px;
-    margin-top: 5px;
+    padding: 1.5vh 0;
+    margin-top: .75vh;
     border: 1px solid #ffdd57;
     color: white;
     border-radius: 5px;
@@ -44,13 +45,13 @@ input, textarea {
 .submit-button{
     background-color: #39FF14;
     color: #121212;
-    font-size: 20px;
+    font-size: 1.3rem;
     font-weight: bold;
     border: none;
-    padding: 10px 20px;
+    padding: 1.5vh 3vw;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 15px;
+    margin-top: 2vh;
     width: 100%;
 }
 

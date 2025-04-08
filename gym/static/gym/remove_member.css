@@ -1,3 +1,5 @@
+/* Designed by Brendon Wolfe on March 30th */
+/* Modified by Brendon Wolfe for consistency on April 6th */
 
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
 
@@ -20,7 +22,7 @@ h1 {
 
 p {
     font-size: 1.2rem;
-    margin: 20px 0;
+    margin: 3vh 0;
 }
 
 .yesButton {
@@ -28,7 +30,7 @@ p {
     color: black;
     font-size: 1.2rem;
     font-weight: bold;
-    padding: 12px 24px;
+    padding: 1.8vh 2.5vw;
     border: none;
     border-radius: 8px;
     cursor: pointer;
@@ -45,7 +47,7 @@ button:hover {
     color: black;
     font-size: 1.2rem;
     font-weight: bold;
-    padding: 12px 24px;
+    padding: 1.8vh 2.5vw;
     border: none;
     border-radius: 8px;
     cursor: pointer;

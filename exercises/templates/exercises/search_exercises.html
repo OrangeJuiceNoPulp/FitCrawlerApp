@@ -3,7 +3,6 @@
 
 {% extends 'fitness/header.html' %}
 {%load static %}
-
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'exercises/search_exercises.css' %}">
 
@@ -44,7 +43,6 @@
 
 
 <div class="footer">
-    
     
     {% if previous %}
     <h2><a href="{% url 'exercises:search_exercises' %}?page={{previous}}&exercise_name={{search_query}}" class="active_next">Prev</a></h2>

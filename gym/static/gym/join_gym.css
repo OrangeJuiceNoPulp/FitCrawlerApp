@@ -1,4 +1,6 @@
 /* Designed by Brendon Wolfe on March 31st */
+/* Modified by Brendon Wolfe for consistency on April 6th */
+
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
 
 body {
@@ -13,11 +15,11 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
+    justify-content: left;
+    height: 90vh;
     background-color: #181818;
     text-align: center;
-    padding: 20px;
+    padding-top: 10vh;
 }
 
 h1 {

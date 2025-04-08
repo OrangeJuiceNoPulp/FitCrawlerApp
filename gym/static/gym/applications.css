@@ -1,38 +1,39 @@
 /* Designed by Brendon Wolfe on February 10th */
 /* Modified by Brendon Wolfe on February 16th */
-
+/* Modified by Brendon Wolfe for consistency on April 6th */
 
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
 
 body{
     background-color: #181818;
     padding-top: 15vh;
+    font-family: 'Rajdhani', sans-serif;
 }
 
 h1 {
     text-align: center;
     color: #ffdd57;
     text-shadow: 2px 2px 10px rgba(255, 221, 87, 0.8);
-    margin: 1.25rem 0;
+    margin: 1vh 0;
 }
 
 .applications-list {
     list-style: none;
     padding: 0;
-    max-width: 35rem;
+    max-width: 40vw;
     margin: 0 auto;
 }
 
 .application-item {
     background-color: #181818; 
-    border: .06rem solid #39FF14;
-    border-radius: .3rem;
-    padding: 1rem;
-    margin-bottom: 1rem;
+    border: 1px solid #39FF14;
+    border-radius: 6px;
+    padding: 2vh;
+    margin-bottom: 3vh;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-width: 25rem;
+    min-width: 36vw;
 }
 
 .applicant-name {
@@ -41,18 +42,16 @@ h1 {
 
 .action-buttons {
     display: flex;
-    gap: 1rem;
 }
 
 .accept-button,
 .decline-button {
-    padding: .6rem 1rem;
+    padding: 1.5vh 1.5vw;
     border: none;
-    border-radius: .25rem;
-    font-family: 'Rajdhani', sans-serif;
+    border-radius: 6px;
     font-weight: bold;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: .9rem;
 }
 
 .accept-button {
@@ -66,7 +65,7 @@ h1 {
 }
 
 .accept-button:hover {
-    background-color: #2ECC71;
+    background-color: #28a828;
 }
 
 .decline-button:hover {
@@ -76,7 +75,7 @@ h1 {
 .no-applications {
     text-align: center;
     color: red;
-    margin-top: 3rem;
+    margin-top: 5vh;
     font-size: 1.2rem;
 }
 
@@ -87,10 +86,10 @@ h1 {
     justify-content: center;
     background-color: #121212;
     height: 100%;
-    width: 80%;
-    margin-left: 10%;
+    width: 70%;
+    margin-left: 15%;
     border-radius: 50px;
-    padding-bottom: 1rem;
+    padding-bottom: 1.5vh;
     box-shadow: 0px 0px 10px rgba(255, 221, 87, 0.8);
 }
 

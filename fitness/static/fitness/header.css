@@ -1,6 +1,7 @@
 /* Designed by Brendon Wolfe on February 17th */
 /* Updated by Brendon Wolfe on March 2nd */
 /* Responsive design developed by Eli Sepulveda on March 8th */
+/* Modified by Brendon Wolfe for consistency on April 7th */
 
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
 
@@ -16,8 +17,7 @@ body {
     justify-content: space-evenly;
     align-items: center;
     border-bottom: 1px solid #39FF14; 
-    background-color: #181818; 
-    margin-bottom: 1rem;
+    background-color: #181818;
     position: fixed;
     width: 100%;
     top: 0;
@@ -51,7 +51,7 @@ body {
     align-items: center;
     justify-content: space-between;
     width: 70%;
-    margin: 0 1rem;
+    margin: 0 2vw;
     height: 12vh;
 }
 
@@ -59,10 +59,10 @@ body {
     display: inline-block;
     background-color: #39FF14; 
     color: black; 
-    padding: 0.5rem 1rem;
+    padding: 1.3vh 1.7vw;
     text-decoration: none;
     border-radius: 5px;
-    margin-left: 0.5rem;
+    margin-left: 1vw;
     transition: background-color 0.3s, transform 0.2s;
     border: none;
     cursor: pointer;
@@ -76,12 +76,17 @@ body {
 .profileButton {
     background-color: #39FF14; 
     color: black; 
-    padding: 0.5rem 1rem;
+    padding: 1.4vh 1.7vw;
     text-decoration: none;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s, transform 0.2s;
     border: none;
     cursor: pointer;
+}
+
+.profileButton:hover{
+    background-color: #28a828; 
+    transform: scale(1.1);
 }
 
 .header-space{
@@ -97,13 +102,13 @@ body {
     justify-content: space-between;
     top: 13%;
     left: 85%;
-    width: 5rem;
+    width: 10vw;
     height: 25%;
     background: #181818;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
-    padding: 1rem;
+    padding: 1.7vh;
     border-radius: 10px;
-    z-index: 1000;
+    z-index: 6;
     box-shadow: 0rem 0rem 1rem rgb(55, 255, 25);
 }
 
@@ -112,15 +117,15 @@ body {
     font-weight: bold;
     color: #ffdd57; 
     text-shadow: 2px 2px 10px rgba(255, 221, 87, 0.8);
-    margin-bottom: 0.4rem;
+    margin-bottom: .7vh;
     font-size: 1.2rem;
 }
 
 .popup .button {
     display: block;
     width: 8vw;
-    padding: 0.5rem;
-    margin: 0.3rem 0;
+    padding: 1.4vh;
+    margin: .5vh 0;
     text-align: center;
     background-color: #39FF14;
     color: black;
@@ -148,15 +153,6 @@ body {
     background-color: #cc0000;
 }
 
-
-.profile{
-    cursor: pointer;
-}
-
-.profile:hover{
-    color:aqua;
-}
-
 @media screen and (max-width: 600px) {
     .header {
         position: fixed;
@@ -167,7 +163,6 @@ body {
         border-top: 1px solid #39FF14;
         border-bottom: none;
         background-color: #181818;
-        z-index: 1000;
         justify-content: space-evenly;
         padding: 0.5rem;
     }
@@ -187,13 +182,13 @@ body {
     }
 
     .button {
-        padding: 0.5rem 0.8rem;
+        padding: 1.5vh 2vw;
         font-size: 0.9rem;
         border-radius: 4px;
     }
 
     .profileButton {
-        padding: 0.5rem 0.8rem;
+        padding: 1.5vh 2vw;
         font-size: 0.9rem;
         border-radius: 4px;
     }
@@ -203,10 +198,10 @@ body {
     }
 
     .popup {
-        left: 68%;
-        top: 47%;
+        left: 72%;
+        top: 55%;
         width: 20%;
-        height: 30%;
+        height: 25%;
     }
 
     .popup .button {

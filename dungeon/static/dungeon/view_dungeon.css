@@ -1,4 +1,8 @@
 /* Designed by Brendon Wolfe on March 31st */
+/* Modified by Brendon Wolfe for consistency on April 7th */
+
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
+
 .screen_container {
     display: flex;
     flex-direction: column;
@@ -16,7 +20,7 @@
     text-align: center;
     color: #ffdd57;
     text-shadow: 2px 2px 5px rgba(255, 221, 87, 0.8);
-    padding: 10px;
+    padding: 1vh;
     background-color: rgba(35, 35, 35, 0.8);
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(255, 221, 87, 0.5);
@@ -25,11 +29,11 @@
 }
 
 .player_info_container h1 {
-    font-size: 20px;
+    font-size: 1.2rem;
 }
 
 .player_info_container h2 a{
-    font-size: 20px;
+    font-size: 1.2rem;
 }
 
 #health_bar {
@@ -73,27 +77,27 @@
     align-items: center;
     width: 50%;
     height: 15%;
-    padding: 5px;
+    padding: 1vh;
     background-color: rgba(35, 35, 35, 0.8);
     border-radius: 10px;
     z-index: 3;
 }
 
-.inventory_container > div {
+.inventory_container div {
     text-align: center;
     font-size: 0.4rem;
 }
 
 .itemSlot {
     border: 2px solid rgba(255, 255, 255, 0.3); 
-    width: 72px;
-    height: 72px;
+    width: 12vh;
+    height: 12vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     background-color: rgba(20, 20, 20, 0.8); 
-    margin: 5px; 
+    margin: 1vh; 
     border-radius: 5px;
 }
 
@@ -112,8 +116,8 @@
         ".   up    ."
         "left  .  right"
         ".  down  .";
-    gap: 8px;
-    padding: 10px;
+    gap: 1vh;
+    padding: 1vh;
     background-color: rgba(35, 35, 35, 0.8);
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(255, 221, 87, 0.5);
@@ -127,8 +131,8 @@
 .go_right_container { grid-area: right; }
 
 .movement_container img {
-    width: 48px;
-    height: 48px;
+    width: 8vh;
+    height: 8vh;
     transition: transform 0.2s;
 }
 

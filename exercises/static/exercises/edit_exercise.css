@@ -1,3 +1,9 @@
+/* Designed by Eli Sepulveda on March 30th */
+/* Modified by Brendon Wolfe for consistency on April 7th */
+
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
+
+
 body {
     background-color: #181818;
     color: white;
@@ -7,27 +13,26 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    padding-top: 20vh;
+    padding-top: 10vh;
 }
 
 .error-message {
     color: #ff4d4d;
     font-size: 1.2rem;
     font-weight: bold;
-    margin-bottom: 1rem;
+    margin-bottom: 2vh;
     text-shadow: 1px 1px 5px rgba(255, 77, 77, 0.8);
 }
 
-.create-exercise-form {
+.edit-exercise-form {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: .5vh;
     width: 60%;
-    max-width: 600px;
-    margin: auto;
+    max-width: 50vw;
     background-color: #121212;
-    padding: 2rem;
+    padding: 2vh;
     border-radius: 20px;
     box-shadow: 0px 0px 10px rgba(255, 221, 87, 0.8);
 }
@@ -36,21 +41,21 @@ h1 {
     color: #ffdd57;
     font-size: 2rem;
     text-shadow: 2px 2px 5px rgba(255, 221, 87, 0.8);
-    margin-bottom: 1rem;
+    margin-bottom: .5vh;
 }
 
-h2 {
+.editH2 {
     color: #ffdd57;
     font-size: 1.2rem;
     text-shadow: 2px 2px 5px rgba(255, 221, 87, 0.8);
-    margin-bottom: 1rem;
+    margin-bottom: 1vh;
     width: 100%;
 }
 
 label {
     font-size: 1.2rem;
     font-weight: bold;
-    margin-top: 10px;
+    margin-top: 1vh;
     display: block;
     color: white;
     text-align: left;
@@ -61,16 +66,16 @@ input, textarea {
     background-color: #232323;
     color: white;
     font-size: 1rem;
-    padding: 10px;
+    padding: 1.5vh;
     width: 90%;
     border: 2px solid #ffdd57;
     border-radius: 5px;
-    margin-top: 5px;
+    margin-top: .5vh;
     text-align: left;
 }
 
 textarea {
-    height: 120px;
+    height: 10vh;
     resize: vertical;
 }
 
@@ -79,13 +84,13 @@ button {
     color: black;
     font-size: 1.2rem;
     font-weight: bold;
-    padding: 12px 24px;
+    padding: 1.5vh 2vw;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
     box-shadow: 0px 0px 10px rgba(57, 255, 20, 0.6);
-    margin-top: 1rem;
+    margin-top: 1vh;
     width: 100%;
 }
 

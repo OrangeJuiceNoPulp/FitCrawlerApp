@@ -1,4 +1,5 @@
 /* Designed by Brendon Wolfe on March 6th */
+/* Modified by Brendon Wolfe for consistency on April 7th */
 
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
 
@@ -21,37 +22,39 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 2rem;
+    padding: 4vh;
     border: 2px solid #39FF14;
     border-left: none;
 }
 
 .profilePic {
-    width: 120px;
-    height: 120px;
+    width: 10vw;
+    height: 10vw;
     border-radius: 50%;
     background-color: #39FF14;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5vh;
+    box-shadow: 0px 0px 10px rgba(255, 221, 87, 0.8);
 }
 
-.badgeTitle {
+.profileTitle {
     font-size: 1.4rem;
     color: #ffdd57;
     text-shadow: 2px 2px 10px rgba(255, 221, 87, 0.8);
     font-weight: bold;
-    margin-bottom: 1rem;
+    margin-bottom: 1.5vh;
 }
 
-.badgeContainer{
+.profileContainer{
     display: flex;
 }
 
-.badges {
-    width: 60px;
-    height: 60px;
+.profilePict {
+    width: 5vw;
+    height: 5vw;
     background-color: #39FF14;
     border-radius: 50%;
-    margin: 0.5rem;
+    margin: .75vh;
+    box-shadow: 0px 0px 10px rgba(255, 221, 87, 0.8);
 }
 
 .right {
@@ -59,10 +62,10 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: 1rem;
-    margin: 0 1rem;
+    padding: 1.5vh;
+    margin: 0 2vw;
     background-color: #232323;
-    border-radius: 1rem;
+    border-radius: 16px;
     box-shadow: 0rem 0rem 1rem rgb(200, 188, 13);
 }
 
@@ -70,7 +73,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    padding: 2vh;
     border-bottom: 1px solid #39FF14;
 }
 
@@ -82,28 +85,5 @@ body {
 
 
 .button:hover {
-    background-color: #2ECC71;
-}
-
-@media screen and (max-width: 768px) {
-    .container {
-        flex-direction: column;
-        height: auto;
-        width: 90%;
-    }
-
-    .left {
-        width: 100%;
-        border-right: none;
-        border-bottom: 2px solid #39FF14;
-    }
-
-    .right {
-        width: 100%;
-    }
-
-    .row {
-        flex-direction: column;
-        text-align: center;
-    }
+    background-color: #28a828;
 }

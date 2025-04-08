@@ -8,11 +8,11 @@
 </div>
 
 
-<form method="POST" class="create-exercise-form">
+<form method="POST" class="edit-exercise-form">
     {% csrf_token %}
     <h1>Edit Exercise</h1>
     <p>
-        <h2 id="id_exercise_name">Exercise Name: {{exercise_name}}<h2>
+        <h2 id="id_exercise_name" class="editH2">Exercise Name: {{exercise_name}}<h2>
     </p>
     
     <p>

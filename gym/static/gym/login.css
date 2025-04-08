@@ -1,5 +1,5 @@
 /* Designed by Eli Sepulveda on March 17th */
-
+/* Modified by Brendon Wolfe for consistency on April 6th */
 
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;700&display=swap');
 
@@ -21,21 +21,21 @@ h1 {
     font-size: 2.2rem;
     color: #ffdd57;
     text-shadow: 2px 2px 10px rgba(255, 221, 87, 0.8);
-    margin-bottom: 1rem;
+    margin-bottom: 2vh;
 }
 
 .login-form {
     background-color: #232323;
-    padding: 1.5rem;
+    padding: 3.5vh;
     border-radius: 10px;
     box-shadow: 0px 0px 10px rgba(255, 221, 87, 0.3);
     width: 60%;
-    max-width: 400px;
+    max-width: 37vw;
     text-align: left;
 }
 
 .login-form p {
-    margin: 1rem 0;
+    margin: 3vh 0;
     display: flex;
     flex-direction: column;
 }
@@ -44,15 +44,9 @@ input {
     background-color: #1a1a1a;
     color: white;
     border: 1px solid #ffdd57;
-    padding: 10px;
+    padding: 1.5vh;
     border-radius: 5px;
     font-size: 1rem;
-    transition: border-color 0.3s ease;
-}
-
-input:focus {
-    border-color: #f4c430;
-    outline: none;
 }
 
 button {
@@ -60,13 +54,13 @@ button {
     color: #232323;
     font-size: 1.2rem;
     font-weight: bold;
-    padding: 10px 20px;
+    padding: 1.5vh 3vw;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
     width: 100%;
-    margin-top: 1rem;
+    margin-top: 2vh;
 }
 
 button:hover {

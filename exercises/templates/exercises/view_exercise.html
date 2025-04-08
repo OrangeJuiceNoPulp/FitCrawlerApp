@@ -36,21 +36,13 @@
           {% endif %}
       </div>
     </div>
-
-
-    {% if user.is_authenticated and user.user_type == 'FitGuildOfficer' %}
-      <div class="button_div">
-      <a href="{% url 'exercises:edit_exercise' exercise_id %}" class="return_button">Edit Exercise</a>  
-      </div>
-    {% endif %}
-
     
-
     <div class="button_div">
+      {% if user.is_authenticated and user.user_type == 'FitGuildOfficer' %}
+      <a href="{% url 'exercises:edit_exercise' exercise_id %}" class="return_button">Edit Exercise</a>  
+      {% endif %}
       <a href="{% url 'exercises:search_exercises' %}" class="return_button">Return to Search</a>  
     </div>
-    
-    
   </body>
 
 {% endblock %}
