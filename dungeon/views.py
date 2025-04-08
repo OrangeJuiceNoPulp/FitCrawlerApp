@@ -574,7 +574,6 @@ def check_for_dungeon_battle(user_id):
         return (cursor.fetchone() is not None)
 
 
-
 @login_required
 def heal(request):
     # Ensure the current user is a FitKnight.
@@ -650,12 +649,6 @@ def heal(request):
             else:
                 return redirect(reverse('dungeon:dungeon_view') + '?' + urlencode({'exhausted':True}))   
                 
-        
-            
-        
-        
-        
-    
     # Otherwise send them to the dungeon select screen
     else:
         return redirect('dungeon:dungeon_select')
@@ -711,10 +704,7 @@ def dungeon_begin_exploration(request, dungeon_pk):
             [request.user.id, start_location, start_location, 'N', initial_health, datetime.datetime.now(), dungeon_pk, layout]
         )
         # Direction can be 'N' (North), 'E' (East), 'W' (West), 'S' (South). Starts as North.
-
-
-
-    
+   
     return redirect('dungeon:dungeon_view')
 
 @login_required
@@ -888,8 +878,7 @@ def battle_attack(request):
         if enemy_results['defeat']:
             return redirect('dungeon:death_screen')
         
-        
-        
+
     return redirect(reverse('dungeon:dungeon_battle') + '?' + urlencode({'player_damage':player_results['damage_done']}) + '&' + urlencode({'enemy_damage':enemy_results['damage_done']}) + '&' + urlencode({'enemy_type':enemy_stats['name']} ))  
         
         
@@ -941,14 +930,11 @@ def open_chest(request):
             
             return redirect(reverse('dungeon:dungeon_view') + '?' + urlencode({'chest_earn':rewarded}))  
         
-        
-    
+
     # Otherwise the user isn't on a chest, so redirect them to the dungeon view
     
     return redirect('dungeon:dungeon_view')
             
-    
-    
     
 
 # Lets the user escape from a battle at the cost of AP
@@ -1008,12 +994,10 @@ def battle_retreat(request):
     return redirect('dungeon:dungeon_view')
         
     
-    
-    
-    
 
-# WIP for dungeon crawler implementation
-# - Jason 3/24/25 Started
+
+# Display the current room of the dungeon
+# - Jason 3/24/25
 @login_required
 def dungeon_view(request):
     
@@ -1152,10 +1136,11 @@ def dungeon_view(request):
      
 
     return render(request, 'dungeon/view_dungeon.html', template_args)
-    pass
 
-# WIP for dungeon crawler implementation
+# Move through the dungeon
 # - Jason 3/24/25 Started
+# - Jason (forget the date) Finished
+@login_required
 def dungeon_traverse(request, direction):
     # Ensure the current user is a FitKnight.
     if request.user.user_type != 'FitKnight':
@@ -1247,10 +1232,11 @@ def dungeon_traverse(request, direction):
         
     # Display the new position in the dungeon 
     return redirect('dungeon:dungeon_view')
-    pass
 
-# WIP for dungeon crawler implementation
-# - Jason 3/24/25 Started
+# Change directions in the dungeon
+# - Jason 3/24/25 Started. 
+# - Jason (forget the date) Finished
+@login_required
 def dungeon_rotate(request, direction):
     
     # Ensure the current user is a FitKnight.
