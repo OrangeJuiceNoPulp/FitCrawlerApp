@@ -73,7 +73,8 @@
                 {% endfor %}
                     </ul>
 
-            <form method="GET" class="leaderboard form">
+
+            <form method="GET" class="leaderboard_form">
                 {% if user.is_authenticated and user.gym and global_board %}
                     <input hidden type="checkbox" name="gym_board" checked id="id_global_board_checkbox">
                     <button type="submit" class="swapLeaderboard"><h4>View My Gym's Leaderboard</h4></button>

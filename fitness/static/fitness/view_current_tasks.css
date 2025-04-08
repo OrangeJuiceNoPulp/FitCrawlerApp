@@ -56,6 +56,7 @@ a {
 .report_progress a:hover {
     background-color: #f4c430;
     transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(255, 221, 87, 0.8);
 }
 
 ul {
