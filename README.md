@@ -51,3 +51,4 @@ To play the game you need to complete tasks or milestones. Easiest way to earn s
 
 8. Click the "Explore Dungeon" button, choose a dungeon, and play the game.
 
+**Important Note**: the dungeon explorations and dungeon battles tables have data added and deleted as players play the game, they are not intended to permanently store data and therefore have no sample data.
