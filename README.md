@@ -15,7 +15,7 @@ To run:
 
 4. Run 'python manage.py runserver' with the python terminal to run the application.
 
-5. Go to http://127.0.0.1:8080 in your browser.
+5. Go to http://127.0.0.1:8000 in your browser.
 
 Note: Enter full screen mode for the smoothest visual experience.
 
